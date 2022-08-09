@@ -1,4 +1,4 @@
-package edu.gmu.dalnim;
+package edu.gmu.c4i.dalnim.bpmn2typedb;
 
 /**
  * Main entrypoint of the BPMN2TypeDB tool
