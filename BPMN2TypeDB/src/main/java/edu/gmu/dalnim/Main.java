@@ -31,8 +31,6 @@ public class Main {
 	 * 					If not running with "--db", then this will be the folder to write 
 	 * 					TypeQL schema (schema.tql) and data (data.tql).
 	 * 					Default is "./output/"
-	 * 
-	 * --
 	 *             </pre>
 	 */
 	public static void main(String[] args) throws Exception {

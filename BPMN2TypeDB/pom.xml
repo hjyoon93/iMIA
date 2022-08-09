@@ -4,7 +4,7 @@
 	<artifactId>BPMN2TypeDB</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>DALNIM BPMN2 to TypeQL converter</name>
-	<description>Script to convert BPMN2 files to TypeQL insert scripts.</description>
+	<description>Tool to convert BPMN2 files to TypeQL insert scripts, or to load BPMN processes from TypeDB.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
