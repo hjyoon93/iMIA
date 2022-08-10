@@ -38,7 +38,7 @@ public interface Encoder {
 	 * @see EncoderImpl
 	 */
 	static Encoder getDefaultEncoder() {
-		return EncoderImpl.getEncoder();
+		return EncoderImpl.getInstance();
 	}
 
 }

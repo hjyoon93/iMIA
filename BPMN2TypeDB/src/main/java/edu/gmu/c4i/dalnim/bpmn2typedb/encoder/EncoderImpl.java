@@ -7,12 +7,7 @@ import java.util.Collection;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
-import org.camunda.bpm.model.bpmn.instance.BaseElement;
-import org.camunda.bpm.model.bpmn.instance.FlowElement;
-import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Process;
-import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
-import org.camunda.bpm.model.xml.instance.DomElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +38,7 @@ public class EncoderImpl implements Encoder {
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
-	 * {@link #getEncoder()} instead.
+	 * {@link #getInstance()} instead.
 	 */
 	protected EncoderImpl() {
 		// Auto-generated constructor stub
@@ -54,7 +49,7 @@ public class EncoderImpl implements Encoder {
 	 * 
 	 * @return a new instance.
 	 */
-	public static Encoder getEncoder() {
+	public static Encoder getInstance() {
 		return new EncoderImpl();
 	}
 
@@ -155,20 +150,18 @@ public class EncoderImpl implements Encoder {
 
 			// iterate on each process
 			for (Process process : processes) {
-				
+
 				logger.debug("Encoding process {}", process);
-				
-				
-				
+
 				// Basically, all elements in the flow (except camunda-specific elements)
 				// process.getChildElementsByType(BaseElement.class)
-				
+
 				// elements in the flow, with names and ids
 				// process.getChildElementsByType(FlowElement.class)
-				
+
 				// Arcs in the diagram
 				// process.getChildElementsByType(SequenceFlow.class).iterator().next()
-				
+
 				// Nodes in the diagram
 				// process.getChildElementsByType(FlowNode.class).iterator().next()
 
@@ -177,9 +170,10 @@ public class EncoderImpl implements Encoder {
 	}
 
 	private void writeSchemaHeader(PrintWriter writer, BpmnModelInstance bpmn) {
-		// TODO Auto-generated method stub
+		// TypeQL schema must start with the keyword "define"
 		writer.println("define");
-		
+
+		// declare the BPMN definitions
 		writer.println("definitions");
 	}
 
@@ -187,7 +181,7 @@ public class EncoderImpl implements Encoder {
 	 * @return the {@link BpmnModelInstance} loaded in
 	 *         {@link #loadInput(InputStream)}
 	 */
-	protected BpmnModelInstance getBPMNModel() {
+	public BpmnModelInstance getBPMNModel() {
 		return bpmnModel;
 	}
 
