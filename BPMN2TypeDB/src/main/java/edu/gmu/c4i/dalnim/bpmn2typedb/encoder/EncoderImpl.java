@@ -22,13 +22,10 @@ import org.camunda.bpm.model.bpmn.impl.instance.Incoming;
 import org.camunda.bpm.model.bpmn.impl.instance.Outgoing;
 import org.camunda.bpm.model.bpmn.instance.BaseElement;
 import org.camunda.bpm.model.bpmn.instance.BpmnModelElementInstance;
-import org.camunda.bpm.model.bpmn.instance.Collaboration;
-import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
 import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
 import org.camunda.bpm.model.bpmn.instance.dc.Point;
 import org.camunda.bpm.model.bpmn.instance.di.DiagramElement;
-import org.camunda.bpm.model.xml.instance.ModelElementInstance;
 import org.camunda.bpm.model.xml.type.attribute.Attribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +66,10 @@ public class EncoderImpl implements Encoder {
 	private String textContentAttributeName = bpmnEntityNamePrefix + "textContent";
 
 	private String bpmnConceptualModelMappingName = bpmnEntityNamePrefix + "hasConceptualModelElement";
+
+	private String bpmnParentChildRelationName = bpmnEntityNamePrefix + "hasChildTag";
+
+	private String commaSeparatedMappableConceptualModelEntities = "Mission,Task,Performer";
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
@@ -165,6 +166,14 @@ public class EncoderImpl implements Encoder {
 					+ getBPMNEntityNamePrefix() + "name, owns " + getTextContentAttributeName() + ", owns uid @key;");
 			writer.println();
 
+			writer.println("## Parent-child relationship of BPMN/XML tags");
+			writer.println(getBPMNParentChildRelationName() + " sub relation, relates parent, relates child;");
+			// A BPMN tag/entity can be a parent or child of another BPMN tag/entity
+			writer.println(getBPMNEntityName() + " plays " + getBPMNParentChildRelationName() + ":child;");
+			writer.println(getBPMNEntityName() + " plays " + getBPMNParentChildRelationName() + ":parent;");
+
+			writer.println();
+
 			// Some attributes are already declared in root "BPMN" entity,
 			// so children do not have to re-declare
 			Set<String> attributesInRootEntity = new HashSet<>();
@@ -177,10 +186,15 @@ public class EncoderImpl implements Encoder {
 			writer.println("## =============== Body ===============");
 			writer.println();
 
-			// recursively visit the tree below definitions
-			Set<String> visitedNodes = new HashSet<>();
-			Set<String> declaredRelations = new HashSet<>();
+			// store what was already declared
 			Set<String> declaredAttributes = new HashSet<>(attributesInRootEntity);
+
+			Set<String> declaredRelations = new HashSet<>();
+			declaredRelations.add(getBPMNParentChildRelationName());
+
+			Set<String> visitedNodes = new HashSet<>();
+
+			// recursively visit what's below "definitions" tag
 			visitEntityRecursive(writer, bpmn.getDefinitions(), visitedNodes, attributesInRootEntity,
 					declaredAttributes, declaredRelations);
 
@@ -260,20 +274,20 @@ public class EncoderImpl implements Encoder {
 		}
 
 		// sanity check on relations
-		if (!declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_process")) {
-			throw new IOException(
-					"Sanity check failed: relation between BPMN definitions and BPMN process' was not created.");
-		}
-		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "BPMNDiagram")
-				&& !declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_BPMNDiagram")) {
-			throw new IOException(
-					"Sanity check failed: relation between BPMN definitions and BPMN diagram' was not created.");
-		}
-		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "collaboration")
-				&& !declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_collaboration")) {
-			throw new IOException(
-					"Sanity check failed: relation between BPMN definitions and BPMN collaboration' was not created.");
-		}
+//		if (!declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_process")) {
+//			throw new IOException(
+//					"Sanity check failed: relation between BPMN definitions and BPMN process' was not created.");
+//		}
+//		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "BPMNDiagram")
+//				&& !declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_BPMNDiagram")) {
+//			throw new IOException(
+//					"Sanity check failed: relation between BPMN definitions and BPMN diagram' was not created.");
+//		}
+//		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "collaboration")
+//				&& !declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_collaboration")) {
+//			throw new IOException(
+//					"Sanity check failed: relation between BPMN definitions and BPMN collaboration' was not created.");
+//		}
 
 		// mapping from BPMN element to conceptual model should be declared
 		if (!declaredRelations.contains(getBPMNConceptualModelMappingName())) {
@@ -368,41 +382,44 @@ public class EncoderImpl implements Encoder {
 
 		} // else we visited this node already
 
-		// declare relationships from parent node to child
-		ModelElementInstance parentNode = currentNode.getParentElement();
-		if (parentNode != null) {
-			/**
-			 * <pre>
-			 * BPMN_definitions_collaboration sub relation,
-			 * 		relates BPMN_parent,
-			 * 		relates BPMN_child;
-			 * definitions plays BPMN_definitions_collaboration:definitions;
-			 * collaboration plays BPMN_definitions_collaboration:collaboration;
-			 * </pre>
-			 */
-
-			// extract parent name
-			String parentEntityName = getBPMNEntityNamePrefix() + parentNode.getDomElement().getLocalName();
-
-			// Declare the relation.
-			// Avoid double-inserting "BPMN_" prefix
-			String relationName = getBPMNEntityNamePrefix() + parentNode.getDomElement().getLocalName() + "_"
-					+ currentNode.getDomElement().getLocalName();
-			if (!declaredRelations.contains(relationName)) {
-				writer.println(relationName + " sub relation, relates " + getBPMNEntityNamePrefix() + "parent, relates "
-						+ getBPMNEntityNamePrefix() + "child;");
-
-				// associate roles
-				writer.println(
-						parentEntityName + " plays " + relationName + ":" + getBPMNEntityNamePrefix() + "parent;");
-				writer.println(
-						currentEntityName + " plays " + relationName + ":" + getBPMNEntityNamePrefix() + "child;");
-				writer.println();
-
-				// mark relation as declared
-				declaredRelations.add(relationName);
-			}
-		} // end of association between parent & child BPMN tags
+//		// declare relationships from parent node to child
+//		ModelElementInstance parentNode = currentNode.getParentElement();
+//		if (parentNode != null) {
+//			/**
+//			 * <pre>
+//			 * BPMN_definitions_collaboration sub relation,
+//			 * 		relates BPMN_parent,
+//			 * 		relates BPMN_child;
+//			 * definitions plays BPMN_definitions_collaboration:definitions;
+//			 * collaboration plays BPMN_definitions_collaboration:collaboration;
+//			 * </pre>
+//			 * 
+//			 * Or an easier way would be to declare a parent-child relationship
+//			 * for the top BPMN entity.
+//			 * If it's the latter, then no need to declare relationships here
+//			 */
+//
+//			// extract parent name
+//			String parentEntityName = getBPMNEntityNamePrefix() + parentNode.getDomElement().getLocalName();
+//
+//			// Declare the relation.
+//			// Avoid double-inserting "BPMN_" prefix
+//			String relationName = getBPMNParentChildRelationName();
+////			String relationName = getBPMNEntityNamePrefix() + parentNode.getDomElement().getLocalName() + "_"
+////					+ currentNode.getDomElement().getLocalName();
+//			if (!declaredRelations.contains(relationName)) {
+//				writer.println(relationName + " sub relation, relates parent, relates child;");
+//
+//				// mark relation as declared
+//				declaredRelations.add(relationName);
+//				
+//				// associate roles
+//				writer.println(parentEntityName + " plays " + relationName + ":parent;");
+//				writer.println(currentEntityName + " plays " + relationName + ":child;");
+//				writer.println();
+//			}
+//
+//		} // end of association between parent & child BPMN tags
 
 		// Check if we have a child text
 		String textContent = currentNode.getTextContent();
@@ -519,14 +536,147 @@ public class EncoderImpl implements Encoder {
 		// We should be able to map an entity in the conceptual model to BPMN entity
 		String mappingRelationName = getBPMNConceptualModelMappingName();
 		if (!declaredRelations.contains(mappingRelationName)) {
+
 			writer.println(mappingRelationName + " sub relation, relates bpmnEntity, relates conceptualModel;");
+
+			// Specify the roles
 			writer.println(getBPMNEntityName() + " plays " + mappingRelationName + ":bpmnEntity;");
+
+			// TypeDB does not allow 'entity' to play a role.
+			// Need to explicitly enumerate...
+			for (String entityName : getCommaSeparatedMappableConceptualModelEntities().split(",")) {
+				if (entityName == null || entityName.trim().isEmpty()) {
+					// ignore nulls and blanks.
+					continue;
+				}
+
+				logger.debug("'{}' will play some role in {}", entityName, mappingRelationName);
+
+				writer.println(entityName + " plays " + mappingRelationName + ":conceptualModel;");
+				// TODO create an abstract conceptual model entity instead
+			}
+
 			// mark relation as declared
 			declaredRelations.add(mappingRelationName);
 			writer.println();
 		}
 	}
 
+	/**
+	 * This should generate TypeQL inserts. For instance, simple.bpmn should result
+	 * in something similar to the following TypeQL:
+	 * 
+	 * <pre>
+	## Insert BPMN elements
+	insert $def isa BPMN_definitions, 
+	has BPMN_targetNamespace "https://camunda.org/examples", 
+	has BPMN_xmlns "http://www.omg.org/spec/BPMN/20100524/MODEL", 
+	has uid "https://camunda.org/examples#definitions123";
+	
+	insert $proc isa BPMN_process,
+	has uid "https://camunda.org/examples#proc123";
+	match
+	$parent isa BPMN_definitions, has uid "https://camunda.org/examples#definitions123";
+	$child isa BPMN_process, has uid "https://camunda.org/examples#proc123";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $startEvent isa BPMN_startEvent,
+	has BPMN_id "start",
+	has uid "https://camunda.org/examples#start";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#proc123";
+	$child isa entity, has uid "https://camunda.org/examples#start";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $outgoing isa BPMN_outgoing,
+	has BPMN_textContent "flow1",
+	has uid "https://camunda.org/examples#outgoing1";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#start";
+	$child isa entity, has uid "https://camunda.org/examples#outgoing1";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $userTask isa BPMN_userTask,
+	has BPMN_id "task",
+	has BPMN_name "User Task",
+	has uid "https://camunda.org/examples#task";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#proc123";
+	$child isa entity, has uid "https://camunda.org/examples#task";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $incoming isa BPMN_incoming,
+	has BPMN_textContent "flow1",
+	has uid "https://camunda.org/examples#taskincoming";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#task";
+	$child isa entity, has uid "https://camunda.org/examples#taskincoming";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $outgoing isa BPMN_outgoing,
+	has BPMN_textContent "flow2",
+	has uid "https://camunda.org/examples#taskoutgoing";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#task";
+	$child isa entity, has uid "https://camunda.org/examples#taskoutgoing";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $sequenceFlow isa BPMN_sequenceFlow,
+	has BPMN_id "flow1",
+	has BPMN_sourceRef "start",
+	has BPMN_targetRef "task",
+	has uid "https://camunda.org/examples#flow1";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#proc123";
+	$child isa entity, has uid "https://camunda.org/examples#flow1";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $endEvent isa BPMN_endEvent,
+	has BPMN_id "end",
+	has uid "https://camunda.org/examples#end";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#proc123";
+	$child isa entity, has uid "https://camunda.org/examples#end";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $incoming isa BPMN_incoming,
+	has BPMN_textContent "flow2",
+	has uid "https://camunda.org/examples#endincoming";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#end";
+	$child isa entity, has uid "https://camunda.org/examples#endincoming";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	insert $sequenceFlow isa BPMN_sequenceFlow,
+	has BPMN_id "flow2",
+	has BPMN_sourceRef "task",
+	has BPMN_targetRef "end",
+	has uid "https://camunda.org/examples#flow2";
+	match
+	$parent isa entity, has uid "https://camunda.org/examples#proc123";
+	$child isa entity, has uid "https://camunda.org/examples#flow2";
+	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+	
+	## references to the conceptual model
+	insert $mission isa Mission,
+	has uid "https://camunda.org/examples#Mission_proc123";
+	match
+	$bpmnEntity isa BPMN_Entity, has uid 'https://camunda.org/examples#proc123';
+	$conceptualModel isa entity, has uid 'https://camunda.org/examples#Mission_proc123';
+	insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $conceptualModel) isa BPMN_hasConceptualModelElement;
+	
+	insert $task isa Task,
+	has uid "https://camunda.org/examples#Task_task";
+	match
+	$bpmnEntity isa BPMN_Entity, has uid 'https://camunda.org/examples#task';
+	$conceptualModel isa entity, has uid 'https://camunda.org/examples#Task_task';
+	insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $conceptualModel) isa BPMN_hasConceptualModelElement;
+	match
+	$task isa Task, has uid 'https://camunda.org/examples#Task_task';
+	$mission isa Mission, has uid 'https://camunda.org/examples#Mission_proc123';
+	insert $rel (mission: $mission, task: $task) isa isCompoundBy;
+	 * </pre>
+	 */
 	@Override
 	public void encodeData(OutputStream outputStream) throws IOException {
 		logger.info("Generating TypeQL data insertion...");
@@ -556,48 +706,64 @@ public class EncoderImpl implements Encoder {
 		}
 		logger.debug("Namespace: {}", namespace);
 
-		logger.debug("Retrieving processes declared in the BPMN model...");
-		Collection<Process> processes = bpmn.getModelElementsByType(Process.class);
-		logger.debug("Retrieved processes: {}", processes);
-
-		logger.debug("Retrieving collaborations declared in the BPMN model...");
-		Collection<Collaboration> collaborations = bpmn.getModelElementsByType(Collaboration.class);
-		logger.debug("Retrieved collaborations: {}", collaborations);
-
 		// prepare writer for output stream
 		try (PrintWriter writer = new PrintWriter(outputStream)) {
-			logger.debug("Writing the headers...");
-			writeDataHeader(writer, bpmn);
 
-			// process the collaboration
-			for (Collaboration collaboration : collaborations) {
-				logger.debug("Encoding collaboration: {}", collaboration);
-				// TODO
-			} // end of for each collaboration
+			logger.debug("Writing the header");
 
-			// iterate on each process
-			for (Process process : processes) {
+			// TypeQL schema must start with the keyword "define"
+			writer.println("define");
+			writer.println();
 
-				logger.debug("Encoding process: {}", process);
+			writer.println("## =============== Header ===============");
+			writer.println();
 
-				// TODO
+			writer.println(
+					"## Note: attribute uid is required in DALNIM. Uncomment the following line if not declared yet.");
+			writer.println("## uid sub attribute, value string;");
+			writer.println();
 
-				// Basically, all elements in the flow (except camunda-specific elements)
-				// process.getChildElementsByType(BaseElement.class)
+			writer.println("## BPMN entities in general");
+			writer.println(getBPMNEntityNamePrefix() + "id sub attribute, value string;");
+			writer.println(getBPMNEntityNamePrefix() + "name sub attribute, value string;");
+			writer.println(getTextContentAttributeName() + " sub attribute, value string;");
+			writer.println(getBPMNEntityName() + " sub entity, owns " + getBPMNEntityNamePrefix() + "id, owns "
+					+ getBPMNEntityNamePrefix() + "name, owns " + getTextContentAttributeName() + ", owns uid @key;");
+			writer.println();
 
-				// elements in the flow, with names and ids
-				// process.getChildElementsByType(FlowElement.class)
+			// Some attributes are already declared in root "BPMN" entity,
+			// so children do not have to re-declare
+			Set<String> attributesInRootEntity = new HashSet<>();
+			attributesInRootEntity.add("uid");
+			attributesInRootEntity.add(getBPMNEntityNamePrefix() + "id");
+			attributesInRootEntity.add(getBPMNEntityNamePrefix() + "name");
+			attributesInRootEntity.add(getTextContentAttributeName());
 
-				// Arcs in the diagram
-				// process.getChildElementsByType(SequenceFlow.class).iterator().next()
+			logger.debug("Writing the body...");
+			writer.println("## =============== Body ===============");
+			writer.println();
 
-				// Nodes in the diagram
-				// process.getChildElementsByType(FlowNode.class).iterator().next()
+			// recursively visit the tree below definitions
+			Set<String> visitedNodes = new HashSet<>();
+			Set<String> declaredRelations = new HashSet<>();
+			Set<String> declaredAttributes = new HashSet<>(attributesInRootEntity);
+			visitEntityRecursive(writer, bpmn.getDefinitions(), visitedNodes, attributesInRootEntity,
+					declaredAttributes, declaredRelations);
 
-			} // end of for each process
+			// declare some attributes specific to our implementation
+			addImplementationSpecificSchemaEntries(writer, bpmn, visitedNodes, attributesInRootEntity,
+					declaredAttributes, declaredRelations);
+
+			// sanity check
+			if (isRunSanityCheck()) {
+				runSanityCheck(bpmn, visitedNodes, attributesInRootEntity, declaredAttributes, declaredRelations);
+			} // end of sanity check
+
+			writer.println("## =============== End ===============");
+			logger.info("Finished TypeQL data insertion");
+
 		} // this will close writer
 
-		logger.info("Finished TypeQL data insertion");
 	}
 
 	/**
@@ -680,8 +846,7 @@ public class EncoderImpl implements Encoder {
 						// extract the labels after 'owns'
 						.map(ownVar -> ownVar.reference().asLabel().label())
 						// ignore "uid" since it's part of conceptual model
-						.filter(label -> (!label.equals("uid")))
-						.collect(Collectors.toSet()));
+						.filter(label -> (!label.equals("uid"))).collect(Collectors.toSet()));
 			}
 			// store references to relations/roles in 'plays' declaration
 			for (Plays plays : typeVar.plays()) {
@@ -860,6 +1025,44 @@ public class EncoderImpl implements Encoder {
 	 */
 	public void setBPMNConceptualModelMappingName(String bPMNConceptualModelMappingName) {
 		bpmnConceptualModelMappingName = bPMNConceptualModelMappingName;
+	}
+
+	/**
+	 * @return the bPMNParentChildRelationName
+	 */
+	public String getBPMNParentChildRelationName() {
+		return bpmnParentChildRelationName;
+	}
+
+	/**
+	 * @param bPMNParentChildRelationName the bPMNParentChildRelationName to set
+	 */
+	public void setBPMNParentChildRelationName(String bPMNParentChildRelationName) {
+		bpmnParentChildRelationName = bPMNParentChildRelationName;
+	}
+
+	/**
+	 * @return comma-separated string listing the names of entities in the
+	 *         conceptual model that can be mapped to
+	 *         {@link #getBPMNConceptualModelMappingName()} (i.e., those that can
+	 *         play a role in this mapping relation).
+	 */
+	public synchronized String getCommaSeparatedMappableConceptualModelEntities() {
+		if (commaSeparatedMappableConceptualModelEntities == null) {
+			commaSeparatedMappableConceptualModelEntities = "";
+		}
+		return commaSeparatedMappableConceptualModelEntities;
+	}
+
+	/**
+	 * @param commaSeparatedVal : comma-separated string listing the names of
+	 *                          entities in the conceptual model that can be mapped
+	 *                          to {@link #getBPMNConceptualModelMappingName()}
+	 *                          (i.e., those that can play a role in this mapping
+	 *                          relation).
+	 */
+	public synchronized void setCommaSeparatedMappableConceptualModelEntities(String commaSeparatedVal) {
+		this.commaSeparatedMappableConceptualModelEntities = commaSeparatedVal;
 	}
 
 }
