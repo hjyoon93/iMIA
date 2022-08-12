@@ -1,5 +1,6 @@
 package edu.gmu.c4i.dalnim.bpmn2typedb.encoder;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -17,21 +18,21 @@ public interface Encoder {
 	 * 
 	 * @param input : stream pointing to the BPMN2 XML file/stream.
 	 */
-	void loadInput(InputStream input);
+	void loadInput(InputStream input) throws IOException;
 
 	/**
 	 * Writes the translated TypeQL schema script to the output stream.
 	 * 
 	 * @param schemaOutput : stream to write.
 	 */
-	void encodeSchema(OutputStream schemaOutput);
+	void encodeSchema(OutputStream schemaOutput) throws IOException;
 
 	/**
 	 * Writes the translated TypeQL data script to the output stream.
 	 * 
 	 * @param schemaOutput : stream to write.
 	 */
-	void encodeData(OutputStream schemaOutput);
+	void encodeData(OutputStream schemaOutput) throws IOException;
 
 	/**
 	 * @return default implementation of {@link Encoder}.

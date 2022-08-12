@@ -1,15 +1,45 @@
 package edu.gmu.c4i.dalnim.bpmn2typedb.encoder;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.impl.instance.FlowNodeRef;
+import org.camunda.bpm.model.bpmn.impl.instance.Incoming;
+import org.camunda.bpm.model.bpmn.impl.instance.Outgoing;
+import org.camunda.bpm.model.bpmn.instance.BaseElement;
+import org.camunda.bpm.model.bpmn.instance.BpmnModelElementInstance;
+import org.camunda.bpm.model.bpmn.instance.Collaboration;
 import org.camunda.bpm.model.bpmn.instance.Process;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
+import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
+import org.camunda.bpm.model.bpmn.instance.dc.Point;
+import org.camunda.bpm.model.bpmn.instance.di.DiagramElement;
+import org.camunda.bpm.model.xml.instance.ModelElementInstance;
+import org.camunda.bpm.model.xml.type.attribute.Attribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.vaticle.typeql.lang.TypeQL;
+import com.vaticle.typeql.lang.common.exception.TypeQLException;
+import com.vaticle.typeql.lang.pattern.constraint.TypeConstraint.Owns;
+import com.vaticle.typeql.lang.pattern.constraint.TypeConstraint.Plays;
+import com.vaticle.typeql.lang.pattern.constraint.TypeConstraint.Relates;
+import com.vaticle.typeql.lang.pattern.variable.TypeVariable;
+import com.vaticle.typeql.lang.query.TypeQLDefine;
 
 /**
  * Default implementation of {@link Encoder}
@@ -26,15 +56,15 @@ public class EncoderImpl implements Encoder {
 
 	private String schemaNamespace;
 
-	/**
-	 * Possible values for the mode of
-	 * {@link EncoderImpl#encode(OutputStream, EncodingMode)}
-	 * 
-	 * @author shou
-	 */
-	public enum EncodingMode {
-		SCHEMA, DATA, UNKNOWN
-	}
+	private boolean isRunSanityCheck = true;
+
+	private boolean isAddImplementationSpecificSchemaAttributes = true;
+
+	private String bpmnEntityNamePrefix = "BPMN_";
+
+	private String bpmnEntityName = bpmnEntityNamePrefix + "Entity";
+
+	private String textContentAttributeName = bpmnEntityNamePrefix + "textContent";
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
@@ -54,52 +84,23 @@ public class EncoderImpl implements Encoder {
 	}
 
 	@Override
-	public void loadInput(InputStream input) {
+	public void loadInput(InputStream input) throws IOException {
 
 		logger.info("Loading input...");
 		bpmnModel = Bpmn.readModelFromStream(input);
 		logger.info("Finished loading input");
 
 		logger.debug("Extracting namespaces");
-		instanceNamespace = bpmnModel.getDefinitions().getTargetNamespace();
+		setInstanceNamespace(bpmnModel.getDefinitions().getTargetNamespace());
 		logger.debug("Extracted instance/target namespace: {}", instanceNamespace);
-		schemaNamespace = bpmnModel.getDocument().getRootElement().getNamespaceURI();
+		setSchemaNamespace(bpmnModel.getDocument().getRootElement().getNamespaceURI());
 		logger.debug("Extracted schema/base namespace: {}", schemaNamespace);
 
 	}
 
 	@Override
-	public void encodeSchema(OutputStream schemaOutput) {
+	public void encodeSchema(OutputStream outputStream) throws IOException {
 		logger.info("Generating TypeQL schema definitions...");
-		this.encode(schemaOutput, EncodingMode.SCHEMA);
-		logger.info("Finished TypeQL schema definitions");
-	}
-
-	@Override
-	public void encodeData(OutputStream schemaOutput) {
-		logger.info("Generating TypeQL data insertion...");
-		this.encode(schemaOutput, EncodingMode.DATA);
-		logger.info("Finished TypeQL data insertion");
-	}
-
-	/**
-	 * Iterates on the processes in {@link #getBPMNModel()} and fills the output
-	 * stream either with TypeQL schema definitions ({@link EncodingMode#SCHEMA}) or
-	 * TypeQL data insertions ({@link EncodingMode#DATA})
-	 * 
-	 * @param outputStream : stream to write
-	 * @param mode         : {@link EncodingMode#SCHEMA} (TypeQL schema definition)
-	 *                     or {@link EncodingMode#DATA} (TypeQL data insertion).
-	 * 
-	 * @see #encodeData(OutputStream)
-	 * @see #encodeSchema(OutputStream)
-	 */
-	protected void encode(OutputStream outputStream, EncodingMode mode) {
-
-		logger.debug("Encoding mode: {}", mode);
-		if (mode == null) {
-			mode = EncodingMode.UNKNOWN;
-		}
 		if (outputStream == null) {
 			throw new NullPointerException("Invalid argument: the output stream was null");
 		}
@@ -109,19 +110,365 @@ public class EncoderImpl implements Encoder {
 		logger.debug("Cached BPMN model: {}", bpmn);
 
 		logger.debug("Retrieving the namespace to use...");
-		String namespace = null;
-		switch (mode) {
-		case SCHEMA:
-			namespace = getSchemaNamespace();
-			break;
-		case DATA:
-			namespace = getInstanceNamespace();
-			break;
-		default:
-		}
+		String namespace = getSchemaNamespace();
+
 		// namespace must be set
 		if (namespace == null || namespace.trim().isEmpty()) {
-			logger.warn("No namespace was set. Using default namespace...");
+			logger.warn("No namespace was set. Using default namespace for schema...");
+			namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL";
+		}
+		// append "#" to the end of the namespace, if not already present
+		if (!namespace.endsWith("#")) {
+			// Make sure namespace ends with "/#"
+			if (!namespace.endsWith("/")) {
+				namespace += "/";
+			}
+			namespace += "#";
+		}
+		logger.debug("Namespace: {}", namespace);
+
+		// prepare writer for output stream
+		try (PrintWriter writer = new PrintWriter(outputStream)) {
+
+			logger.debug("Writing the header");
+
+			// TypeQL schema must start with the keyword "define"
+			writer.println("define");
+			writer.println();
+
+			writer.println("## =============== Header ===============");
+			writer.println();
+
+			writer.println("## BPMN entities in general");
+			writer.println(getBPMNEntityNamePrefix() + "id sub attribute, value string;");
+			writer.println(getBPMNEntityNamePrefix() + "name sub attribute, value string;");
+			writer.println(getTextContentAttributeName() + " sub attribute, value string;");
+			writer.println(getBPMNEntityName() + " sub entity, owns " + getBPMNEntityNamePrefix() + "id, owns "
+					+ getBPMNEntityNamePrefix() + "name, owns " + getTextContentAttributeName() + ";");
+			writer.println();
+
+			// Some attributes are already declared in root "BPMN" entity,
+			// so children do not have to re-declare
+			Set<String> attributesInRootEntity = new HashSet<>();
+			attributesInRootEntity.add(getBPMNEntityNamePrefix() + "id");
+			attributesInRootEntity.add(getBPMNEntityNamePrefix() + "name");
+			attributesInRootEntity.add(getTextContentAttributeName());
+
+			logger.debug("Writing the body...");
+			writer.println("## =============== Body ===============");
+			writer.println();
+
+			// recursively visit the tree below definitions
+			Set<String> visitedNodes = new HashSet<>();
+			Set<String> declaredRelations = new HashSet<>();
+			Set<String> declaredAttributes = new HashSet<>(attributesInRootEntity);
+			visitEntityRecursive(writer, bpmn.getDefinitions(), visitedNodes, attributesInRootEntity,
+					declaredAttributes, declaredRelations);
+
+			// declare some attributes specific to our implementation
+			addImplementationSpecificSchemaAttributes(writer, bpmn, visitedNodes, attributesInRootEntity,
+					declaredAttributes, declaredRelations);
+
+			// sanity check
+			if (isRunSanityCheck()) {
+
+				logger.debug("Running basic sanity check...");
+
+				// sanity check on nodes
+				if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "definitions")) {
+					throw new IOException("Sanity check failed: BPMN definitions was not created.");
+				}
+				if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "process")) {
+					throw new IOException("Sanity check failed: BPMN process was not created.");
+				}
+				if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "startEvent")) {
+					throw new IOException("Sanity check failed: BPMN startEvent was not created.");
+				}
+				if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "endEvent")) {
+					throw new IOException("Sanity check failed: BPMN endEvent was not created.");
+				}
+
+				if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "isExecutable")) {
+					throw new IOException("Sanity check failed: attribute 'isExecutable' was not created.");
+				}
+
+				// sanity check on attributes
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "serviceTask")) {
+					if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "implementation")) {
+						throw new IOException("Sanity check failed: attribute 'implementation' was not created.");
+					}
+					if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "operationRef")) {
+						throw new IOException("Sanity check failed: attribute 'operationRef' was not created.");
+					}
+				}
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "participant")
+						&& !declaredAttributes.contains(getBPMNEntityNamePrefix() + "processRef")) {
+					throw new IOException("Sanity check failed: attribute 'processRef' was not created.");
+				}
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "messageFlow")
+						|| visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")) {
+					if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "sourceRef")) {
+						throw new IOException("Sanity check failed: attribute 'sourceRef' was not created.");
+					}
+					if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "targetRef")) {
+						throw new IOException("Sanity check failed: attribute 'targetRef' was not created.");
+					}
+				}
+
+				// sanity check on relations
+				if (!declaredRelations.contains("BPMN_definitions_process")) {
+					throw new IOException(
+							"Sanity check failed: relation between BPMN definitions and BPMN process' was not created.");
+				}
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "BPMNDiagram")
+						&& !declaredRelations.contains("BPMN_definitions_BPMNDiagram")) {
+					throw new IOException(
+							"Sanity check failed: relation between BPMN definitions and BPMN diagram' was not created.");
+				}
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "collaboration")
+						&& !declaredRelations.contains("BPMN_definitions_collaboration")) {
+					throw new IOException(
+							"Sanity check failed: relation between BPMN definitions and BPMN collaboration' was not created.");
+				}
+
+			} // end of sanity check
+
+			writer.println("## =============== End ===============");
+			logger.info("Finished TypeQL schema definitions.");
+
+		} // this will close writer
+
+	}
+
+	/**
+	 * Recursively visits a BPMN node (and its children) to write the
+	 * entity/attribute/relationship definitions.
+	 * 
+	 * @param writer              : where to write the script block.
+	 * @param currentNode         : current BPMN tag to handle
+	 * @param visitedNodes        : names of BPMN tags that were already visited
+	 *                            (attributes of these tags will be skipped)
+	 * @param inheritedAttributes : these attributes will not be re-declared (it's
+	 *                            supposed to inherit from root "BPMN" entity).
+	 * @param declaredAttributes  : attributes that were already declared
+	 *                            previously.
+	 * @param declaredRelations   : relations that were already declared previously.
+	 */
+	protected void visitEntityRecursive(PrintWriter writer, BpmnModelElementInstance currentNode,
+			Set<String> visitedNodes, Set<String> inheritedAttributes, Set<String> declaredAttributes,
+			Set<String> declaredRelations) {
+
+		logger.debug("Visiting BPMN tag/node {}", currentNode);
+
+		if (currentNode == null) {
+			logger.debug("BPMN node was null. Ignoring...");
+			return;
+		}
+		if (writer == null) {
+			logger.warn("Writer node was null. Returning...");
+			return;
+		}
+		if (visitedNodes == null) {
+			visitedNodes = new HashSet<>();
+		}
+
+		// Extract the entity name
+		String currentEntityName = getBPMNEntityNamePrefix() + currentNode.getDomElement().getLocalName();
+		logger.debug("Entity: {}", currentEntityName);
+
+		// skip declaration if this node was already visited
+		if (!visitedNodes.contains(currentEntityName)) {
+
+			// declare the current entity
+			writer.println("## BPMN '" + currentEntityName + "' tag/node");
+			writer.println(currentEntityName + " sub " + getBPMNEntityName() + ";");
+			writer.println();
+
+			// declare all attributes
+			for (Attribute<?> attrib : currentNode.getElementType().getAttributes()) {
+
+				String attributeName = getBPMNEntityNamePrefix() + attrib.getAttributeName();
+
+				// Skip attribute if it's already defined in root entity.
+				if (inheritedAttributes.contains(attributeName)) {
+					logger.debug("Skipped attribute {} in {}. It should be inherited from BPMN root entity.",
+							attributeName, currentEntityName);
+					continue;
+				}
+
+				// declare the attribute
+				if (!declaredAttributes.contains(attributeName)) {
+					writer.println(attributeName + " sub attribute, value string;");
+					// mark attribute as declared
+					declaredAttributes.add(attributeName);
+				}
+
+				// associate entity and attribute
+				writer.println(currentEntityName + " owns " + attributeName + ";");
+			}
+			writer.println();
+
+		} // else we visited this node already
+
+		// declare relationships from parent node to child
+		ModelElementInstance parentNode = currentNode.getParentElement();
+		if (parentNode != null) {
+			/**
+			 * <pre>
+			 * BPMN_definitions_collaboration sub relation,
+			 * 		relates BPMN_parent,
+			 * 		relates BPMN_child;
+			 * definitions plays BPMN_definitions_collaboration:definitions;
+			 * collaboration plays BPMN_definitions_collaboration:collaboration;
+			 * </pre>
+			 */
+
+			// extract parent name
+			String parentEntityName = getBPMNEntityNamePrefix() + parentNode.getDomElement().getLocalName();
+
+			// Declare the relation.
+			// Avoid double-inserting "BPMN_" prefix
+			String relationName = getBPMNEntityNamePrefix() + parentNode.getDomElement().getLocalName() + "_"
+					+ currentNode.getDomElement().getLocalName();
+			if (!declaredRelations.contains(relationName)) {
+				writer.println(relationName + " sub relation, relates " + getBPMNEntityNamePrefix() + "parent, relates "
+						+ getBPMNEntityNamePrefix() + "child;");
+
+				// associate roles
+				writer.println(
+						parentEntityName + " plays " + relationName + ":" + getBPMNEntityNamePrefix() + "parent;");
+				writer.println(
+						currentEntityName + " plays " + relationName + ":" + getBPMNEntityNamePrefix() + "child;");
+				writer.println();
+
+				// mark relation as declared
+				declaredRelations.add(relationName);
+			}
+		} // end of association between parent & child BPMN tags
+
+		// Check if we have a child text
+		String textContent = currentNode.getTextContent();
+		if (textContent != null && !textContent.trim().isEmpty()
+		// Skip attribute if it's already defined in root entity.
+				&& !inheritedAttributes.contains(getTextContentAttributeName())) {
+			// do not re-declare attribute
+			if (!declaredAttributes.contains(getTextContentAttributeName())) {
+				writer.println(getTextContentAttributeName() + " sub attribute, value string;");
+				// mark attribute as declared
+				declaredAttributes.add(getTextContentAttributeName());
+			}
+
+			// associate entity and attribute
+			writer.println(currentEntityName + " owns " + getTextContentAttributeName() + ";");
+		}
+
+		// mark current node/tag as visited
+		visitedNodes.add(currentEntityName);
+
+		/*
+		 * Recursively visit the child BPMN tags. We may have visited empty tag
+		 * previously, so re-visit children to make sure new parent-child relations are
+		 * built normally.
+		 */
+		Collection<BpmnModelElementInstance> childrenToVisit = new ArrayList<>();
+
+		// iterate first on basic BPMN elements
+		childrenToVisit.addAll(currentNode.getChildElementsByType(BaseElement.class));
+
+		// The following are special tags in which
+		// their "values" should be extracted from child text node instead
+		childrenToVisit.addAll(currentNode.getChildElementsByType(FlowNodeRef.class));
+		childrenToVisit.addAll(currentNode.getChildElementsByType(Incoming.class));
+		childrenToVisit.addAll(currentNode.getChildElementsByType(Outgoing.class));
+
+		// iterate on visual (GUI) elements
+		childrenToVisit.addAll(currentNode.getChildElementsByType(BpmnDiagram.class));
+		childrenToVisit.addAll(currentNode.getChildElementsByType(DiagramElement.class));
+		childrenToVisit.addAll(currentNode.getChildElementsByType(Bounds.class));
+		childrenToVisit.addAll(currentNode.getChildElementsByType(Point.class));
+
+		// recursive call
+		for (BpmnModelElementInstance child : childrenToVisit) {
+			visitEntityRecursive(writer, child, visitedNodes, inheritedAttributes, declaredAttributes,
+					declaredRelations);
+		}
+	}
+
+	/**
+	 * Includes some implementation-specific schema elements, such as the xmlns
+	 * document namespace for BPMN tags.
+	 * 
+	 * @param writer              : where to write the script
+	 * @param bpmn                : reference to the BPMN object.
+	 * @param visitedNodes        : names of BPMN tags that were already visited
+	 *                            (attributes of these tags will be skipped)
+	 * @param inheritedAttributes : these attributes will not be re-declared (it's
+	 *                            supposed to inherit from root "BPMN" entity).
+	 * @param declaredAttributes  : attributes that were already declared
+	 *                            previously.
+	 * @param declaredRelations   : relations that were already declared previously.
+	 */
+	protected void addImplementationSpecificSchemaAttributes(PrintWriter writer, BpmnModelInstance bpmn,
+			Set<String> visitedNodes, Set<String> inheritedAttributes, Set<String> declaredAttributes,
+			Set<String> declaredRelations) {
+
+		if (!isAddImplementationSpecificSchemaAttributes()) {
+			return;
+		}
+
+		logger.debug("Adding implementation-specific schema elements");
+
+		writer.println("## =============== Implementation-specific schema elements ===============");
+
+		// xmlns contains schema namespace
+		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "xmlns")) {
+			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "xmlns")) {
+				writer.println(getBPMNEntityNamePrefix() + "xmlns sub attribute, value string;");
+			}
+			writer.println(getBPMNEntityNamePrefix() + "definitions owns " + getBPMNEntityNamePrefix() + "xmlns;");
+		}
+		writer.println();
+
+		// waypoint's x and y contains coordinates of edges,
+		if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "waypoint")) {
+			// declare waypoint if it was not declared yet
+			writer.println(getBPMNEntityNamePrefix() + "waypoint sub " + getBPMNEntityName() + ";");
+			writer.println();
+		}
+		// declare the waypoint's x and y coordinates
+		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "x")) {
+			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "x")) {
+				writer.println(getBPMNEntityNamePrefix() + "x sub attribute, value long;");
+			}
+			writer.println(getBPMNEntityNamePrefix() + "waypoint owns " + getBPMNEntityNamePrefix() + "x;");
+		}
+		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "y")) {
+			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "y")) {
+				writer.println(getBPMNEntityNamePrefix() + "y sub attribute, value long;");
+			}
+			writer.println(getBPMNEntityNamePrefix() + "waypoint owns " + getBPMNEntityNamePrefix() + "y;");
+		}
+		writer.println();
+
+	}
+
+	@Override
+	public void encodeData(OutputStream outputStream) throws IOException {
+		logger.info("Generating TypeQL data insertion...");
+		if (outputStream == null) {
+			throw new NullPointerException("Invalid argument: the output stream was null");
+		}
+
+		logger.debug("Retrieving cached BPMN model...");
+		BpmnModelInstance bpmn = getBPMNModel();
+		logger.debug("Cached BPMN model: {}", bpmn);
+
+		logger.debug("Retrieving the namespace to use...");
+		String namespace = getInstanceNamespace();
+
+		// namespace must be set
+		if (namespace == null || namespace.trim().isEmpty()) {
+			logger.warn("No namespace was set. Using default namespace for data...");
 			namespace = "http://c4i.gmu.edu/dalnim/#";
 		}
 		// append "#" to the end of the namespace, if not already present
@@ -138,20 +485,27 @@ public class EncoderImpl implements Encoder {
 		Collection<Process> processes = bpmn.getModelElementsByType(Process.class);
 		logger.debug("Retrieved processes: {}", processes);
 
+		logger.debug("Retrieving collaborations declared in the BPMN model...");
+		Collection<Collaboration> collaborations = bpmn.getModelElementsByType(Collaboration.class);
+		logger.debug("Retrieved collaborations: {}", collaborations);
+
 		// prepare writer for output stream
 		try (PrintWriter writer = new PrintWriter(outputStream)) {
 			logger.debug("Writing the headers...");
-			switch (mode) {
-			case SCHEMA:
-				writeSchemaHeader(writer, bpmn);
-				break;
-			default:
-			}
+			writeDataHeader(writer, bpmn);
+
+			// process the collaboration
+			for (Collaboration collaboration : collaborations) {
+				logger.debug("Encoding collaboration: {}", collaboration);
+				// TODO
+			} // end of for each collaboration
 
 			// iterate on each process
 			for (Process process : processes) {
 
-				logger.debug("Encoding process {}", process);
+				logger.debug("Encoding process: {}", process);
+
+				// TODO
 
 				// Basically, all elements in the flow (except camunda-specific elements)
 				// process.getChildElementsByType(BaseElement.class)
@@ -167,14 +521,133 @@ public class EncoderImpl implements Encoder {
 
 			} // end of for each process
 		} // this will close writer
+
+		logger.info("Finished TypeQL data insertion");
 	}
 
-	private void writeSchemaHeader(PrintWriter writer, BpmnModelInstance bpmn) {
-		// TypeQL schema must start with the keyword "define"
-		writer.println("define");
+	/**
+	 * 
+	 * @param writer : where to write the header
+	 * @param bpmn   : reference to the BPMN model.
+	 */
+	protected void writeDataHeader(PrintWriter writer, BpmnModelInstance bpmn) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Not implemented yet...");
+	}
 
-		// declare the BPMN definitions
-		writer.println("definitions");
+	/**
+	 * Parses a TypeQL script and verifies whether all referred entities/attributes
+	 * are also declared.
+	 * 
+	 * @param typeql : a typeql schema script (which starts with 'define').
+	 * @return true if the test passed. False otherwise.
+	 */
+	public boolean checkDefinitionReferences(String typeql) throws ParseException, TypeQLException {
+
+		logger.debug("Parsing typeql schema:\n{}", typeql);
+
+		TypeQLDefine define = TypeQL.parseQuery(typeql).asDefine();
+
+		// make sure all entities and attributes are defined
+		Set<String> declaredEntities = new HashSet<>();
+		Set<String> referredEntities = new HashSet<>();
+		Set<String> declaredAttributes = new HashSet<>();
+		Set<String> referredAttributes = new HashSet<>();
+		Map<String, Collection<String>> declaredRelationRoles = new HashMap<>();
+		Map<String, Collection<String>> referredRelationRoles = new HashMap<>();
+
+		// iterate on the definitions
+		List<TypeVariable> definitions = define.variables();
+		for (int definitionIndex = 0; definitionIndex < definitions.size(); definitionIndex++) {
+
+			TypeVariable typeVar = definitions.get(definitionIndex);
+			logger.debug("Checking type definition {}: {}", definitionIndex, typeVar);
+
+			// check if this is an attribute
+			// Note: we do not allow sub-attributes in our system.
+			if (typeVar.sub().isPresent()
+					&& "attribute".equals(typeVar.sub().orElseThrow().type().reference().asLabel().label())) {
+				declaredAttributes.add(typeVar.reference().asLabel().label());
+				// attributes must declare value type
+				if (!typeVar.valueType().isPresent()) {
+					throw new ParseException("Attributes must declare value type in '" + typeVar.toString() + "'",
+							definitionIndex);
+				}
+			} else if (typeVar.sub().isPresent()
+					&& "relation".equals(typeVar.sub().orElseThrow().type().reference().asLabel().label())) {
+				// this should be a relation and roles
+				String relationName = typeVar.reference().asLabel().label();
+				Set<String> roles = new HashSet<>();
+				// iterate on roles
+				for (Relates relates : typeVar.relates()) {
+					roles.addAll(relates.variables().stream()
+							// extract the labels after 'relates'
+							.map(ownVar -> ownVar.reference().asLabel().label()).collect(Collectors.toSet()));
+				}
+				declaredRelationRoles.put(relationName, roles);
+			} else {
+				// it's a sub-entity (we should avoid sub-attributes and sub-relationships in
+				// this system)
+				declaredEntities.add(typeVar.reference().asLabel().label());
+
+				if (typeVar.sub().isPresent()
+						&& !"entity".equals(typeVar.sub().orElseThrow().type().reference().asLabel().label())
+						&& !"relation".equals(typeVar.sub().orElseThrow().type().reference().asLabel().label())) {
+					// store references to entities in 'sub' declaration
+					referredEntities.add(typeVar.sub().orElseThrow().type().reference().asLabel().label());
+				} // else: no need to store references to the top entity
+			}
+			// store references to attributes in 'owns' declaration
+			for (Owns owns : typeVar.owns()) {
+				referredAttributes.addAll(owns.variables().stream()
+						// extract the labels after 'owns'
+						.map(ownVar -> ownVar.reference().asLabel().label()).collect(Collectors.toSet()));
+			}
+			// store references to relations/roles in 'plays' declaration
+			for (Plays plays : typeVar.plays()) {
+				// update map of referred relations and roles
+				String roleLabel = plays.role().reference().asLabel().label();
+				// role should be like reference:role
+				String relationLabel = roleLabel.split(":")[0];
+				// reuse the collection if present
+				Collection<String> referredRoles = referredRelationRoles.get(relationLabel);
+				if (referredRoles == null) {
+					// This is 1st time this relation is used.
+					referredRoles = new HashSet<>();
+				}
+				referredRoles.add(roleLabel);
+				referredRelationRoles.put(relationLabel, referredRoles);
+			}
+		} // end of iteration on definitions
+
+		// all referred entities must have a declaration
+		if (!declaredEntities.containsAll(referredEntities)) {
+			throw new ParseException("All entities must have a declaration. Declared = " + declaredEntities
+					+ "; referenced = " + referredEntities, definitions.size());
+		}
+
+		// all referred attributes must have a declaration
+		if (!declaredAttributes.containsAll(referredAttributes)) {
+			throw new ParseException("All referred attributes must have a declaration. Declared = " + declaredAttributes
+					+ "; referred = " + referredAttributes, definitions.size());
+		}
+
+		// all referred relations/roles should have a declaration
+		for (Entry<String, Collection<String>> referredEntry : referredRelationRoles.entrySet()) {
+			// the relation must be declared
+			if (!declaredRelationRoles.containsKey(referredEntry.getKey())) {
+				throw new ParseException("All referred relation must have a declaration. Relation was " + referredEntry,
+						definitions.size());
+			}
+			// the roles must be declared
+			Collection<String> declaredRoles = declaredRelationRoles.get(referredEntry.getKey());
+			if (!declaredRoles.containsAll(referredEntry.getValue())) {
+				throw new ParseException("All referred roles must have a declaration. Declared = "
+						+ declaredRelationRoles + "; used = " + referredEntry, definitions.size());
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -219,6 +692,79 @@ public class EncoderImpl implements Encoder {
 	 */
 	public void setSchemaNamespace(String schemaNamespace) {
 		this.schemaNamespace = schemaNamespace;
+	}
+
+	/**
+	 * @return name of the common root entity of BPMN elements.
+	 */
+	public String getBPMNEntityName() {
+		return bpmnEntityName;
+	}
+
+	/**
+	 * @param bPMNEntityName : name of the common root entity of BPMN elements.
+	 */
+	public void setBPMNEntityName(String bPMNEntityName) {
+		bpmnEntityName = bPMNEntityName;
+	}
+
+	/**
+	 * @return the isRunSanityCheck
+	 */
+	public boolean isRunSanityCheck() {
+		return isRunSanityCheck;
+	}
+
+	/**
+	 * @param isRunSanityCheck the isRunSanityCheck to set
+	 */
+	public void setRunSanityCheck(boolean isRunSanityCheck) {
+		this.isRunSanityCheck = isRunSanityCheck;
+	}
+
+	/**
+	 * @return the isAddImplementationSpecificSchemaAttributes
+	 */
+	public boolean isAddImplementationSpecificSchemaAttributes() {
+		return isAddImplementationSpecificSchemaAttributes;
+	}
+
+	/**
+	 * @param isAddSpecialAttributes the isAddSpecialAttributes to set
+	 */
+	public void setAddImplementationSpecificSchemaAttributes(boolean isAddSpecialAttributes) {
+		this.isAddImplementationSpecificSchemaAttributes = isAddSpecialAttributes;
+	}
+
+	/**
+	 * @return the textContentAttributeName
+	 */
+	public String getTextContentAttributeName() {
+		return textContentAttributeName;
+	}
+
+	/**
+	 * @param textContentAttributeName the textContentAttributeName to set
+	 */
+	public void setTextContentAttributeName(String textContentAttributeName) {
+		this.textContentAttributeName = textContentAttributeName;
+	}
+
+	/**
+	 * @return the prefix to be used in all entities/attributes/relations generated
+	 *         by this class.
+	 */
+	public String getBPMNEntityNamePrefix() {
+		return bpmnEntityNamePrefix;
+	}
+
+	/**
+	 * @param bpmnEntityNamePrefix : the prefix to be used in all
+	 *                             entities/attributes/relations generated by this
+	 *                             class.
+	 */
+	public void setBPMNEntityNamePrefix(String bpmnEntityNamePrefix) {
+		this.bpmnEntityNamePrefix = bpmnEntityNamePrefix;
 	}
 
 }
