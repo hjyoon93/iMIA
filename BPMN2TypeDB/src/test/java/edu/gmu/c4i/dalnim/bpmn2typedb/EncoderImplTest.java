@@ -202,21 +202,58 @@ public class EncoderImplTest {
 	/**
 	 * Test method for
 	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
-	 * for multiple types of BPMN models.
+	 * for simple BPMN models.
 	 * 
 	 * @see #testEncodeSchema(String)
 	 */
 	@Test
-	public final void testEncodeBPMNSchema() throws Exception {
+	public final void testEncodeBPMNSchemaSimple() throws Exception {
 
 		testEncodeSchema("/simple.bpmn");
+
+		testEncodeSchema("/UAV_material_transport_eclipse.bpmn");
+
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
+	 * for multiple examples of BPMN models obtained from the web.
+	 * 
+	 * @see #testEncodeSchema(String)
+	 */
+	@Test
+	public final void testEncodeBPMNSchemaExamles() throws Exception {
+
 		testEncodeSchema("/Models and Diagrams/Process.bpmn");
 		testEncodeSchema("/Models and Diagrams/Pool.bpmn");
 		testEncodeSchema("/Models and Diagrams/Laneset.bpmn");
 		testEncodeSchema("/Models and Diagrams/Expanded SubProcess.bpmn");
 		testEncodeSchema("/Models and Diagrams/Collapsed SubProcess.bpmn");
 		testEncodeSchema("/Models and Diagrams/Call Activity.bpmn");
-		testEncodeSchema("/UAV_material_transport_eclipse.bpmn");
+
+		testEncodeSchema("/Diagram Interchange/Examples - DI -Collapsed Sub-Process.bpmn");
+		testEncodeSchema("/Diagram Interchange/Examples - DI - Expanded Sub-Process.bpmn");
+
+		testEncodeSchema("/eMail Voting/Email Voting 2.bpmn");
+
+		testEncodeSchema("/Hardware Retailer/triso - Hardware Retailer v2.bpmn");
+
+		testEncodeSchema("/Incident Management/Incident Management(Account Manager Only).bpmn");
+		testEncodeSchema("/Incident Management/Incident Management(Process Engine Executable).bpmn");
+		testEncodeSchema("/Incident Management/Incident Management(Process Engine Only).bpmn");
+		testEncodeSchema("/Incident Management/Incident Management(Whole Collab).bpmn");
+		testEncodeSchema("/Incident Management/Incident Management - coll chor.bpmn");
+		testEncodeSchema("/Incident Management/Incident Management level 1.bpmn");
+
+		testEncodeSchema("/Nobel Prize/Nobel Prize Process.bpmn");
+
+		testEncodeSchema(
+				"/Order Fulfillment/Procurement Processes with Error Handling - Stencil Trisotech 3 pages.bpmn");
+
+		testEncodeSchema("/Pizza/triso - Order Process for Pizza V4.bpmn");
+
+		testEncodeSchema("/Travel Booking/Tavel Booking.bpmn");
 
 	}
 

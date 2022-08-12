@@ -41,6 +41,8 @@ import com.vaticle.typeql.lang.pattern.constraint.TypeConstraint.Relates;
 import com.vaticle.typeql.lang.pattern.variable.TypeVariable;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 
+import edu.gmu.c4i.dalnim.util.ApplicationProperties;
+
 /**
  * Default implementation of {@link Encoder}
  * 
@@ -52,9 +54,9 @@ public class EncoderImpl implements Encoder {
 
 	private BpmnModelInstance bpmnModel;
 
-	private String instanceNamespace;
+	private String instanceNamespace = "http://c4i.gmu.edu/dalnim/#";
 
-	private String schemaNamespace;
+	private String schemaNamespace = "http://www.omg.org/spec/BPMN/20100524/MODEL";
 
 	private boolean isRunSanityCheck = true;
 
@@ -65,6 +67,8 @@ public class EncoderImpl implements Encoder {
 	private String bpmnEntityName = bpmnEntityNamePrefix + "Entity";
 
 	private String textContentAttributeName = bpmnEntityNamePrefix + "textContent";
+
+	private String bpmnConceptualModelMappingName = bpmnEntityNamePrefix + "hasConceptualModelElement";
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
@@ -80,7 +84,16 @@ public class EncoderImpl implements Encoder {
 	 * @return a new instance.
 	 */
 	public static Encoder getInstance() {
-		return new EncoderImpl();
+
+		EncoderImpl ret = new EncoderImpl();
+
+		try {
+			ApplicationProperties.getInstance().loadApplicationProperties(ret);
+		} catch (Exception e) {
+			logger.warn("Failed to load application.properties. Ignoring...", e);
+		}
+
+		return ret;
 	}
 
 	@Override
@@ -139,17 +152,23 @@ public class EncoderImpl implements Encoder {
 			writer.println("## =============== Header ===============");
 			writer.println();
 
+			writer.println(
+					"## Note: attribute uid is required in DALNIM. Uncomment the following line if not declared yet.");
+			writer.println("## uid sub attribute, value string;");
+			writer.println();
+
 			writer.println("## BPMN entities in general");
 			writer.println(getBPMNEntityNamePrefix() + "id sub attribute, value string;");
 			writer.println(getBPMNEntityNamePrefix() + "name sub attribute, value string;");
 			writer.println(getTextContentAttributeName() + " sub attribute, value string;");
 			writer.println(getBPMNEntityName() + " sub entity, owns " + getBPMNEntityNamePrefix() + "id, owns "
-					+ getBPMNEntityNamePrefix() + "name, owns " + getTextContentAttributeName() + ";");
+					+ getBPMNEntityNamePrefix() + "name, owns " + getTextContentAttributeName() + ", owns uid @key;");
 			writer.println();
 
 			// Some attributes are already declared in root "BPMN" entity,
 			// so children do not have to re-declare
 			Set<String> attributesInRootEntity = new HashSet<>();
+			attributesInRootEntity.add("uid");
 			attributesInRootEntity.add(getBPMNEntityNamePrefix() + "id");
 			attributesInRootEntity.add(getBPMNEntityNamePrefix() + "name");
 			attributesInRootEntity.add(getTextContentAttributeName());
@@ -166,71 +185,12 @@ public class EncoderImpl implements Encoder {
 					declaredAttributes, declaredRelations);
 
 			// declare some attributes specific to our implementation
-			addImplementationSpecificSchemaAttributes(writer, bpmn, visitedNodes, attributesInRootEntity,
+			addImplementationSpecificSchemaEntries(writer, bpmn, visitedNodes, attributesInRootEntity,
 					declaredAttributes, declaredRelations);
 
 			// sanity check
 			if (isRunSanityCheck()) {
-
-				logger.debug("Running basic sanity check...");
-
-				// sanity check on nodes
-				if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "definitions")) {
-					throw new IOException("Sanity check failed: BPMN definitions was not created.");
-				}
-				if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "process")) {
-					throw new IOException("Sanity check failed: BPMN process was not created.");
-				}
-				if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "startEvent")) {
-					throw new IOException("Sanity check failed: BPMN startEvent was not created.");
-				}
-				if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "endEvent")) {
-					throw new IOException("Sanity check failed: BPMN endEvent was not created.");
-				}
-
-				if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "isExecutable")) {
-					throw new IOException("Sanity check failed: attribute 'isExecutable' was not created.");
-				}
-
-				// sanity check on attributes
-				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "serviceTask")) {
-					if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "implementation")) {
-						throw new IOException("Sanity check failed: attribute 'implementation' was not created.");
-					}
-					if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "operationRef")) {
-						throw new IOException("Sanity check failed: attribute 'operationRef' was not created.");
-					}
-				}
-				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "participant")
-						&& !declaredAttributes.contains(getBPMNEntityNamePrefix() + "processRef")) {
-					throw new IOException("Sanity check failed: attribute 'processRef' was not created.");
-				}
-				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "messageFlow")
-						|| visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")) {
-					if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "sourceRef")) {
-						throw new IOException("Sanity check failed: attribute 'sourceRef' was not created.");
-					}
-					if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "targetRef")) {
-						throw new IOException("Sanity check failed: attribute 'targetRef' was not created.");
-					}
-				}
-
-				// sanity check on relations
-				if (!declaredRelations.contains("BPMN_definitions_process")) {
-					throw new IOException(
-							"Sanity check failed: relation between BPMN definitions and BPMN process' was not created.");
-				}
-				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "BPMNDiagram")
-						&& !declaredRelations.contains("BPMN_definitions_BPMNDiagram")) {
-					throw new IOException(
-							"Sanity check failed: relation between BPMN definitions and BPMN diagram' was not created.");
-				}
-				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "collaboration")
-						&& !declaredRelations.contains("BPMN_definitions_collaboration")) {
-					throw new IOException(
-							"Sanity check failed: relation between BPMN definitions and BPMN collaboration' was not created.");
-				}
-
+				runSanityCheck(bpmn, visitedNodes, attributesInRootEntity, declaredAttributes, declaredRelations);
 			} // end of sanity check
 
 			writer.println("## =============== End ===============");
@@ -241,8 +201,106 @@ public class EncoderImpl implements Encoder {
 	}
 
 	/**
+	 * Run basic sanity check on the structures generated in
+	 * {@link #encodeSchema(OutputStream)}
+	 * 
+	 * @param bpmn                : reference to the BPMN object.
+	 * @param visitedNodes        : names of BPMN tags that were already visited
+	 *                            (attributes of these tags will be skipped)
+	 * @param inheritedAttributes : these attributes will not be re-declared (it's
+	 *                            supposed to inherit from root "BPMN" entity).
+	 * @param declaredAttributes  : attributes that were already declared
+	 *                            previously.
+	 * @param declaredRelations   : relations that were already declared previously.
+	 */
+	protected void runSanityCheck(BpmnModelInstance bpmn, Set<String> visitedNodes, Set<String> attributesInRootEntity,
+			Set<String> declaredAttributes, Set<String> declaredRelations) throws IOException {
+
+		logger.debug("Running basic sanity check...");
+
+		// sanity check on nodes
+		if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "definitions")) {
+			throw new IOException("Sanity check failed: BPMN definitions was not created.");
+		}
+		if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "process")) {
+			throw new IOException("Sanity check failed: BPMN process was not created.");
+		}
+		if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "startEvent")) {
+			throw new IOException("Sanity check failed: BPMN startEvent was not created.");
+		}
+		if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "endEvent")) {
+			throw new IOException("Sanity check failed: BPMN endEvent was not created.");
+		}
+
+		if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "isExecutable")) {
+			throw new IOException("Sanity check failed: attribute 'isExecutable' was not created.");
+		}
+
+		// sanity check on attributes
+		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "serviceTask")) {
+			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "implementation")) {
+				throw new IOException("Sanity check failed: attribute 'implementation' was not created.");
+			}
+			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "operationRef")) {
+				throw new IOException("Sanity check failed: attribute 'operationRef' was not created.");
+			}
+		}
+		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "participant")
+				&& !declaredAttributes.contains(getBPMNEntityNamePrefix() + "processRef")) {
+			throw new IOException("Sanity check failed: attribute 'processRef' was not created.");
+		}
+		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "messageFlow")
+				|| visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")) {
+			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "sourceRef")) {
+				throw new IOException("Sanity check failed: attribute 'sourceRef' was not created.");
+			}
+			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "targetRef")) {
+				throw new IOException("Sanity check failed: attribute 'targetRef' was not created.");
+			}
+		}
+
+		// sanity check on relations
+		if (!declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_process")) {
+			throw new IOException(
+					"Sanity check failed: relation between BPMN definitions and BPMN process' was not created.");
+		}
+		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "BPMNDiagram")
+				&& !declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_BPMNDiagram")) {
+			throw new IOException(
+					"Sanity check failed: relation between BPMN definitions and BPMN diagram' was not created.");
+		}
+		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "collaboration")
+				&& !declaredRelations.contains(getBPMNEntityNamePrefix() + "definitions_collaboration")) {
+			throw new IOException(
+					"Sanity check failed: relation between BPMN definitions and BPMN collaboration' was not created.");
+		}
+
+		// mapping from BPMN element to conceptual model should be declared
+		if (!declaredRelations.contains(getBPMNConceptualModelMappingName())) {
+			throw new IOException(
+					"Sanity check failed: relation/mapping between BPMN entities and conceptual model was not created.");
+		}
+	}
+
+	/**
 	 * Recursively visits a BPMN node (and its children) to write the
-	 * entity/attribute/relationship definitions.
+	 * entity/attribute/relationship definitions. <br/>
+	 * <br/>
+	 * This should also create a mapping to elements in the DALNIM conceptual model.
+	 * For instance:
+	 * <ul>
+	 * <li>BPMN task -> Task</li>
+	 * <li>BPMN end event -> Mission</li>
+	 * <li>collaboration.participant -> Performer</li>
+	 * <li>lane -> Performer</li>
+	 * <li>collaboration.messageFlow -> Resource (or Asset)</li>
+	 * </ul>
+	 * Also note that
+	 * <ul>
+	 * <li>Mission -> isCompoundBy -> Task</li>
+	 * <li>Task -> isPerformedBy -> Performer</li>
+	 * <li>Task -> requires -> Resource (or Asset)</li>
+	 * </ul>
 	 * 
 	 * @param writer              : where to write the script block.
 	 * @param currentNode         : current BPMN tag to handle
@@ -408,7 +466,7 @@ public class EncoderImpl implements Encoder {
 	 *                            previously.
 	 * @param declaredRelations   : relations that were already declared previously.
 	 */
-	protected void addImplementationSpecificSchemaAttributes(PrintWriter writer, BpmnModelInstance bpmn,
+	protected void addImplementationSpecificSchemaEntries(PrintWriter writer, BpmnModelInstance bpmn,
 			Set<String> visitedNodes, Set<String> inheritedAttributes, Set<String> declaredAttributes,
 			Set<String> declaredRelations) {
 
@@ -424,6 +482,8 @@ public class EncoderImpl implements Encoder {
 		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "xmlns")) {
 			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "xmlns")) {
 				writer.println(getBPMNEntityNamePrefix() + "xmlns sub attribute, value string;");
+				// mark as declared
+				declaredAttributes.add(getBPMNEntityNamePrefix() + "xmlns");
 			}
 			writer.println(getBPMNEntityNamePrefix() + "definitions owns " + getBPMNEntityNamePrefix() + "xmlns;");
 		}
@@ -433,23 +493,38 @@ public class EncoderImpl implements Encoder {
 		if (!visitedNodes.contains(getBPMNEntityNamePrefix() + "waypoint")) {
 			// declare waypoint if it was not declared yet
 			writer.println(getBPMNEntityNamePrefix() + "waypoint sub " + getBPMNEntityName() + ";");
+			// mark as visited
+			visitedNodes.add(getBPMNEntityNamePrefix() + "waypoint");
 			writer.println();
 		}
 		// declare the waypoint's x and y coordinates
 		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "x")) {
 			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "x")) {
 				writer.println(getBPMNEntityNamePrefix() + "x sub attribute, value long;");
+				// mark as declared
+				declaredAttributes.add(getBPMNEntityNamePrefix() + "x");
 			}
 			writer.println(getBPMNEntityNamePrefix() + "waypoint owns " + getBPMNEntityNamePrefix() + "x;");
 		}
 		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "y")) {
 			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "y")) {
 				writer.println(getBPMNEntityNamePrefix() + "y sub attribute, value long;");
+				// mark as declared
+				declaredAttributes.add(getBPMNEntityNamePrefix() + "y");
 			}
 			writer.println(getBPMNEntityNamePrefix() + "waypoint owns " + getBPMNEntityNamePrefix() + "y;");
 		}
 		writer.println();
 
+		// We should be able to map an entity in the conceptual model to BPMN entity
+		String mappingRelationName = getBPMNConceptualModelMappingName();
+		if (!declaredRelations.contains(mappingRelationName)) {
+			writer.println(mappingRelationName + " sub relation, relates bpmnEntity, relates conceptualModel;");
+			writer.println(getBPMNEntityName() + " plays " + mappingRelationName + ":bpmnEntity;");
+			// mark relation as declared
+			declaredRelations.add(mappingRelationName);
+			writer.println();
+		}
 	}
 
 	@Override
@@ -566,7 +641,9 @@ public class EncoderImpl implements Encoder {
 			// check if this is an attribute
 			// Note: we do not allow sub-attributes in our system.
 			if (typeVar.sub().isPresent()
-					&& "attribute".equals(typeVar.sub().orElseThrow().type().reference().asLabel().label())) {
+					&& "attribute".equals(typeVar.sub().orElseThrow().type().reference().asLabel().label())
+					// ignore "uid" since it's part of conceptual model
+					&& !typeVar.reference().asLabel().label().equals("uid")) {
 				declaredAttributes.add(typeVar.reference().asLabel().label());
 				// attributes must declare value type
 				if (!typeVar.valueType().isPresent()) {
@@ -601,7 +678,10 @@ public class EncoderImpl implements Encoder {
 			for (Owns owns : typeVar.owns()) {
 				referredAttributes.addAll(owns.variables().stream()
 						// extract the labels after 'owns'
-						.map(ownVar -> ownVar.reference().asLabel().label()).collect(Collectors.toSet()));
+						.map(ownVar -> ownVar.reference().asLabel().label())
+						// ignore "uid" since it's part of conceptual model
+						.filter(label -> (!label.equals("uid")))
+						.collect(Collectors.toSet()));
 			}
 			// store references to relations/roles in 'plays' declaration
 			for (Plays plays : typeVar.plays()) {
@@ -765,6 +845,21 @@ public class EncoderImpl implements Encoder {
 	 */
 	public void setBPMNEntityNamePrefix(String bpmnEntityNamePrefix) {
 		this.bpmnEntityNamePrefix = bpmnEntityNamePrefix;
+	}
+
+	/**
+	 * @return the bPMNConceptualModelMappingName
+	 */
+	public String getBPMNConceptualModelMappingName() {
+		return bpmnConceptualModelMappingName;
+	}
+
+	/**
+	 * @param bPMNConceptualModelMappingName the bPMNConceptualModelMappingName to
+	 *                                       set
+	 */
+	public void setBPMNConceptualModelMappingName(String bPMNConceptualModelMappingName) {
+		bpmnConceptualModelMappingName = bPMNConceptualModelMappingName;
 	}
 
 }
