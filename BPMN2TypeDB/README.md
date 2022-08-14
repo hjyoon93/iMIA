@@ -24,7 +24,7 @@ Tool to convert BPMN2 files to TypeQL insert scripts, or to load BPMN processes 
 
 				java -jar BPMN2TypeDB-<VERSION>-jar-with-dependencies.jar [COMMAND LINE ARGUMENTS]
 
-###Command line arguments
+### Command line arguments
 				
 				 --db, -d URL :	URL of TypeDB database to load. 
 				 					If this parameter is specified, the program will read a 
