@@ -8,12 +8,13 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -262,10 +263,10 @@ public class EncoderImplTest {
 
 	/**
 	 * Test method for
-	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeData(java.io.OutputStream)}.
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeData(java.io.OutputStream)}
+	 * for simple.bpmn.
 	 */
 	@Test
-	@Ignore("Still fixing")
 	public final void testEncodeDataSimple() throws Exception {
 		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
 
@@ -281,9 +282,39 @@ public class EncoderImplTest {
 		assertFalse(typeql.trim().isEmpty());
 
 		// make sure the typeql schema can be parsed
-		TypeQLQuery parsed = TypeQL.parseQuery(typeql);
-		assertNotNull(parsed.asInsert());
-
+		List<TypeQLQuery> parsedList = TypeQL.parseQueries(typeql).collect(Collectors.toList());
+		// there should be many commands
+		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
+		// the 1st command should be an insert
+		assertNotNull(parsedList.get(0).asInsert());
+	}
+	
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeData(java.io.OutputStream)}
+	 * for UAV_material_transport_eclipse.bpmn.
+	 */
+	@Test
+	public final void testEncodeDataUAV() throws Exception {
+		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+		
+		encoder.loadInput(getClass().getResourceAsStream("/UAV_material_transport_eclipse.bpmn"));
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		encoder.encodeData(out);
+		out.flush();
+		
+		String typeql = out.toString();
+		logger.debug("Generated typeql data: \n{}", typeql);
+		
+		assertFalse(typeql.trim().isEmpty());
+		
+		// make sure the typeql schema can be parsed
+		List<TypeQLQuery> parsedList = TypeQL.parseQueries(typeql).collect(Collectors.toList());
+		// there should be many commands
+		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
+		// the 1st command should be an insert
+		assertNotNull(parsedList.get(0).asInsert());
 	}
 
 }

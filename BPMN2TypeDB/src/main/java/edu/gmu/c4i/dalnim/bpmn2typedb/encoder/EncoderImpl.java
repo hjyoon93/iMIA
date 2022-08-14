@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.exception.TypeQLException;
@@ -50,9 +51,34 @@ import com.vaticle.typeql.lang.query.TypeQLDefine;
 import edu.gmu.c4i.dalnim.util.ApplicationProperties;
 
 /**
- * Default implementation of {@link Encoder}
- * to parse BPMN files with Camunda libraries
- * and save TypeQL scripts.
+ * <p>
+ * Default implementation of {@link Encoder} to parse BPMN files with Camunda
+ * libraries and save TypeQL scripts.
+ * </p>
+ * <p>
+ * This class expects that a TypeDB schema like the following is already set up.
+ * </p>
+ * <pre>
+ * define
+ * 
+ * uid sub attribute, value string;
+ * Mission sub entity, owns uid @key;
+ * Task sub entity, owns uid @key;
+ * Performer sub entity, owns uid @key;
+ * Resource sub entity, owns uid @key;
+ * 
+ * isCompoundBy sub relation, relates mission, relates task;
+ * Mission plays isCompoundBy:mission;
+ * Task plays isCompoundBy:task;
+ * 
+ * requires sub relation, relates task, relates resource;
+ * Task plays requires:task;
+ * Resource plays requires:resource;
+ * 
+ * isPerformedBy sub relation, relates task, relates performer;
+ * Task plays isPerformedBy:task;
+ * Performer plays isPerformedBy:performer;
+ * </pre>
  * 
  * @author shou
  */
@@ -81,6 +107,8 @@ public class EncoderImpl implements Encoder {
 	private String bpmnParentChildRelationName = bpmnEntityNamePrefix + "hasChildTag";
 
 	private String jsonBPMNConceptualModelMap = "{'definitions':'Mission','@org.camunda.bpm.model.bpmn.instance.Task':'Task'}";
+
+	private boolean ignoreInvalidAttributeName = true;
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
@@ -350,9 +378,12 @@ public class EncoderImpl implements Encoder {
 			writer.println();
 
 			// declare all attributes
-			for (Attribute<?> attrib : currentNode.getElementType().getAttributes()) {
+			for (Entry<String, String> attrib : getAllAttributes(currentNode,
+					// true = include those defined in the BPMN element type
+					// (because not all BPMN files uses all attributes)
+					true).entrySet()) {
 
-				String attributeName = getBPMNEntityNamePrefix() + attrib.getAttributeName();
+				String attributeName = getBPMNEntityNamePrefix() + attrib.getKey();
 
 				// Skip attribute if it's already defined in root entity.
 				if (inheritedAttributes.contains(attributeName)) {
@@ -473,7 +504,7 @@ public class EncoderImpl implements Encoder {
 		// declare the waypoint's x and y coordinates
 		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "x")) {
 			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "x")) {
-				writer.println(getBPMNEntityNamePrefix() + "x sub attribute, value long;");
+				writer.println(getBPMNEntityNamePrefix() + "x sub attribute, value string;");
 				// mark as declared
 				declaredAttributes.add(getBPMNEntityNamePrefix() + "x");
 			}
@@ -481,7 +512,7 @@ public class EncoderImpl implements Encoder {
 		}
 		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "y")) {
 			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "y")) {
-				writer.println(getBPMNEntityNamePrefix() + "y sub attribute, value long;");
+				writer.println(getBPMNEntityNamePrefix() + "y sub attribute, value string;");
 				// mark as declared
 				declaredAttributes.add(getBPMNEntityNamePrefix() + "y");
 			}
@@ -769,7 +800,10 @@ public class EncoderImpl implements Encoder {
 				// if not found, use entity name as base
 				currentEntityOriginalName;
 		// Iterate on all attributes.
-		for (Entry<String, String> attrib : getAllAttributes(currentNode).entrySet()) {
+		for (Entry<String, String> attrib : getAllAttributes(currentNode,
+				// false = only iterate on attributes that
+				// were actually "used" in this BPMN project
+				false).entrySet()) {
 
 			// Extract the attribute name and values...
 			// The original name
@@ -797,16 +831,19 @@ public class EncoderImpl implements Encoder {
 
 		// Also check if we have a child text,
 		// because child texts will be saved as attributes in TypeDB.
-		String textContent = currentNode.getTextContent();
-		if (textContent != null && !textContent.trim().isEmpty()) {
+
+		// currentNode.getTextContent() is returning the text of all descendants,
+		// so use a special method to obtain the immediate text child.
+		Optional<String> optText = getTextContent(currentNode);
+		if (!optText.isEmpty()) {
 			// has BPMN_textContent "flow2",
-			writer.println("\t has " + getBPMNTextContentAttributeName() + " \"" + textContent + "\",");
+			writer.println("\t has " + getBPMNTextContentAttributeName() + " \"" + optText.get() + "\",");
 		}
 
 		// All entities must have an UID.
 		// Obtain a unique ID with namespace.
 		// Use the current ID as base prefix.
-		String currentUID = getNewUID(namespace + currentID, usedUIDs);
+		String currentUID = getNewUID(namespace, currentID, usedUIDs);
 
 		// mark this ID as "used"
 		usedUIDs.add(currentUID);
@@ -882,9 +919,9 @@ public class EncoderImpl implements Encoder {
 			// The UID will look like "https://camunda.org/examples#Mission_proc123"
 			String conceptUID = getNewUID(
 					// https://camunda.org/examples#
-					namespace
-							// Mission
-							+ conceptModelEntity
+					namespace,
+					// Mission
+					conceptModelEntity
 							// _proc123
 							+ "_" + currentID,
 					// avoid duplicates
@@ -960,17 +997,77 @@ public class EncoderImpl implements Encoder {
 	}
 
 	/**
+	 * {@link BpmnModelElementInstance#getTextContent()} seems to return all text
+	 * content of all its descendants. This method returns the text content of its
+	 * immediate text XML child instead. This method assumes that BPMN tags/nodes
+	 * can have only 0 or 1 text content.
+	 * 
+	 * @param bpmnElement : the element to extract text content
+	 * @return the text content of its immediate text XML child instead.
+	 */
+	protected Optional<String> getTextContent(BpmnModelElementInstance bpmnElement) {
+
+		logger.debug("Searching for text content of node {}", bpmnElement);
+
+		if (bpmnElement == null) {
+			return Optional.empty();
+		}
+
+		// extract the original DOM element so that we can obtain its raw children
+		Optional<Element> optElement = DomElementWrapper.wrap(bpmnElement.getDomElement()).getOriginalElement();
+		if (!optElement.isPresent()) {
+			return Optional.empty();
+		}
+
+		// extract the immediate DOM/XML children
+		NodeList immediateChildren = optElement.get().getChildNodes();
+
+		// iterate on children and search for text content.
+		int length = immediateChildren.getLength();
+		for (int childIndex = 0; childIndex < length; childIndex++) {
+			Node node = immediateChildren.item(childIndex);
+			if (node.getNodeType() == Node.TEXT_NODE) {
+				// this is a textual node
+				String text = node.getTextContent();
+				if (text != null && !text.trim().isEmpty()) {
+					// we assume BPMN nodes can have 0 or 1 text content
+					// so just return the 1st match
+					logger.debug("Text content '{}' found in node '{}'.", text, bpmnElement);
+					return Optional.of(text);
+				}
+			}
+		}
+
+		// no text node was found
+		logger.debug("No text content found in node '{}'.", bpmnElement);
+		return Optional.empty();
+	}
+
+	/**
 	 * Extracts all "used" attributes in current BPMN tag. This can be different
 	 * from {@link ModelElementType#getAttributes()} (at
 	 * {@link BpmnModelElementInstance#getElementType()} ), which is the collection
 	 * of attributes in the BPMN dictionary.
 	 * 
-	 * @param element : the BPMN element.
+	 * @param element         : the BPMN element.
+	 * @param includeFromType : if true, those from
+	 *                        {@link ModelElementType#getAttributes()} (at
+	 *                        {@link BpmnModelElementInstance#getElementType()})
+	 *                        will also be included.
+	 * 
 	 * @return a map whose key is the name of the attribute and value is its value.
 	 */
-	protected Map<String, String> getAllAttributes(BpmnModelElementInstance element) {
+	protected Map<String, String> getAllAttributes(BpmnModelElementInstance element, boolean includeFromType) {
 
 		Map<String, String> ret = new HashMap<>();
+
+		// check if we should also include those unused attributes
+		// inherited from BPMN element type
+		if (includeFromType) {
+			for (Attribute<?> attribute : element.getElementType().getAttributes()) {
+				ret.put(attribute.getAttributeName(), null);
+			}
+		}
 
 		// extract the DOM object
 		// so that we can literally iterate on all used attributes
@@ -984,7 +1081,14 @@ public class EncoderImpl implements Encoder {
 			// iterate on the attributes to convert to Map<String,String>
 			for (int index = 0; index < nodeMap.getLength(); index++) {
 				Node node = nodeMap.item(index);
-				ret.put(node.getNodeName(), node.getNodeValue());
+				String attribName = node.getNodeName();
+				// check validity of attribute name
+				if (isIgnoreInvalidAttributeName() && !attribName.matches("^[_a-zA-Z_]\\w*$")) {
+					// invalid attribute name
+					logger.warn("{} has an invalid pattern for attribute names. Ignoring/Skipping...", attribName);
+					continue;
+				}
+				ret.put(attribName, node.getNodeValue());
 			}
 		}
 
@@ -994,45 +1098,58 @@ public class EncoderImpl implements Encoder {
 	/**
 	 * Appends a numeric suffix to UIDs to keep UIDs unique.
 	 * 
-	 * @param base     : where to append the suffix
-	 * @param usedUIDs : UIDs that were used already.
+	 * @param base      : where to append the suffix
+	 * @param namespace : prefix to be appended at the end
+	 * @param usedUIDs  : UIDs that were used already.
 	 * 
-	 * @return new string with a numeric suffix appended. If base is not in usedUID,
-	 *         then this method will simply return the base.
+	 * @return new string with a numeric suffix appended. If namespace + base is not
+	 *         in usedUID, then this method will simply return the base. Special
+	 *         characters in base will be converted to underscore ('_').
 	 */
-	public String getNewUID(String base, Collection<String> usedUIDs) throws IndexOutOfBoundsException {
+	public String getNewUID(String namespace, String base, Collection<String> usedUIDs)
+			throws IndexOutOfBoundsException {
 
 		if (base == null) {
 			base = "";
+		}
+		if (namespace == null) {
+			namespace = "";
 		}
 		if (usedUIDs == null) {
 			usedUIDs = new HashSet<>();
 		}
 
-		if (!usedUIDs.contains(base)) {
-			return base;
+		// Replace all special characters with '_'
+		base = base.replaceAll("\\W+", "_");
+
+		// UID is namespace + base
+		// or namespace + base + [NUMBER]
+		String uid = namespace + base;
+
+		if (!usedUIDs.contains(uid)) {
+			return uid;
 		}
 
 		// append a number at the end of string until we find something not in usedUIDs
 		for (int numberSuffix = 1; numberSuffix < Integer.MAX_VALUE; numberSuffix++) {
-			if (!usedUIDs.contains(base + numberSuffix)) {
-				return base + numberSuffix;
+			if (!usedUIDs.contains(uid + numberSuffix)) {
+				return uid + numberSuffix;
 			}
 		}
 
-		// if failed, try base<n>_<m>
-		logger.warn("Could not generate unique ID by appending integer suffixes. Retrying 'base<n>_<m>'");
+		// if failed, try uid<n>_<m>
+		logger.warn("Could not generate unique ID by appending integer suffixes. Retrying 'uid<n>_<m>'");
 		for (int n = 1; n < Integer.MAX_VALUE; n++) {
 			for (int m = 1; m < Integer.MAX_VALUE; m++) {
-				if (!usedUIDs.contains(base + n + "_" + m)) {
-					return base + n + "_" + m;
+				if (!usedUIDs.contains(uid + n + "_" + m)) {
+					return uid + n + "_" + m;
 				}
 			}
 		}
 
 		logger.warn("Could not generate unique ID. Exceeded {} x {} possibilities...", Integer.MAX_VALUE,
 				Integer.MAX_VALUE);
-		throw new IndexOutOfBoundsException("Coud not generate id by appending a numeric suffix to " + base
+		throw new IndexOutOfBoundsException("Coud not generate id by appending a numeric suffix to " + uid
 				+ ". Maximum allowed number is " + Integer.MAX_VALUE);
 
 	}
@@ -1369,6 +1486,24 @@ public class EncoderImpl implements Encoder {
 	 */
 	public synchronized void setJSONBPMNConceptualModelMap(String json) {
 		this.jsonBPMNConceptualModelMap = json;
+	}
+
+	/**
+	 * @return if true, {@link #getAllAttributes(BpmnModelElementInstance, boolean)}
+	 *         will ignore/skip attributes with invalid names.
+	 */
+	public boolean isIgnoreInvalidAttributeName() {
+		return ignoreInvalidAttributeName;
+	}
+
+	/**
+	 * @param ignoreInvalidAttributeName : if true,
+	 *                                   {@link #getAllAttributes(BpmnModelElementInstance, boolean)}
+	 *                                   will ignore/skip attributes with invalid
+	 *                                   names.
+	 */
+	public void setIgnoreInvalidAttributeNameString(String ignoreInvalidAttributeName) {
+		this.ignoreInvalidAttributeName = Boolean.parseBoolean(ignoreInvalidAttributeName);
 	}
 
 }

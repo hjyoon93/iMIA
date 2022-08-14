@@ -102,7 +102,7 @@ public class ApplicationProperties extends Properties {
 
 	/**
 	 * Load some attributes from application.properties and injects them to class
-	 * variables/attributes by using reflection.
+	 * variables/attributes by using reflection, but only string types are allowed.
 	 * 
 	 * @param obj : the object to inject the loaded attributes
 	 */
@@ -131,6 +131,7 @@ public class ApplicationProperties extends Properties {
 						logger.debug("Attribute name = {}", attributeName);
 
 						// use reflection to set
+						// assume string argument by default
 						Method setter = clazz.getMethod("set" + StringUtils.capitalize(attributeName), String.class);
 						logger.debug("Setter = {}", setter);
 
