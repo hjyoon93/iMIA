@@ -24,7 +24,7 @@ See *pom.xml* (the maven configuration file) for details about this project's co
 
 2. Run the following command in the console:
 
-				java -jar BPMN2TypeDB-<VERSION>-jar-with-dependencies.jar [COMMAND LINE ARGUMENTS]
+				java [-Dlog4j.configurationFile=log4j2.xml] -jar BPMN2TypeDB-<VERSION>-jar-with-dependencies.jar [COMMAND LINE ARGUMENTS]
 
 ### Command line arguments
 				
