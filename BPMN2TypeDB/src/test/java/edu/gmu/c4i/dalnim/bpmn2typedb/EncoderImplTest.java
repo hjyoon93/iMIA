@@ -13,11 +13,14 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.exception.TypeQLException;
+import com.vaticle.typeql.lang.query.TypeQLQuery;
 
 import edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl;
 
@@ -262,8 +265,25 @@ public class EncoderImplTest {
 	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeData(java.io.OutputStream)}.
 	 */
 	@Test
-	public final void testEncodeData() throws Exception {
-		fail("Not yet implemented"); // TODO
+	@Ignore("Still fixing")
+	public final void testEncodeDataSimple() throws Exception {
+		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+
+		encoder.loadInput(getClass().getResourceAsStream("/simple.bpmn"));
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		encoder.encodeData(out);
+		out.flush();
+
+		String typeql = out.toString();
+		logger.debug("Generated typeql data: \n{}", typeql);
+
+		assertFalse(typeql.trim().isEmpty());
+
+		// make sure the typeql schema can be parsed
+		TypeQLQuery parsed = TypeQL.parseQuery(typeql);
+		assertNotNull(parsed.asInsert());
+
 	}
 
 }
