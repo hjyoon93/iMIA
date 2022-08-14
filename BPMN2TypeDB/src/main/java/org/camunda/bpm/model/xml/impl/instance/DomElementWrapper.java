@@ -6,7 +6,9 @@ import org.camunda.bpm.model.xml.instance.DomElement;
 import org.w3c.dom.Element;
 
 /**
- * Adapter/wrapper class for {@link DomElementImpl}
+ * Adapter/wrapper class for {@link DomElementImpl} used in
+ * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl} to expose a XML
+ * DOM element.
  * 
  * @author shou
  */
@@ -45,14 +47,14 @@ public class DomElementWrapper extends DomElementImpl {
 	}
 
 	/**
-	 * @return the wrapped
+	 * @return the wrapped object.
 	 */
 	public DomElementImpl getWrapped() {
 		return wrapped;
 	}
 
 	/**
-	 * @param wrapped the wrapped to set
+	 * @param wrapped : the wrapped object to set
 	 */
 	public void setWrapped(DomElementImpl wrapped) {
 		this.wrapped = wrapped;

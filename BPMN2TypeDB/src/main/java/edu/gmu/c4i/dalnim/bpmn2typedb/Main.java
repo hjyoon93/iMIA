@@ -38,19 +38,14 @@ public class Main {
 	 * @param args :
 	 * 
 	 *             <pre>
-	 * --db, -d URL :	URL of TypeDB database to load. 
-	 * 					If this parameter is specified, the program will read a 
-	 * 					TypeDB database from a URL and saves the loaded BPMN process to a BPMN2 file. 
-	 * 					If not specified, then the program will run in BPMN to TypeQL file mode 
-	 * 					(i.e., it reads a BPMN and saves TypeQL script files).
-	 * 
+	 * --help,  -h :	Prints this help. See application.properties for more configurable parameters.
 	 * --input, -i :	The input BPMN file. 
-	 * 					Will be ignored if "--db" is present.
+	 * 					Will be ignored if "--url" is present.
 	 * 					Default is "input.bpmn"
 	 * 
 	 * --output, -o :	Output directory. 
-	 * 					If running with "--db", then this program will output a BPMN file read from TypeDB.
-	 * 					If not running with "--db", then this will be the folder to write 
+	 * 					If running with "--url", then this program will output a BPMN file read from TypeDB.
+	 * 					If not running with "--url", then this will be the folder to write 
 	 * 					TypeQL schema (schema.tql) and data (data.tql).
 	 * 					Default is "./output/"
 	 *             </pre>
@@ -59,16 +54,9 @@ public class Main {
 
 		// set up the command line arguments
 		Options options = new Options();
-		options.addOption("h", "help", false, "Prints this help. See application.properties for more help.");
-		options.addOption("i", "input", true,
-				"The input BPMN file. It will be ignored if \"--db\" is present. Default is \"input.bpmn\"");
-		options.addOption("o", "output", true,
-				"Output directory. If running with \"--db\", then this program will output a BPMN file read from TypeDB."
-						+ "If not running with \"--db\", then this will be the folder to write TypeQL schema (schema.tql) and data (data.tql)."
-						+ "Default is \"./output/\"");
-		options.addOption("d", "db", true, "URL of TypeDB database to load. "
-				+ "If this parameter is specified, the program will read a TypeDB database from a URL and saves the loaded BPMN process to a BPMN2 file."
-				+ "If not specified, then the program will run in BPMN to TypeQL file mode (i.e., it reads a BPMN and saves TypeQL script files).");
+		options.addOption("h", "help", false, "Prints this help. See application.properties for more configurable parameters.");
+		options.addOption("i", "input", true, "The input BPMN file. Default is \"input.bpmn\"");
+		options.addOption("o", "output", true, "Output directory. Default is \"./output/\"");
 
 		// parse the command line arguments
 		logger.debug("Reading the command line arguments.");
@@ -78,12 +66,6 @@ public class Main {
 		if (cmd.hasOption('h')) {
 			new HelpFormatter().printHelp("sparql.http.request", options);
 			return;
-		}
-
-		// the --db option
-		if (cmd.hasOption("db")) {
-			logger.debug("DB option provided: {}", cmd.getOptionValue("db"));
-			throw new UnsupportedOperationException("--db not implemented yet");
 		}
 
 		// read the input location

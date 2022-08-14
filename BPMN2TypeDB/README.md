@@ -2,11 +2,13 @@
 
 Tool to convert BPMN2 files to TypeQL insert scripts, or to load BPMN processes from TypeDB.
 
+See *pom.xml* (the maven configuration file) for details about this project's configuration.
+
 ## How to build
 
 1. Download and setup Apache Maven (recommended version 3.8.X) from [https://maven.apache.org/](https://maven.apache.org/).
 
-2. Access (cd) this project's root directory.
+2. Access (cd) this project's root directory (where the *pom.xml* resides).
 
 3. Run the command below. Make sure you are connected to the Internet because Maven will attempt to automatically download some dependencies.
 
@@ -26,18 +28,14 @@ Tool to convert BPMN2 files to TypeQL insert scripts, or to load BPMN processes 
 
 ### Command line arguments
 				
-				 --db, -d URL :	URL of TypeDB database to load. 
-				 					If this parameter is specified, the program will read a 
-				 					TypeDB database from a URL and saves the loaded BPMN process to a BPMN2 file. 
-				 					If not specified, then the program will run in BPMN to TypeQL file mode 
-				 					(i.e., it reads a BPMN and saves TypeQL script files).
+				 --help,  -h :	Prints this help. See application.properties for more configurable parameters.
 				 
 				 --input, -i :	The input BPMN file. 
-				 					Will be ignored if "--db" is present.
+				 					Will be ignored if "--url" is present.
 				 					Default is "input.bpmn"
 				 
 				 --output, -o :	Output directory. 
-				 					If running with "--db", then this program will output a BPMN file read from TypeDB.
-				 					If not running with "--db", then this will be the folder to write 
+				 					If running with "--url", then this program will output a BPMN file read from TypeDB.
+				 					If not running with "--url", then this will be the folder to write 
 				 					TypeQL schema (schema.tql) and data (data.tql).
 				 					Default is "./output/"

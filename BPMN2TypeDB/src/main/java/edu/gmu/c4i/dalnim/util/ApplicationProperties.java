@@ -47,7 +47,7 @@ public class ApplicationProperties extends Properties {
 	}
 
 	/**
-	 * Loads the application.properties file.
+	 * Loads the content of application.properties file.
 	 * 
 	 * @throws IOException
 	 */
@@ -101,7 +101,8 @@ public class ApplicationProperties extends Properties {
 	}
 
 	/**
-	 * Load some attributes from application.properties.
+	 * Load some attributes from application.properties and injects them to class
+	 * variables/attributes by using reflection.
 	 * 
 	 * @param obj : the object to inject the loaded attributes
 	 */

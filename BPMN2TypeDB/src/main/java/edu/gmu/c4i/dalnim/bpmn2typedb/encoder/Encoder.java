@@ -5,7 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Converts BPMN2 to TypeQL scripts.
+ * Converts a script to another format. This is originally designed to read a
+ * BPMN file and save a TypeQL script.
  * 
  * @author shou
  * 

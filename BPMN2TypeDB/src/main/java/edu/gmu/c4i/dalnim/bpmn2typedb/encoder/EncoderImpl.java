@@ -51,6 +51,8 @@ import edu.gmu.c4i.dalnim.util.ApplicationProperties;
 
 /**
  * Default implementation of {@link Encoder}
+ * to parse BPMN files with Camunda libraries
+ * and save TypeQL scripts.
  * 
  * @author shou
  */
