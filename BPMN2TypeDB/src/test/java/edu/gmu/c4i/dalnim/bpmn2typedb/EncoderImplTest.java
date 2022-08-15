@@ -64,9 +64,12 @@ public class EncoderImplTest {
 
 	/**
 	 * @param resource : location of BPMN file to load.
+	 * 
+	 * @return the typeql script
+	 * 
 	 * @see #testEncodeBPMNSchema()
 	 */
-	public void testEncodeSchema(String resource) throws Exception {
+	public String testEncodeSchema(String resource) throws Exception {
 		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
 		assertNotNull(encoder);
 
@@ -85,6 +88,7 @@ public class EncoderImplTest {
 		// make sure the typeql schema can be parsed
 		assertTrue(encoder.checkDefinitionReferences(schema));
 
+		return schema;
 	}
 
 	/**
@@ -288,7 +292,7 @@ public class EncoderImplTest {
 		// the 1st command should be an insert
 		assertNotNull(parsedList.get(0).asInsert());
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeData(java.io.OutputStream)}
@@ -297,24 +301,88 @@ public class EncoderImplTest {
 	@Test
 	public final void testEncodeDataUAV() throws Exception {
 		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
-		
+
 		encoder.loadInput(getClass().getResourceAsStream("/UAV_material_transport_eclipse.bpmn"));
-		
+
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		encoder.encodeData(out);
 		out.flush();
-		
+
 		String typeql = out.toString();
 		logger.debug("Generated typeql data: \n{}", typeql);
-		
+
 		assertFalse(typeql.trim().isEmpty());
-		
-		// make sure the typeql schema can be parsed
+
+		// make sure the typeql can be parsed
 		List<TypeQLQuery> parsedList = TypeQL.parseQueries(typeql).collect(Collectors.toList());
 		// there should be many commands
 		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
 		// the 1st command should be an insert
 		assertNotNull(parsedList.get(0).asInsert());
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
+	 * and
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeD(java.io.OutputStream)}
+	 * for a simple BPMN model about data object.
+	 * 
+	 * @see #testEncodeSchema(String)
+	 */
+	@Test
+	public final void testEncodeBPMNDataObject() throws Exception {
+
+		// make sure the schema can be generated
+		testEncodeSchema("/dataObject.bpmn");
+
+		// generate the data
+		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+		encoder.loadInput(getClass().getResourceAsStream("/dataObject.bpmn"));
+		String dataTypeQL;
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			encoder.encodeData(out);
+			dataTypeQL = out.toString();
+		}
+		;
+		logger.debug("Generated typeql data: \n{}", dataTypeQL);
+		assertFalse(dataTypeQL.trim().isEmpty());
+
+		// make sure the typeql data can be parsed
+		List<TypeQLQuery> parsedList = TypeQL.parseQueries(dataTypeQL).collect(Collectors.toList());
+		// there should be many commands
+		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
+		// the 1st command should be an insert
+		assertNotNull(parsedList.get(0).asInsert());
+
+		/**
+		 * We should find declarations like the following:
+		 * 
+		 * <pre>
+		 * insert $concept isa Resource, has uid (...);
+		 * match
+		 * 		$bpmnEntity isa BPMN_Entity, has uid (...);
+		 * 		$concept isa entity, has uid (...);
+		 * insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+		 * </pre>
+		 */
+		boolean foundConcept = false;
+		for (int i = 0; i < parsedList.size(); i++) {
+			TypeQLQuery insertQuery = parsedList.get(i);
+			if (insertQuery.toString().startsWith("insert $concept isa Resource, has uid ")) {
+				foundConcept = true;
+				// the next element should be the "match" command
+				TypeQLQuery matchQuery = parsedList.get(i + 1);
+				assertTrue(matchQuery.toString(),
+						// should be an insert command with a "match" block
+						matchQuery.asInsert().match().get()
+								// it should contain reference to the data object's ID
+								.toString().contains("DataObject"));
+				break;
+			}
+		}
+		assertTrue(foundConcept);
+
 	}
 
 }

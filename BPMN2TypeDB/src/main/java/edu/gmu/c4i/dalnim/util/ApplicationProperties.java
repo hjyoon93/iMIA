@@ -8,6 +8,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -115,31 +116,113 @@ public class ApplicationProperties extends Properties {
 
 		Class<? extends Object> clazz = obj.getClass();
 
-		this.entrySet().stream()
-				// key is in the format <CLASS>.<ATTRIBUTE NAME>.
-				// Only consider keys with same class name.
-				.filter(entry -> entry.getKey().toString().startsWith(clazz.getName()))
-				// Inject attribute values
-				.forEach(entry -> {
-					try {
-						logger.debug("Processing property {}", entry);
+//		this.entrySet().stream()
+//				// key is in the format <CLASS>.<ATTRIBUTE NAME>.
+//				// Only consider keys with same class name.
+//				.filter(entry -> entry.getKey().toString().startsWith(clazz.getName()))
+//				// Inject attribute values
+//				.forEach(entry -> {
+//					try {
+//						logger.debug("Processing property {}", entry);
+//
+//						// Extract <ATTRIBUTE NAME>
+//						String attributeName = entry.getKey().toString().substring(clazz.getName().length()
+//								// +1 to ignore "."
+//								+ 1);
+//						logger.debug("Attribute name = {}", attributeName);
+//
+//						// use reflection to set
+//						// assume string argument by default
+//						Method setter = clazz.getMethod("set" + StringUtils.capitalize(attributeName), String.class);
+//						logger.debug("Setter = {}", setter);
+//
+//						setter.invoke(obj, entry.getValue().toString());
+//					} catch (Exception e) {
+//						logger.warn("Failed to handle property {}", entry, e);
+//					}
+//				});
+		for (java.util.Map.Entry<Object, Object> entry : this.entrySet()) {
+			if (!entry.getKey().toString().startsWith(clazz.getName())) {
+				continue;
+			}
+			try {
+				logger.debug("Processing property {}", entry);
 
-						// Extract <ATTRIBUTE NAME>
-						String attributeName = entry.getKey().toString().substring(clazz.getName().length()
-								// +1 to ignore "."
-								+ 1);
-						logger.debug("Attribute name = {}", attributeName);
+				// Extract <ATTRIBUTE NAME>
+				String attributeName = entry.getKey().toString().substring(clazz.getName().length()
+						// +1 to ignore "."
+						+ 1);
+				logger.debug("Attribute name = {}", attributeName);
 
-						// use reflection to set
-						// assume string argument by default
-						Method setter = clazz.getMethod("set" + StringUtils.capitalize(attributeName), String.class);
-						logger.debug("Setter = {}", setter);
+				// use reflection to set
+				Method setter = getMethodByName(clazz, "set" + StringUtils.capitalize(attributeName)).orElseThrow();
+				logger.debug("Setter = {}", setter);
 
-						setter.invoke(obj, entry.getValue().toString());
-					} catch (Exception e) {
-						logger.warn("Failed to handle property {}", entry, e);
-					}
-				});
+				// check the type of the parameter
+				Class<?> paramClass = setter.getParameterTypes()[0];
+
+				// handle numbers and booleans
+				if (paramClass.isAssignableFrom(int.class)) {
+					setter.invoke(obj, Integer.parseInt(entry.getValue().toString()));
+					logger.debug("Assigned an int parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(Integer.class)) {
+					setter.invoke(obj, Integer.valueOf(entry.getValue().toString()));
+					logger.debug("Assigned an Integer parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(long.class)) {
+					setter.invoke(obj, Long.parseLong(entry.getValue().toString()));
+					logger.debug("Assigned long parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(Long.class)) {
+					setter.invoke(obj, Long.valueOf(entry.getValue().toString()));
+					logger.debug("Assigned Long parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(float.class)) {
+					setter.invoke(obj, Float.parseFloat(entry.getValue().toString()));
+					logger.debug("Assigned float parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(Float.class)) {
+					setter.invoke(obj, Float.valueOf(entry.getValue().toString()));
+					logger.debug("Assigned Float parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(double.class)) {
+					setter.invoke(obj, Double.parseDouble(entry.getValue().toString()));
+					logger.debug("Assigned double parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(Double.class)) {
+					setter.invoke(obj, Double.valueOf(entry.getValue().toString()));
+					logger.debug("Assigned Double parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(boolean.class)) {
+					setter.invoke(obj, Boolean.parseBoolean(entry.getValue().toString()));
+					logger.debug("Assigned boolean parameter to setter {}", setter);
+				} else if (paramClass.isAssignableFrom(Boolean.class)) {
+					setter.invoke(obj, Boolean.valueOf(entry.getValue().toString()));
+					logger.debug("Assigned Boolean parameter to setter {}", setter);
+				} else {
+					// use string as default...
+					setter.invoke(obj, entry.getValue().toString());
+					logger.debug("Assigned a String parameter to setter {}", setter);
+				}
+			} catch (Exception e) {
+				logger.warn("Failed to handle property {}", entry, e);
+			}
+
+		}
+	}
+
+	/**
+	 * Search for a method with the provided name.
+	 * 
+	 * @param clazz : class to search for method
+	 * @param name  : method's name
+	 * @return the method object obtained with reflection.
+	 */
+	protected Optional<Method> getMethodByName(Class<? extends Object> clazz, String name) {
+		if (clazz == null || name == null) {
+			return Optional.empty();
+		}
+
+		for (Method method : clazz.getMethods()) {
+			if (method.getName().equals(name)) {
+				return Optional.of(method);
+			}
+		}
+
+		return Optional.empty();
 	}
 
 }

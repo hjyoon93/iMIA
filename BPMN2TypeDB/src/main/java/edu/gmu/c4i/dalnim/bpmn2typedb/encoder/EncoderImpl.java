@@ -19,15 +19,7 @@ import java.util.stream.Collectors;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
-import org.camunda.bpm.model.bpmn.impl.instance.FlowNodeRef;
-import org.camunda.bpm.model.bpmn.impl.instance.Incoming;
-import org.camunda.bpm.model.bpmn.impl.instance.Outgoing;
-import org.camunda.bpm.model.bpmn.instance.BaseElement;
 import org.camunda.bpm.model.bpmn.instance.BpmnModelElementInstance;
-import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
-import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
-import org.camunda.bpm.model.bpmn.instance.dc.Point;
-import org.camunda.bpm.model.bpmn.instance.di.DiagramElement;
 import org.camunda.bpm.model.xml.impl.instance.DomElementWrapper;
 import org.camunda.bpm.model.xml.instance.ModelElementInstance;
 import org.camunda.bpm.model.xml.type.ModelElementType;
@@ -58,6 +50,7 @@ import edu.gmu.c4i.dalnim.util.ApplicationProperties;
  * <p>
  * This class expects that a TypeDB schema like the following is already set up.
  * </p>
+ * 
  * <pre>
  * define
  * 
@@ -109,6 +102,14 @@ public class EncoderImpl implements Encoder {
 	private String jsonBPMNConceptualModelMap = "{'definitions':'Mission','@org.camunda.bpm.model.bpmn.instance.Task':'Task'}";
 
 	private boolean ignoreInvalidAttributeName = true;
+
+	private boolean mapBPMNToConceptualModel;
+
+	private String isCompoundByRelationName = "isCompoundBy";
+
+	private String isPerformedByRelationName = "isPerformedBy";
+	
+	private String requiresRelationName = "requires";
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
@@ -183,18 +184,20 @@ public class EncoderImpl implements Encoder {
 		// prepare writer for output stream
 		try (PrintWriter writer = new PrintWriter(outputStream)) {
 
-			logger.debug("Writing the header");
+			writer.println("## =============== Begin ===============");
 
 			// TypeQL schema must start with the keyword "define"
+			logger.debug("Writing the header");
 			writer.println("define");
 			writer.println();
 
-			writer.println("## =============== Header ===============");
-			writer.println();
-
-			writer.println(
-					"## Note: attribute uid is required in DALNIM. Uncomment the following line if not declared yet.");
-			writer.println("## uid sub attribute, value string;");
+			if (isMapBPMNToConceptualModel()) {
+				writer.println(
+						"## Note: attribute uid is required in DALNIM. Uncomment the following line if not declared yet.");
+				writer.println("## uid sub attribute, value string;");
+			} else {
+				writer.println("uid sub attribute, value string;");
+			}
 			writer.println();
 
 			writer.println("## BPMN entities in general");
@@ -347,7 +350,7 @@ public class EncoderImpl implements Encoder {
 	 *                            previously.
 	 * @param declaredRelations   : relations that were already declared previously.
 	 */
-	protected void visitBPMNSchemaRecursive(PrintWriter writer, BpmnModelElementInstance currentNode,
+	protected void visitBPMNSchemaRecursive(PrintWriter writer, ModelElementInstance currentNode,
 			Set<String> visitedNodes, Set<String> inheritedAttributes, Set<String> declaredAttributes,
 			Set<String> declaredRelations) throws IOException {
 
@@ -432,25 +435,15 @@ public class EncoderImpl implements Encoder {
 		 * previously, so re-visit children to make sure new parent-child relations are
 		 * built normally.
 		 */
-		Collection<BpmnModelElementInstance> childrenToVisit = new ArrayList<>();
+		Collection<ModelElementInstance> childrenToVisit = new ArrayList<>();
 
-		// iterate first on basic BPMN elements
-		childrenToVisit.addAll(currentNode.getChildElementsByType(BaseElement.class));
-
-		// The following are special tags in which
-		// their "values" should be extracted from child text node instead
-		childrenToVisit.addAll(currentNode.getChildElementsByType(FlowNodeRef.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(Incoming.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(Outgoing.class));
-
-		// iterate on visual (GUI) elements
-		childrenToVisit.addAll(currentNode.getChildElementsByType(BpmnDiagram.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(DiagramElement.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(Bounds.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(Point.class));
+		// iterate on known elements only
+		for (ModelElementType childType : currentNode.getElementType().getAllChildElementTypes()) {
+			childrenToVisit.addAll(currentNode.getChildElementsByType(childType));
+		}
 
 		// recursive call
-		for (BpmnModelElementInstance child : childrenToVisit) {
+		for (ModelElementInstance child : childrenToVisit) {
 			visitBPMNSchemaRecursive(writer, child, visitedNodes, inheritedAttributes, declaredAttributes,
 					declaredRelations);
 		}
@@ -521,40 +514,87 @@ public class EncoderImpl implements Encoder {
 		writer.println();
 
 		// We should be able to map an entity in the conceptual model to BPMN entity
-		String mappingRelationName = getBPMNConceptualModelMappingName();
-		if (!declaredRelations.contains(mappingRelationName)) {
+		if (isMapBPMNToConceptualModel()) {
+			String mappingRelationName = getBPMNConceptualModelMappingName();
+			if (!declaredRelations.contains(mappingRelationName)) {
+				writer.println("## =============== Mapping to conceptual model ===============");
 
-			writer.println(mappingRelationName + " sub relation, relates bpmnEntity, relates conceptualModel;");
+				writer.println(mappingRelationName + " sub relation, relates bpmnEntity, relates conceptualModel;");
 
-			// Specify the roles
-			writer.println(getBPMNEntityName() + " plays " + mappingRelationName + ":bpmnEntity;");
+				// Specify the roles
+				writer.println(getBPMNEntityName() + " plays " + mappingRelationName + ":bpmnEntity;");
 
-			// TypeDB does not allow 'entity' to play a role.
-			// Need to explicitly enumerate...
-			// TODO create an abstract conceptual model entity instead of enumerating each
-			parseConceptualModelJSONMap()
-					// get all values (values are entities in conceptual model)
-					.values().stream()
-					// remove repetitions
-					.distinct()
-					// ignore nulls and blanks.
-					.filter(Objects::nonNull).filter(name -> !name.trim().isEmpty())
-					// add entry: <entityName> plays BPMN_hasConceptualModelElement:conceptualModel
-					.forEach(entityName -> {
-						logger.debug("'{}' will play some role in {}", entityName, mappingRelationName);
-						writer.println(entityName + " plays " + mappingRelationName + ":conceptualModel;");
-					});
+				// TypeDB does not allow 'entity' to play a role.
+				// Need to explicitly enumerate...
+				// TODO create an abstract conceptual model entity instead of enumerating each
+				parseBPMNtoConceptualModelJSONMap()
+						// get all values (values are entities in conceptual model)
+						.values().stream()
+						// remove repetitions
+						.distinct()
+						// ignore nulls and blanks.
+						.filter(Objects::nonNull).filter(name -> !name.trim().isEmpty())
+						// add entry: <entityName> plays BPMN_hasConceptualModelElement:conceptualModel
+						.forEach(entityName -> {
+							logger.debug("'{}' will play some role in {}", entityName, mappingRelationName);
+							writer.println(entityName + " plays " + mappingRelationName + ":conceptualModel;");
+						});
 
-			// mark relation as declared
-			declaredRelations.add(mappingRelationName);
+				// mark relation as declared
+				declaredRelations.add(mappingRelationName);
+				writer.println();
+
+			} else {
+				// the relation was already declared...
+				logger.warn("The relation '{}' (BPMN -> conceptual model) was already declared. Skipping...",
+						mappingRelationName);
+			}
+			
+			// add rules
+
+			writer.println("## Rules that inject BPMN semantics to entities in the conceptual model");
 			writer.println();
-		}
+			
+			writer.println("## Task isCompoundBy Mission");
+			writer.println("rule rule_misson_isCompoundBy_task:\n"
+					+ "when {\n"
+					+ "\t $bpmndefinitions isa " + getBPMNEntityNamePrefix() + "definitions;\n"
+					+ "\t $bpmnprocess isa " + getBPMNEntityNamePrefix() + "process;\n"
+					+ "\t $mission isa Mission;\n"
+					+ "\t $task isa Task;\n"
+					+ "\t (parent: $bpmndefinitions, child: $bpmnprocess) isa " + getBPMNParentChildRelationName() + ";\n"
+					+ "\t (parent: $bpmnprocess, child: $bpmntask) isa " + getBPMNParentChildRelationName() + ";\n"
+					+ "\t (bpmnEntity: $bpmndefinitions, conceptualModel: $mission) isa " + getBPMNConceptualModelMappingName() + ";\n"
+					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName() + ";\n"
+					+ "} then {\n"
+					+ "\t (mission: $mission, task: $task) isa " + getIsCompoundByRelationName() + ";\n"
+					+ "};");
+			writer.println();
+
+			writer.println("## Task isPerformedBy Performer");
+			writer.println("rule rule_task_isperformedBy_performer:\n"
+					+ "when {\n"
+					+ "\t $bpmnflowNodeRef isa " + getBPMNEntityNamePrefix() + "flowNodeRef, has " + getBPMNTextContentAttributeName() + " $id-ref;\n"
+					+ "\t $bpmntask isa " + getBPMNEntityName() + ", has " + getBPMNEntityNamePrefix() + "id $id;\n"
+					+ "\t $id = $id-ref;\n"
+					+ "\t $task isa Task;\n"
+					+ "\t $performer isa Performer;\n"
+					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName() + ";\n"
+					+ "\t (parent: $bpmnlane, child: $bpmnflowNodeRef) isa BPMN_hasChildTag;\n"
+					+ "\t (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa " + getBPMNConceptualModelMappingName() + ";\n"
+					+ "} then {\n"
+					+ "\t (task: $task, performer: $performer) isa " + getIsPerformedByRelationName() + ";\n"
+					+ "};");
+			writer.println();
+			
+		} // else ignore mappings to conceptual model
+
 	}
 
 	/**
 	 * @return parsed {@link #getJSONBPMNConceptualModelMap()}
 	 */
-	protected Map<String, String> parseConceptualModelJSONMap() {
+	protected Map<String, String> parseBPMNtoConceptualModelJSONMap() {
 
 		Map<String, String> ret = new HashMap<>();
 
@@ -719,6 +759,7 @@ public class EncoderImpl implements Encoder {
 
 			logger.debug("Writing the data");
 
+			writer.println("## =============== Begin ===============");
 			writer.println("## Insert BPMN elements");
 			writer.println();
 
@@ -734,7 +775,7 @@ public class EncoderImpl implements Encoder {
 					// UIDs should be unique, so keep track of them with a set
 					new HashSet<>(),
 					// specify a map from BPMN element to entity in conceptual model
-					parseConceptualModelJSONMap());
+					parseBPMNtoConceptualModelJSONMap());
 
 			writer.println("## =============== End ===============");
 
@@ -747,18 +788,19 @@ public class EncoderImpl implements Encoder {
 	/**
 	 * Recursively visit BPMN nodes to write data.
 	 * 
-	 * @param writer             : where to write the script block.
-	 * @param currentNode        : current BPMN tag to handle
-	 * @param namespace          : the namespace to use in UIDs.
-	 * @param parentUID          : the UID of parent XML tag, if any.
-	 * @param usedUIDs           : keeps track of UIDs that were used
-	 * @param conceptualModelMap : map from BPMN elements to Conceptual Model. See
-	 *                           {@link #parseConceptualModelJSONMap()},
-	 *                           {@link #getJSONBPMNConceptualModelMap()}, and
-	 *                           {@link #getBPMNConceptualModelMappingName()}.
+	 * @param writer                   : where to write the script block.
+	 * @param currentNode              : current BPMN tag to handle
+	 * @param namespace                : the namespace to use in UIDs.
+	 * @param parentUID                : the UID of parent XML tag, if any.
+	 * @param usedUIDs                 : keeps track of UIDs that were used
+	 * @param bpmnToConceptualModelMap : map from BPMN elements to Conceptual Model.
+	 *                                 See
+	 *                                 {@link #parseBPMNtoConceptualModelJSONMap()},
+	 *                                 {@link #getJSONBPMNConceptualModelMap()}, and
+	 *                                 {@link #getBPMNConceptualModelMappingName()}.
 	 */
-	protected void visitBPMNDataRecursive(PrintWriter writer, BpmnModelElementInstance currentNode, String namespace,
-			String parentUID, Set<String> usedUIDs, Map<String, String> conceptualModelMap) throws IOException {
+	protected void visitBPMNDataRecursive(PrintWriter writer, ModelElementInstance currentNode, String namespace,
+			String parentUID, Set<String> usedUIDs, Map<String, String> bpmnToConceptualModelMap) throws IOException {
 
 		logger.debug("Visiting BPMN tag/node {}", currentNode);
 
@@ -878,109 +920,100 @@ public class EncoderImpl implements Encoder {
 		} // else no parent XML/BPMN tag was found
 		writer.println();
 
-		// Extract the entity in the conceptual model
-		// which is mapped with current BPMN element.
-		String conceptModelEntity = conceptualModelMap.get(currentEntityOriginalName);
-		if (conceptModelEntity == null) {
-			// We didn't find an exact match.
-			// However, keys starting with '@' (i.e., '@class' key) represent Java classes.
-			// Find a compatible class...
-			for (String key : conceptualModelMap.keySet().stream()
-					// get all keys that starts with "@"
-					.filter(key -> key.startsWith("@")).collect(Collectors.toSet())) {
-				// Obtain the class name, which is after '@'.
-				String className = key.substring(1);
-				// load the class and check if its compatible with current BPMN node.
-				try {
-					Class<?> clz = Class.forName(className);
-					if (clz.isAssignableFrom(currentNode.getClass())) {
-						// Current node is compatible (it's equal or a subclass of the specified class).
-						conceptModelEntity = conceptualModelMap.get(key);
-						logger.debug(
-								"Found matching class {} for current BPMN entity {}. Only the 1st match will be used...",
-								key, currentEntityOriginalName);
-						// just use the 1st one we found
-						break;
+		// handle the mapping to conceptual model entities.
+		if (isMapBPMNToConceptualModel()) {
+			// Extract the entity in the conceptual model
+			// which is mapped with current BPMN element.
+			String conceptModelEntity = bpmnToConceptualModelMap.get(currentEntityOriginalName);
+			if (conceptModelEntity == null) {
+				// We didn't find an exact match.
+				// However, keys starting with '@' (i.e., '@class' key) represent Java classes.
+				// Find a compatible class...
+				for (String key : bpmnToConceptualModelMap.keySet().stream()
+						// get all keys that starts with "@"
+						.filter(key -> key.startsWith("@")).collect(Collectors.toSet())) {
+					// Obtain the class name, which is after '@'.
+					String className = key.substring(1);
+					// load the class and check if its compatible with current BPMN node.
+					try {
+						Class<?> clz = Class.forName(className);
+						if (clz.isAssignableFrom(currentNode.getClass())) {
+							// Current node is compatible (it's equal or a subclass of the specified class).
+							conceptModelEntity = bpmnToConceptualModelMap.get(key);
+							logger.debug(
+									"Found matching class {} for current BPMN entity {}. Only the 1st match will be used...",
+									key, currentEntityOriginalName);
+							// just use the 1st one we found
+							break;
+						}
+					} catch (ClassNotFoundException e) {
+						logger.warn("Invalid '@class' found in mapping from BPMN to conceptual model. Key = {}", key,
+								e);
 					}
-				} catch (ClassNotFoundException e) {
-					logger.warn("Invalid '@class' found in mapping from BPMN to conceptual model. Key = {}", key, e);
-				}
-			} // end of iteration on '@class' keys
-		} else {
-			// We found an exact match
-			logger.debug("Found exact mapping: {} -> {}", currentEntityOriginalName, conceptModelEntity);
-		}
+				} // end of iteration on '@class' keys
+			} else {
+				// We found an exact match
+				logger.debug("Found exact mapping: {} -> {}", currentEntityOriginalName, conceptModelEntity);
+			}
 
-		// Add references/mappings to the conceptual model, if any.
-		if (conceptModelEntity != null && !conceptModelEntity.trim().isEmpty()) {
-			logger.debug("Mapping: {} -> {}", currentEntityOriginalName, conceptModelEntity);
+			// Add references/mappings to the conceptual model, if any.
+			if (conceptModelEntity != null && !conceptModelEntity.trim().isEmpty()) {
+				logger.debug("Mapping: {} -> {}", currentEntityOriginalName, conceptModelEntity);
 
-			// Create an UID for the mapped instance in the conceptual model.
-			// The UID will look like "https://camunda.org/examples#Mission_proc123"
-			String conceptUID = getNewUID(
-					// https://camunda.org/examples#
-					namespace,
-					// Mission
-					conceptModelEntity
-							// _proc123
-							+ "_" + currentID,
-					// avoid duplicates
-					usedUIDs);
+				// Create an UID for the mapped instance in the conceptual model.
+				// The UID will look like "https://camunda.org/examples#Mission_proc123"
+				String conceptUID = getNewUID(
+						// https://camunda.org/examples#
+						namespace,
+						// Mission
+						conceptModelEntity
+								// _proc123
+								+ "_" + currentID,
+						// avoid duplicates
+						usedUIDs);
 
-			// Mark this UID as used.
-			usedUIDs.add(conceptUID);
+				// Mark this UID as used.
+				usedUIDs.add(conceptUID);
 
-			/**
-			 * The mapping should look like:
-			 * 
-			 * <pre>
-			 * insert $concept isa Mission, has uid "https://camunda.org/examples#Mission_proc123";
-			 * match
-			 * 		$bpmnEntity isa BPMN_Entity, has uid 'https://camunda.org/examples#proc123';
-			 * 		$concept isa entity, has uid 'https://camunda.org/examples#Mission_proc123';
-			 * insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
-			 * </pre>
-			 */
-			writer.println("## Mapping to the conceptual model");
-			// Add the new concept instance
-			writer.println("insert $concept isa " + conceptModelEntity + ", has uid \"" + conceptUID + "\";");
-			// Add the relation to the above instance
-			writer.println("match");
-			writer.println("\t $bpmnEntity isa " + getBPMNEntityName() + ", has uid '" + currentUID + "';");
-			writer.println("\t $concept isa entity, has uid '" + conceptUID + "';");
-			writer.println("insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa "
-					+ getBPMNConceptualModelMappingName() + ";");
-			writer.println();
-		} // else this BPMN entity does not map to any entity in the conceptual model
+				/**
+				 * The mapping should look like:
+				 * 
+				 * <pre>
+				 * insert $concept isa Mission, has uid "https://camunda.org/examples#Mission_proc123";
+				 * match
+				 * 		$bpmnEntity isa BPMN_Entity, has uid 'https://camunda.org/examples#proc123';
+				 * 		$concept isa entity, has uid 'https://camunda.org/examples#Mission_proc123';
+				 * insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+				 * </pre>
+				 */
+				writer.println("## Mapping to the conceptual model");
+				// Add the new concept instance
+				writer.println("insert $concept isa " + conceptModelEntity + ", has uid \"" + conceptUID + "\";");
+				// Add the relation to the above instance
+				writer.println("match");
+				writer.println("\t $bpmnEntity isa " + getBPMNEntityName() + ", has uid '" + currentUID + "';");
+				writer.println("\t $concept isa entity, has uid '" + conceptUID + "';");
+				writer.println("insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println();
+			} // else this BPMN entity does not map to any entity in the conceptual model
+
+		} // else skip mapping to conceptual model
 
 		/*
 		 * Recursively visit the child BPMN tags. We may have visited empty tag
 		 * previously, so re-visit children to make sure new parent-child relations are
 		 * built normally.
 		 */
-		Collection<BpmnModelElementInstance> childrenToVisit = new ArrayList<>();
-
-		// Explicitly list up the types of nodes we support
-		// because we do not support all types, and some types are specific of Camunda.
-
-		// Consider basic BPMN elements
-		childrenToVisit.addAll(currentNode.getChildElementsByType(BaseElement.class));
-
-		// The following are "special" tags in which
-		// their "values" should be extracted from child text node instead
-		childrenToVisit.addAll(currentNode.getChildElementsByType(FlowNodeRef.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(Incoming.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(Outgoing.class));
-
-		// Also consider common visual (GUI) elements
-		childrenToVisit.addAll(currentNode.getChildElementsByType(BpmnDiagram.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(DiagramElement.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(Bounds.class));
-		childrenToVisit.addAll(currentNode.getChildElementsByType(Point.class));
-		// TODO add more types here *if* we can support them.
+		Collection<ModelElementInstance> childrenToVisit = new ArrayList<>();
+		
+		for (ModelElementType childType : currentNode.getElementType().getAllChildElementTypes()) {
+			// Consider only known child elements
+			childrenToVisit.addAll(currentNode.getChildElementsByType(childType));
+		}
 
 		// Do recursive call
-		for (BpmnModelElementInstance child : childrenToVisit) {
+		for (ModelElementInstance child : childrenToVisit) {
 			visitBPMNDataRecursive(writer,
 					// visit the child XML tag
 					child,
@@ -991,7 +1024,7 @@ public class EncoderImpl implements Encoder {
 					// always avoid duplicate UIDs
 					usedUIDs,
 					// reuse same mapping from BPMN to conceptual model
-					conceptualModelMap);
+					bpmnToConceptualModelMap);
 		}
 
 	}
@@ -1005,7 +1038,7 @@ public class EncoderImpl implements Encoder {
 	 * @param bpmnElement : the element to extract text content
 	 * @return the text content of its immediate text XML child instead.
 	 */
-	protected Optional<String> getTextContent(BpmnModelElementInstance bpmnElement) {
+	protected Optional<String> getTextContent(ModelElementInstance bpmnElement) {
 
 		logger.debug("Searching for text content of node {}", bpmnElement);
 
@@ -1057,7 +1090,7 @@ public class EncoderImpl implements Encoder {
 	 * 
 	 * @return a map whose key is the name of the attribute and value is its value.
 	 */
-	protected Map<String, String> getAllAttributes(BpmnModelElementInstance element, boolean includeFromType) {
+	protected Map<String, String> getAllAttributes(ModelElementInstance element, boolean includeFromType) {
 
 		Map<String, String> ret = new HashMap<>();
 
@@ -1502,8 +1535,66 @@ public class EncoderImpl implements Encoder {
 	 *                                   will ignore/skip attributes with invalid
 	 *                                   names.
 	 */
-	public void setIgnoreInvalidAttributeNameString(String ignoreInvalidAttributeName) {
-		this.ignoreInvalidAttributeName = Boolean.parseBoolean(ignoreInvalidAttributeName);
+	public void setIgnoreInvalidAttributeName(boolean ignoreInvalidAttributeName) {
+		this.ignoreInvalidAttributeName = ignoreInvalidAttributeName;
+	}
+
+	/**
+	 * @return if true, BPMN entities and entities in conceptual model will have
+	 *         mappings.
+	 */
+	public boolean isMapBPMNToConceptualModel() {
+		return mapBPMNToConceptualModel;
+	}
+
+	/**
+	 * @param mapBPMNToConceptualModel : if true, BPMN entities and entities in
+	 *                                 conceptual model will have mappings.
+	 */
+	public void setMapBPMNToConceptualModel(boolean mapBPMNToConceptualModel) {
+		this.mapBPMNToConceptualModel = mapBPMNToConceptualModel;
+	}
+
+	/**
+	 * @return the isCompoundByRelationName
+	 */
+	public String getIsCompoundByRelationName() {
+		return isCompoundByRelationName;
+	}
+
+	/**
+	 * @param isCompoundByRelationName the isCompoundByRelationName to set
+	 */
+	public void setIsCompoundByRelationName(String isCompoundByRelationName) {
+		this.isCompoundByRelationName = isCompoundByRelationName;
+	}
+
+	/**
+	 * @return the isPerformedByRelationName
+	 */
+	public String getIsPerformedByRelationName() {
+		return isPerformedByRelationName;
+	}
+
+	/**
+	 * @param isPerformedByRelationName the isPerformedByRelationName to set
+	 */
+	public void setIsPerformedByRelationName(String isPerformedByRelationName) {
+		this.isPerformedByRelationName = isPerformedByRelationName;
+	}
+
+	/**
+	 * @return the requiresRelationName
+	 */
+	public String getRequiresRelationName() {
+		return requiresRelationName;
+	}
+
+	/**
+	 * @param requiresRelationName the requiresRelationName to set
+	 */
+	public void setRequiresRelationName(String requiresRelationName) {
+		this.requiresRelationName = requiresRelationName;
 	}
 
 }
