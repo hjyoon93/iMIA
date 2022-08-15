@@ -91,6 +91,8 @@ public class EncoderImpl implements Encoder {
 
 	private String bpmnEntityNamePrefix = "BPMN_";
 
+	private String bpmnAttributeNamePrefix = "BPMNattrib_";
+
 	private String bpmnEntityName = bpmnEntityNamePrefix + "Entity";
 
 	private String bpmnTextContentAttributeName = bpmnEntityNamePrefix + "textContent";
@@ -108,7 +110,7 @@ public class EncoderImpl implements Encoder {
 	private String isCompoundByRelationName = "isCompoundBy";
 
 	private String isPerformedByRelationName = "isPerformedBy";
-	
+
 	private String requiresRelationName = "requires";
 
 	/**
@@ -201,11 +203,11 @@ public class EncoderImpl implements Encoder {
 			writer.println();
 
 			writer.println("## BPMN entities in general");
-			writer.println(getBPMNEntityNamePrefix() + "id sub attribute, value string;");
-			writer.println(getBPMNEntityNamePrefix() + "name sub attribute, value string;");
+			writer.println(getBPMNAttributeNamePrefix() + "id sub attribute, value string;");
+			writer.println(getBPMNAttributeNamePrefix() + "name sub attribute, value string;");
 			writer.println(getBPMNTextContentAttributeName() + " sub attribute, value string;");
-			writer.println(getBPMNEntityName() + " sub entity, owns " + getBPMNEntityNamePrefix() + "id, owns "
-					+ getBPMNEntityNamePrefix() + "name, owns " + getBPMNTextContentAttributeName()
+			writer.println(getBPMNEntityName() + " sub entity, owns " + getBPMNAttributeNamePrefix() + "id, owns "
+					+ getBPMNAttributeNamePrefix() + "name, owns " + getBPMNTextContentAttributeName()
 					+ ", owns uid @key;");
 			writer.println();
 
@@ -221,8 +223,8 @@ public class EncoderImpl implements Encoder {
 			// so children do not have to re-declare
 			Set<String> attributesInRootEntity = new HashSet<>();
 			attributesInRootEntity.add("uid");
-			attributesInRootEntity.add(getBPMNEntityNamePrefix() + "id");
-			attributesInRootEntity.add(getBPMNEntityNamePrefix() + "name");
+			attributesInRootEntity.add(getBPMNAttributeNamePrefix() + "id");
+			attributesInRootEntity.add(getBPMNAttributeNamePrefix() + "name");
 			attributesInRootEntity.add(getBPMNTextContentAttributeName());
 
 			logger.debug("Writing the body...");
@@ -286,29 +288,29 @@ public class EncoderImpl implements Encoder {
 			throw new IOException("Sanity check failed: BPMN endEvent was not created.");
 		}
 
-		if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "isExecutable")) {
+		if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + "isExecutable")) {
 			throw new IOException("Sanity check failed: attribute 'isExecutable' was not created.");
 		}
 
 		// sanity check on attributes
 		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "serviceTask")) {
-			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "implementation")) {
+			if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + "implementation")) {
 				throw new IOException("Sanity check failed: attribute 'implementation' was not created.");
 			}
-			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "operationRef")) {
+			if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + "operationRef")) {
 				throw new IOException("Sanity check failed: attribute 'operationRef' was not created.");
 			}
 		}
 		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "participant")
-				&& !declaredAttributes.contains(getBPMNEntityNamePrefix() + "processRef")) {
+				&& !declaredAttributes.contains(getBPMNAttributeNamePrefix() + "processRef")) {
 			throw new IOException("Sanity check failed: attribute 'processRef' was not created.");
 		}
 		if (visitedNodes.contains(getBPMNEntityNamePrefix() + "messageFlow")
 				|| visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")) {
-			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "sourceRef")) {
+			if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + "sourceRef")) {
 				throw new IOException("Sanity check failed: attribute 'sourceRef' was not created.");
 			}
-			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "targetRef")) {
+			if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + "targetRef")) {
 				throw new IOException("Sanity check failed: attribute 'targetRef' was not created.");
 			}
 		}
@@ -386,7 +388,7 @@ public class EncoderImpl implements Encoder {
 					// (because not all BPMN files uses all attributes)
 					true).entrySet()) {
 
-				String attributeName = getBPMNEntityNamePrefix() + attrib.getKey();
+				String attributeName = getBPMNAttributeNamePrefix() + attrib.getKey();
 
 				// Skip attribute if it's already defined in root entity.
 				if (inheritedAttributes.contains(attributeName)) {
@@ -450,8 +452,47 @@ public class EncoderImpl implements Encoder {
 	}
 
 	/**
+	 * <p>
 	 * Includes some implementation-specific schema elements, such as the xmlns
 	 * document namespace for BPMN tags.
+	 * </p>
+	 * <p>
+	 * Rules will be also created. Examples of TypeQL queries involving these rules
+	 * can be:
+	 * </p>
+	 * 
+	 * <pre>
+	 * ## query isCompoundBy
+	 * match 
+	 * $r isa isCompoundBy; 
+	 * $m isa Mission, has uid $muid; 
+	 * $t isa Task, has uid $tuid; 
+	 * (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;
+	 * $bpmntask isa BPMN_Entity, has uid $buid;
+	 * get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;
+	 * 
+	 * ## query isPerformedBy
+	 * match
+	 * $task isa Task, has uid $uid1;
+	 * $performer isa Performer, has uid $uid2;
+	 * $bpmntask isa BPMN_Entity, has uid $uid3;
+	 * $bpmnlane isa BPMN_lane, has uid $uid4;
+	 * $rel (task: $task, performer: $performer) isa isPerformedBy;
+	 * (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
+	 * (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa BPMN_hasConceptualModelElement;
+	 * get $rel, $uid1, $uid2, $uid3, $uid4, $bpmntask, $bpmnlane;
+	 * 
+	 * ## query requires
+	 * match
+	 * $dataObject isa BPMN_dataObject, has uid $uid1;
+	 * $resource isa Resource, has uid $uid2;
+	 * $bpmntask isa BPMN_Entity, has uid $uid3;
+	 * $task isa Task, has uid $uid4;
+	 * $rel (task: $task, resource: $resource) isa requires;
+	 * (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
+	 * (bpmnEntity: $dataObject, conceptualModel: $resource) isa BPMN_hasConceptualModelElement;
+	 * get $rel, $dataObject, $resource, $bpmntask, $task , $uid1, $uid2, $uid3, $uid4;
+	 * </pre>
 	 * 
 	 * @param writer              : where to write the script
 	 * @param bpmn                : reference to the BPMN object.
@@ -476,13 +517,13 @@ public class EncoderImpl implements Encoder {
 		writer.println("## =============== Implementation-specific schema elements ===============");
 
 		// xmlns contains schema namespace
-		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "xmlns")) {
-			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "xmlns")) {
-				writer.println(getBPMNEntityNamePrefix() + "xmlns sub attribute, value string;");
+		if (!inheritedAttributes.contains(getBPMNAttributeNamePrefix() + "xmlns")) {
+			if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + "xmlns")) {
+				writer.println(getBPMNAttributeNamePrefix() + "xmlns sub attribute, value string;");
 				// mark as declared
-				declaredAttributes.add(getBPMNEntityNamePrefix() + "xmlns");
+				declaredAttributes.add(getBPMNAttributeNamePrefix() + "xmlns");
 			}
-			writer.println(getBPMNEntityNamePrefix() + "definitions owns " + getBPMNEntityNamePrefix() + "xmlns;");
+			writer.println(getBPMNEntityNamePrefix() + "definitions owns " + getBPMNAttributeNamePrefix() + "xmlns;");
 		}
 		writer.println();
 
@@ -495,21 +536,21 @@ public class EncoderImpl implements Encoder {
 			writer.println();
 		}
 		// declare the waypoint's x and y coordinates
-		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "x")) {
-			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "x")) {
-				writer.println(getBPMNEntityNamePrefix() + "x sub attribute, value string;");
+		if (!inheritedAttributes.contains(getBPMNAttributeNamePrefix() + "x")) {
+			if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + "x")) {
+				writer.println(getBPMNAttributeNamePrefix() + "x sub attribute, value string;");
 				// mark as declared
-				declaredAttributes.add(getBPMNEntityNamePrefix() + "x");
+				declaredAttributes.add(getBPMNAttributeNamePrefix() + "x");
 			}
-			writer.println(getBPMNEntityNamePrefix() + "waypoint owns " + getBPMNEntityNamePrefix() + "x;");
+			writer.println(getBPMNEntityNamePrefix() + "waypoint owns " + getBPMNAttributeNamePrefix() + "x;");
 		}
-		if (!inheritedAttributes.contains(getBPMNEntityNamePrefix() + "y")) {
-			if (!declaredAttributes.contains(getBPMNEntityNamePrefix() + "y")) {
-				writer.println(getBPMNEntityNamePrefix() + "y sub attribute, value string;");
+		if (!inheritedAttributes.contains(getBPMNAttributeNamePrefix() + "y")) {
+			if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + "y")) {
+				writer.println(getBPMNAttributeNamePrefix() + "y sub attribute, value string;");
 				// mark as declared
-				declaredAttributes.add(getBPMNEntityNamePrefix() + "y");
+				declaredAttributes.add(getBPMNAttributeNamePrefix() + "y");
 			}
-			writer.println(getBPMNEntityNamePrefix() + "waypoint owns " + getBPMNEntityNamePrefix() + "y;");
+			writer.println(getBPMNEntityNamePrefix() + "waypoint owns " + getBPMNAttributeNamePrefix() + "y;");
 		}
 		writer.println();
 
@@ -549,44 +590,84 @@ public class EncoderImpl implements Encoder {
 				logger.warn("The relation '{}' (BPMN -> conceptual model) was already declared. Skipping...",
 						mappingRelationName);
 			}
-			
+
 			// add rules
 
 			writer.println("## Rules that inject BPMN semantics to entities in the conceptual model");
 			writer.println();
-			
+
 			writer.println("## Task isCompoundBy Mission");
-			writer.println("rule rule_misson_isCompoundBy_task:\n"
-					+ "when {\n"
-					+ "\t $bpmndefinitions isa " + getBPMNEntityNamePrefix() + "definitions;\n"
-					+ "\t $bpmnprocess isa " + getBPMNEntityNamePrefix() + "process;\n"
-					+ "\t $mission isa Mission;\n"
-					+ "\t $task isa Task;\n"
-					+ "\t (parent: $bpmndefinitions, child: $bpmnprocess) isa " + getBPMNParentChildRelationName() + ";\n"
-					+ "\t (parent: $bpmnprocess, child: $bpmntask) isa " + getBPMNParentChildRelationName() + ";\n"
-					+ "\t (bpmnEntity: $bpmndefinitions, conceptualModel: $mission) isa " + getBPMNConceptualModelMappingName() + ";\n"
-					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName() + ";\n"
-					+ "} then {\n"
-					+ "\t (mission: $mission, task: $task) isa " + getIsCompoundByRelationName() + ";\n"
-					+ "};");
+			writer.println("rule rule_misson_isCompoundBy_task:\n" + "when {\n" + "\t $bpmndefinitions isa "
+					+ getBPMNEntityNamePrefix() + "definitions;\n" + "\t $bpmnprocess isa " + getBPMNEntityNamePrefix()
+					+ "process;\n" + "\t $mission isa Mission;\n" + "\t $task isa Task;\n"
+					+ "\t (parent: $bpmndefinitions, child: $bpmnprocess) isa " + getBPMNParentChildRelationName()
+					+ ";\n" + "\t (parent: $bpmnprocess, child: $bpmntask) isa " + getBPMNParentChildRelationName()
+					+ ";\n" + "\t (bpmnEntity: $bpmndefinitions, conceptualModel: $mission) isa "
+					+ getBPMNConceptualModelMappingName() + ";\n"
+					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName()
+					+ ";\n" + "} then {\n" + "\t (mission: $mission, task: $task) isa " + getIsCompoundByRelationName()
+					+ ";\n" + "};");
 			writer.println();
 
 			writer.println("## Task isPerformedBy Performer");
-			writer.println("rule rule_task_isperformedBy_performer:\n"
-					+ "when {\n"
-					+ "\t $bpmnflowNodeRef isa " + getBPMNEntityNamePrefix() + "flowNodeRef, has " + getBPMNTextContentAttributeName() + " $id-ref;\n"
-					+ "\t $bpmntask isa " + getBPMNEntityName() + ", has " + getBPMNEntityNamePrefix() + "id $id;\n"
-					+ "\t $id = $id-ref;\n"
-					+ "\t $task isa Task;\n"
-					+ "\t $performer isa Performer;\n"
-					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName() + ";\n"
+			writer.println("rule rule_task_isperformedBy_performer:\n" + "when {\n" + "\t $bpmnflowNodeRef isa "
+					+ getBPMNEntityNamePrefix() + "flowNodeRef, has " + getBPMNTextContentAttributeName()
+					+ " $id-ref;\n" + "\t $bpmntask isa " + getBPMNEntityName() + ", has "
+					+ getBPMNAttributeNamePrefix() + "id $id;\n" + "\t $id = $id-ref;\n" + "\t $task isa Task;\n"
+					+ "\t $performer isa Performer;\n" + "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
+					+ getBPMNConceptualModelMappingName() + ";\n"
 					+ "\t (parent: $bpmnlane, child: $bpmnflowNodeRef) isa BPMN_hasChildTag;\n"
-					+ "\t (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa " + getBPMNConceptualModelMappingName() + ";\n"
-					+ "} then {\n"
-					+ "\t (task: $task, performer: $performer) isa " + getIsPerformedByRelationName() + ";\n"
-					+ "};");
+					+ "\t (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa "
+					+ getBPMNConceptualModelMappingName() + ";\n" + "} then {\n"
+					+ "\t (task: $task, performer: $performer) isa " + getIsPerformedByRelationName() + ";\n" + "};");
 			writer.println();
-			
+
+			writer.println("## Task requires Resource");
+			writer.println("rule rule_task_requries_resource:\n" + "when {\n" + "\t $dataObject isa "
+					+ getBPMNEntityNamePrefix() + "dataObject, has " + getBPMNAttributeNamePrefix() + "id $data_id;\n"
+					+ "\t $resource isa Resource;\n" + "\t $bpmntask isa " + getBPMNEntityName() + ";\n"
+					+ "\t $task isa Task;\n" + "\t $dataInputAssociation isa " + getBPMNEntityNamePrefix()
+					+ "dataInputAssociation;\n" + "\t $sourceRef isa " + getBPMNEntityNamePrefix() + "sourceRef, has "
+					+ getBPMNTextContentAttributeName() + " $source;\n" + "\t $source = $data_id;\n"
+					+ "\t (bpmnEntity: $dataObject, conceptualModel: $resource) isa "
+					+ getBPMNConceptualModelMappingName() + ";\n"
+					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName()
+					+ ";\n" + "\t (parent: $bpmntask, child: $dataInputAssociation) isa "
+					+ getBPMNParentChildRelationName() + ";\n"
+					+ "\t (parent: $dataInputAssociation, child: $sourceRef) isa " + getBPMNParentChildRelationName() + ";\n"
+					+ "} then {\n" + "\t (task: $task, resource: $resource) isa requires;\n" + "};");
+			writer.println();
+
+			// Show sample queries
+			writer.println("## Sample queries for the above rules");
+			writer.println();
+
+			writer.println("## query isCompoundBy");
+			writer.println("# match \n" + "# $r isa isCompoundBy; \n" + "# $m isa Mission, has uid $muid; \n"
+					+ "# $t isa Task, has uid $tuid; \n"
+					+ "# (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;\n"
+					+ "# $bpmntask isa BPMN_Entity, has uid $buid;\n" + "# get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;");
+			writer.println();
+
+			writer.println("## query isPerformedBy");
+			writer.println("# match\n" + "# $task isa Task, has uid $uid1;\n"
+					+ "# $performer isa Performer, has uid $uid2;\n" + "# $bpmntask isa BPMN_Entity, has uid $uid3;\n"
+					+ "# $bpmnlane isa BPMN_lane, has uid $uid4;\n"
+					+ "# $rel (task: $task, performer: $performer) isa isPerformedBy;\n"
+					+ "# (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;\n"
+					+ "# (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa BPMN_hasConceptualModelElement;\n"
+					+ "# get $rel, $uid1, $uid2, $uid3, $uid4, $bpmntask, $bpmnlane;");
+			writer.println();
+
+			writer.println("## query requires");
+			writer.println("# match\n" + "# $dataObject isa BPMN_dataObject, has uid $uid1;\n"
+					+ "# $resource isa Resource, has uid $uid2;\n" + "# $bpmntask isa BPMN_Entity, has uid $uid3;\n"
+					+ "# $task isa Task, has uid $uid4;\n" + "# $rel (task: $task, resource: $resource) isa requires;\n"
+					+ "# (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;\n"
+					+ "# (bpmnEntity: $dataObject, conceptualModel: $resource) isa BPMN_hasConceptualModelElement;\n"
+					+ "# get $rel, $dataObject, $resource, $bpmntask, $task , $uid1, $uid2, $uid3, $uid4;");
+			writer.println();
+
 		} // else ignore mappings to conceptual model
 
 	}
@@ -851,7 +932,7 @@ public class EncoderImpl implements Encoder {
 			// The original name
 			String attributeOriginalName = attrib.getKey();
 			// The name to use when saving to TypeQL
-			String attributeNameToSave = getBPMNEntityNamePrefix() + attributeOriginalName;
+			String attributeNameToSave = getBPMNAttributeNamePrefix() + attributeOriginalName;
 			// The value of this attribute
 			String attributeValue = attrib.getValue();
 
@@ -1006,7 +1087,7 @@ public class EncoderImpl implements Encoder {
 		 * built normally.
 		 */
 		Collection<ModelElementInstance> childrenToVisit = new ArrayList<>();
-		
+
 		for (ModelElementType childType : currentNode.getElementType().getAllChildElementTypes()) {
 			// Consider only known child elements
 			childrenToVisit.addAll(currentNode.getChildElementsByType(childType));
@@ -1408,20 +1489,34 @@ public class EncoderImpl implements Encoder {
 	}
 
 	/**
-	 * @return the prefix to be used in all entities/attributes/relations generated
-	 *         by this class.
+	 * @return the prefix to be used in all entities/relations generated by this
+	 *         class.
 	 */
 	public String getBPMNEntityNamePrefix() {
 		return bpmnEntityNamePrefix;
 	}
 
 	/**
-	 * @param bpmnEntityNamePrefix : the prefix to be used in all
-	 *                             entities/attributes/relations generated by this
-	 *                             class.
+	 * @param bpmnEntityNamePrefix : the prefix to be used in all entities/relations
+	 *                             generated by this class.
 	 */
 	public void setBPMNEntityNamePrefix(String bpmnEntityNamePrefix) {
 		this.bpmnEntityNamePrefix = bpmnEntityNamePrefix;
+	}
+
+	/**
+	 * @return : the prefix to be used in all attributes generated by this class.
+	 */
+	public String getBPMNAttributeNamePrefix() {
+		return bpmnAttributeNamePrefix;
+	}
+
+	/**
+	 * @param bpmnAttributeNamePrefix : the prefix to be used in all attributes
+	 *                                generated by this class.
+	 */
+	public void setBPMNAttributeNamePrefix(String bpmnAttributeNamePrefix) {
+		this.bpmnAttributeNamePrefix = bpmnAttributeNamePrefix;
 	}
 
 	/**
