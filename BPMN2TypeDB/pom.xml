@@ -124,7 +124,7 @@
 							<archive>
 								<manifest>
 									<!-- The main entrypoint -->
-									<mainClass>edu.gmu.dalnim.bpmn2typedb.Main</mainClass>
+									<mainClass>edu.gmu.c4i.dalnim.bpmn2typedb.Main</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>

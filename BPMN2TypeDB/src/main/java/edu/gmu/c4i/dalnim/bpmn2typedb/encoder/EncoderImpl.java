@@ -195,8 +195,21 @@ public class EncoderImpl implements Encoder {
 
 			if (isMapBPMNToConceptualModel()) {
 				writer.println(
-						"## Note: attribute uid is required in DALNIM. Uncomment the following line if not declared yet.");
+						"## Note: conceptual model is required in DALNIM. Uncomment the following if not declared yet.");
 				writer.println("## uid sub attribute, value string;");
+				writer.println("## Mission sub entity, owns uid @key;");
+				writer.println("## Task sub entity, owns uid @key;");
+				writer.println("## Performer sub entity, owns uid @key;");
+				writer.println("## Resource sub entity, owns uid @key;");
+				writer.println("## isCompoundBy sub relation, relates mission, relates task;");
+				writer.println("## Mission plays isCompoundBy:mission;");
+				writer.println("## Task plays isCompoundBy:task;");
+				writer.println("## requires sub relation, relates task, relates resource;");
+				writer.println("## Task plays requires:task;");
+				writer.println("## Resource plays requires:resource;");
+				writer.println("## isPerformedBy sub relation, relates task, relates performer;");
+				writer.println("## Task plays isPerformedBy:task;");
+				writer.println("## Performer plays isPerformedBy:performer;");
 			} else {
 				writer.println("uid sub attribute, value string;");
 			}
@@ -634,8 +647,8 @@ public class EncoderImpl implements Encoder {
 					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName()
 					+ ";\n" + "\t (parent: $bpmntask, child: $dataInputAssociation) isa "
 					+ getBPMNParentChildRelationName() + ";\n"
-					+ "\t (parent: $dataInputAssociation, child: $sourceRef) isa " + getBPMNParentChildRelationName() + ";\n"
-					+ "} then {\n" + "\t (task: $task, resource: $resource) isa requires;\n" + "};");
+					+ "\t (parent: $dataInputAssociation, child: $sourceRef) isa " + getBPMNParentChildRelationName()
+					+ ";\n" + "} then {\n" + "\t (task: $task, resource: $resource) isa requires;\n" + "};");
 			writer.println();
 
 			// Show sample queries
