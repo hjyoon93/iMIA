@@ -118,7 +118,7 @@ public class EncoderImpl implements Encoder {
 
 	private boolean ignoreInvalidAttributeName = true;
 
-	private boolean mapBPMNToConceptualModel;
+	private boolean mapBPMNToConceptualModel = true;
 
 	private String isCompoundByRelationName = "isCompoundBy";
 
@@ -343,7 +343,7 @@ public class EncoderImpl implements Encoder {
 		}
 
 		// mapping from BPMN element to conceptual model should be declared
-		if (!declaredRelations.contains(getBPMNConceptualModelMappingName())) {
+		if (isMapBPMNToConceptualModel() && !declaredRelations.contains(getBPMNConceptualModelMappingName())) {
 			throw new IOException(
 					"Sanity check failed: relation/mapping between BPMN entities and conceptual model was not created.");
 		}
@@ -1450,8 +1450,8 @@ public class EncoderImpl implements Encoder {
 			// Note: we do not allow sub-attributes in our system.
 			if (typeVar.sub().isPresent()
 					&& "attribute".equals(typeVar.sub().orElseThrow().type().reference().asLabel().label())
-					// ignore "uid" since it's part of conceptual model
-					&& !typeVar.reference().asLabel().label().equals("uid")) {
+					// ignore "uid" since it's part of conceptual model, if we're mapping to it
+					&& !(isMapBPMNToConceptualModel() && typeVar.reference().asLabel().label().equals("uid"))) {
 				declaredAttributes.add(typeVar.reference().asLabel().label());
 				// attributes must declare value type
 				if (!typeVar.valueType().isPresent()) {

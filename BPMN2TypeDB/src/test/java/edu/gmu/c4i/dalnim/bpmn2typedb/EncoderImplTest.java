@@ -331,13 +331,17 @@ public class EncoderImplTest {
 	 * @see #testEncodeSchema(String)
 	 */
 	@Test
-	public final void testEncodeBPMNDataObject() throws Exception {
+	public final void testEncodeBPMNDataObjectWithMapping() throws Exception {
 
 		// make sure the schema can be generated
 		testEncodeSchema("/dataObject.bpmn");
 
 		// generate the data
 		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+
+		// force-enable mapping from BPMN to concept model
+		encoder.setMapBPMNToConceptualModel(true);
+
 		encoder.loadInput(getClass().getResourceAsStream("/dataObject.bpmn"));
 		String dataTypeQL;
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -354,6 +358,10 @@ public class EncoderImplTest {
 		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
 		// the 1st command should be an insert
 		assertNotNull(parsedList.get(0).asInsert());
+
+		// check presence of relations that represent
+		// mapping between BPMN and concept model
+		assertTrue(encoder.isMapBPMNToConceptualModel());
 
 		/**
 		 * We should find declarations like the following:
@@ -410,6 +418,49 @@ public class EncoderImplTest {
 			}
 		}
 		assertTrue(foundConcept);
+
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
+	 * and
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeD(java.io.OutputStream)}
+	 * for a simple BPMN model about data object.
+	 * 
+	 * @see #testEncodeSchema(String)
+	 */
+	@Test
+	public final void testEncodeBPMNDataObjectWithoutMapping() throws Exception {
+
+		// make sure the schema can be generated
+		testEncodeSchema("/dataObject.bpmn");
+
+		// generate the data
+		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+
+		// disable mapping of BPMN to Concept model
+		encoder.setMapBPMNToConceptualModel(false);
+
+		encoder.loadInput(getClass().getResourceAsStream("/dataObject.bpmn"));
+		String dataTypeQL;
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			encoder.encodeData(out);
+			dataTypeQL = out.toString();
+		}
+
+		logger.debug("Generated typeql data: \n{}", dataTypeQL);
+		assertFalse(dataTypeQL.trim().isEmpty());
+
+		// make sure the typeql data can be parsed
+		List<TypeQLQuery> parsedList = TypeQL.parseQueries(dataTypeQL).collect(Collectors.toList());
+		// there should be many commands
+		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
+		// the 1st command should be an insert
+		assertNotNull(parsedList.get(0).asInsert());
+
+		// No need to check presence of relations that represent
+		assertFalse(encoder.isMapBPMNToConceptualModel());
 
 	}
 
