@@ -344,7 +344,7 @@ public class EncoderImplTest {
 			encoder.encodeData(out);
 			dataTypeQL = out.toString();
 		}
-		;
+
 		logger.debug("Generated typeql data: \n{}", dataTypeQL);
 		assertFalse(dataTypeQL.trim().isEmpty());
 
@@ -359,7 +359,7 @@ public class EncoderImplTest {
 		 * We should find declarations like the following:
 		 * 
 		 * <pre>
-		 * insert $concept isa Resource, has uid (...);
+		 * insert $concept isa Asset, has uid (...);
 		 * match
 		 * 		$bpmnEntity isa BPMN_Entity, has uid (...);
 		 * 		$concept isa entity, has uid (...);
@@ -369,7 +369,7 @@ public class EncoderImplTest {
 		boolean foundConcept = false;
 		for (int i = 0; i < parsedList.size(); i++) {
 			TypeQLQuery insertQuery = parsedList.get(i);
-			if (insertQuery.toString().startsWith("insert $concept isa Resource, has uid ")) {
+			if (insertQuery.toString().startsWith("insert $concept isa Asset, has uid ")) {
 				foundConcept = true;
 				// the next element should be the "match" command
 				TypeQLQuery matchQuery = parsedList.get(i + 1);
@@ -377,7 +377,35 @@ public class EncoderImplTest {
 						// should be an insert command with a "match" block
 						matchQuery.asInsert().match().get()
 								// it should contain reference to the data object's ID
-								.toString().contains("DataObject"));
+								.toString().contains("DataObject_2"));
+				break;
+			}
+		}
+		assertTrue(foundConcept);
+
+		/**
+		 * We should also find declarations like the following:
+		 * 
+		 * <pre>
+		 * insert $concept isa Service, has uid (...);
+		 * match
+		 * 		$bpmnEntity isa BPMN_Entity, has uid (...);
+		 * 		$concept isa entity, has uid (...);
+		 * insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+		 * </pre>
+		 */
+		foundConcept = false;
+		for (int i = 0; i < parsedList.size(); i++) {
+			TypeQLQuery insertQuery = parsedList.get(i);
+			if (insertQuery.toString().startsWith("insert $concept isa Service, has uid ")) {
+				foundConcept = true;
+				// the next element should be the "match" command
+				TypeQLQuery matchQuery = parsedList.get(i + 1);
+				assertTrue(matchQuery.toString(),
+						// should be an insert command with a "match" block
+						matchQuery.asInsert().match().get()
+								// it should contain reference to the dataInputAssociation ID
+								.toString().contains("DataInputAssociation_1"));
 				break;
 			}
 		}

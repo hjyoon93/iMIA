@@ -24,6 +24,7 @@ import org.camunda.bpm.model.xml.impl.instance.DomElementWrapper;
 import org.camunda.bpm.model.xml.instance.ModelElementInstance;
 import org.camunda.bpm.model.xml.type.ModelElementType;
 import org.camunda.bpm.model.xml.type.attribute.Attribute;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +35,16 @@ import org.w3c.dom.NodeList;
 
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.exception.TypeQLException;
+import com.vaticle.typeql.lang.pattern.Pattern;
+import com.vaticle.typeql.lang.pattern.constraint.ThingConstraint.Has;
+import com.vaticle.typeql.lang.pattern.constraint.ThingConstraint.Isa;
+import com.vaticle.typeql.lang.pattern.constraint.ThingConstraint.Relation;
 import com.vaticle.typeql.lang.pattern.constraint.TypeConstraint.Owns;
 import com.vaticle.typeql.lang.pattern.constraint.TypeConstraint.Plays;
 import com.vaticle.typeql.lang.pattern.constraint.TypeConstraint.Relates;
+import com.vaticle.typeql.lang.pattern.schema.Rule;
+import com.vaticle.typeql.lang.pattern.variable.BoundVariable;
+import com.vaticle.typeql.lang.pattern.variable.ThingVariable;
 import com.vaticle.typeql.lang.pattern.variable.TypeVariable;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 
@@ -101,7 +109,12 @@ public class EncoderImpl implements Encoder {
 
 	private String bpmnParentChildRelationName = bpmnEntityNamePrefix + "hasChildTag";
 
-	private String jsonBPMNConceptualModelMap = "{'definitions':'Mission','@org.camunda.bpm.model.bpmn.instance.Task':'Task'}";
+	private String jsonBPMNConceptualModelMap = "{" + "'definitions':'Mission',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.Task':'Task'," + "'lane':'Performer',"
+			+ "'participant':'Performer'," + "'@org.camunda.bpm.model.bpmn.instance.ItemAwareElement':'Asset',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.DataAssociation':'Service'" + "}";
+
+	private String jsonConceptsNotToAddRole = "[" + "'Service'" + "]";
 
 	private boolean ignoreInvalidAttributeName = true;
 
@@ -111,7 +124,7 @@ public class EncoderImpl implements Encoder {
 
 	private String isPerformedByRelationName = "isPerformedBy";
 
-	private String requiresRelationName = "requires";
+	private String providesRelationName = "provides";
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
@@ -196,20 +209,21 @@ public class EncoderImpl implements Encoder {
 			if (isMapBPMNToConceptualModel()) {
 				writer.println(
 						"## Note: conceptual model is required in DALNIM. Uncomment the following if not declared yet.");
-				writer.println("## uid sub attribute, value string;");
-				writer.println("## Mission sub entity, owns uid @key;");
-				writer.println("## Task sub entity, owns uid @key;");
-				writer.println("## Performer sub entity, owns uid @key;");
-				writer.println("## Resource sub entity, owns uid @key;");
-				writer.println("## isCompoundBy sub relation, relates mission, relates task;");
-				writer.println("## Mission plays isCompoundBy:mission;");
-				writer.println("## Task plays isCompoundBy:task;");
-				writer.println("## requires sub relation, relates task, relates resource;");
-				writer.println("## Task plays requires:task;");
-				writer.println("## Resource plays requires:resource;");
-				writer.println("## isPerformedBy sub relation, relates task, relates performer;");
-				writer.println("## Task plays isPerformedBy:task;");
-				writer.println("## Performer plays isPerformedBy:performer;");
+				writer.println("# uid sub attribute, value string;");
+				writer.println("# Mission sub entity, owns uid @key;");
+				writer.println("# Task sub entity, owns uid @key;");
+				writer.println("# Performer sub entity, owns uid @key;");
+				writer.println("# Service sub Performer;");
+				writer.println("# Asset sub entity, owns uid @key;");
+				writer.println("# isCompoundBy sub relation, relates mission, relates task;");
+				writer.println("# Mission plays isCompoundBy:mission;");
+				writer.println("# Task plays isCompoundBy:task;");
+				writer.println("# isPerformedBy sub relation, relates task, relates performer;");
+				writer.println("# Task plays isPerformedBy:task;");
+				writer.println("# Performer plays isPerformedBy:performer;");
+				writer.println("# provides sub relation, relates asset, relates service;");
+				writer.println("# Asset plays provides:asset;");
+				writer.println("# Service plays provides:service;");
 			} else {
 				writer.println("uid sub attribute, value string;");
 			}
@@ -578,6 +592,9 @@ public class EncoderImpl implements Encoder {
 				// Specify the roles
 				writer.println(getBPMNEntityName() + " plays " + mappingRelationName + ":bpmnEntity;");
 
+				// obtain names of concepts not to include in roles.
+				Collection<String> conceptsNotToAddRole = parseJSONConceptsNotToAddRole();
+
 				// TypeDB does not allow 'entity' to play a role.
 				// Need to explicitly enumerate...
 				// TODO create an abstract conceptual model entity instead of enumerating each
@@ -588,6 +605,8 @@ public class EncoderImpl implements Encoder {
 						.distinct()
 						// ignore nulls and blanks.
 						.filter(Objects::nonNull).filter(name -> !name.trim().isEmpty())
+						// do not re-declare roles if super-entity already declared it
+						.filter(name -> !conceptsNotToAddRole.contains(name))
 						// add entry: <entityName> plays BPMN_hasConceptualModelElement:conceptualModel
 						.forEach(entityName -> {
 							logger.debug("'{}' will play some role in {}", entityName, mappingRelationName);
@@ -609,80 +628,198 @@ public class EncoderImpl implements Encoder {
 			writer.println("## Rules that inject BPMN semantics to entities in the conceptual model");
 			writer.println();
 
+			// Rule to connect Mission-Task
 			writer.println("## Task isCompoundBy Mission");
-			writer.println("rule rule_misson_isCompoundBy_task:\n" + "when {\n" + "\t $bpmndefinitions isa "
-					+ getBPMNEntityNamePrefix() + "definitions;\n" + "\t $bpmnprocess isa " + getBPMNEntityNamePrefix()
-					+ "process;\n" + "\t $mission isa Mission;\n" + "\t $task isa Task;\n"
-					+ "\t (parent: $bpmndefinitions, child: $bpmnprocess) isa " + getBPMNParentChildRelationName()
-					+ ";\n" + "\t (parent: $bpmnprocess, child: $bpmntask) isa " + getBPMNParentChildRelationName()
-					+ ";\n" + "\t (bpmnEntity: $bpmndefinitions, conceptualModel: $mission) isa "
-					+ getBPMNConceptualModelMappingName() + ";\n"
-					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName()
-					+ ";\n" + "} then {\n" + "\t (mission: $mission, task: $task) isa " + getIsCompoundByRelationName()
-					+ ";\n" + "};");
+			writer.println("rule rule_misson_isCompoundBy_task:");
+			writer.println("when {");
+			writer.println("\t $bpmndefinitions isa " + getBPMNEntityNamePrefix() + "definitions;");
+			writer.println("\t $bpmnprocess isa " + getBPMNEntityNamePrefix() + "process;");
+			writer.println("\t $mission isa Mission;");
+			writer.println("\t $task isa Task;");
+			writer.println(
+					"\t (parent: $bpmndefinitions, child: $bpmnprocess) isa " + getBPMNParentChildRelationName() + ";");
+			writer.println("\t (parent: $bpmnprocess, child: $bpmntask) isa " + getBPMNParentChildRelationName() + ";");
+			writer.println("\t (bpmnEntity: $bpmndefinitions, conceptualModel: $mission) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("} then {");
+			writer.println("\t (mission: $mission, task: $task) isa " + getIsCompoundByRelationName() + ";");
+			writer.println("};");
 			writer.println();
 
-			writer.println("## Task isPerformedBy Performer");
-			writer.println("rule rule_task_isperformedBy_performer:\n" + "when {\n" + "\t $bpmnflowNodeRef isa "
-					+ getBPMNEntityNamePrefix() + "flowNodeRef, has " + getBPMNTextContentAttributeName()
-					+ " $id-ref;\n" + "\t $bpmntask isa " + getBPMNEntityName() + ", has "
-					+ getBPMNAttributeNamePrefix() + "id $id;\n" + "\t $id = $id-ref;\n" + "\t $task isa Task;\n"
-					+ "\t $performer isa Performer;\n" + "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
-					+ getBPMNConceptualModelMappingName() + ";\n"
-					+ "\t (parent: $bpmnlane, child: $bpmnflowNodeRef) isa BPMN_hasChildTag;\n"
-					+ "\t (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa "
-					+ getBPMNConceptualModelMappingName() + ";\n" + "} then {\n"
-					+ "\t (task: $task, performer: $performer) isa " + getIsPerformedByRelationName() + ";\n" + "};");
-			writer.println();
+			// Rule to connect Task-Performer
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "flowNodeRef")
+					&& declaredAttributes.contains(getBPMNTextContentAttributeName())) {
+				writer.println("## Task isPerformedBy Performer");
+				writer.println("rule rule_task_isperformedBy_performer:");
+				writer.println("when {");
+				writer.println("\t $bpmnflowNodeRef isa " + getBPMNEntityNamePrefix() + "flowNodeRef, has "
+						+ getBPMNTextContentAttributeName() + " $id-ref;");
+				writer.println("\t $bpmntask isa " + getBPMNEntityName() + ", has " + getBPMNAttributeNamePrefix()
+						+ "id $id;");
+				writer.println("\t $id = $id-ref;");
+				writer.println("\t $task isa Task;");
+				writer.println("\t $performer isa Performer;");
+				writer.println("\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("\t (parent: $bpmnlane, child: $bpmnflowNodeRef) isa " + getBPMNParentChildRelationName()
+						+ ";");
+				writer.println("\t (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("} then {");
+				writer.println("\t (task: $task, performer: $performer) isa " + getIsPerformedByRelationName() + ";");
+				writer.println("};");
+				writer.println();
+			}
+			// Another rule to connect Task-Performer when Performer == Service
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataInputAssociation")) {
+				writer.println("## Task isPerformedBy Service if Asset provides Service");
+				writer.println("rule rule_task_isPerformedBy_service_if_asset_provides_service:");
+				writer.println("when {");
+				writer.println("$bpmntask isa " + getBPMNEntityName() + ";");
+				writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
+				writer.println("\t $dataInputAssociation isa " + getBPMNEntityNamePrefix() + "dataInputAssociation;");
+				writer.println("\t $task isa Task; ");
+				writer.println("\t $service isa Service;");
+				writer.println("\t (parent: $bpmntask, child: $dataInputAssociation) isa "
+						+ getBPMNParentChildRelationName() + ";");
+				writer.println("\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("\t (bpmnEntity: $dataInputAssociation, conceptualModel: $service) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("} then {");
+				writer.println("\t (task: $task, performer: $service) isa " + getIsPerformedByRelationName() + ";");
+				writer.println("};");
+				writer.println();
+			}
 
-			writer.println("## Task requires Resource");
-			writer.println("rule rule_task_requries_resource:\n" + "when {\n" + "\t $dataObject isa "
-					+ getBPMNEntityNamePrefix() + "dataObject, has " + getBPMNAttributeNamePrefix() + "id $data_id;\n"
-					+ "\t $resource isa Resource;\n" + "\t $bpmntask isa " + getBPMNEntityName() + ";\n"
-					+ "\t $task isa Task;\n" + "\t $dataInputAssociation isa " + getBPMNEntityNamePrefix()
-					+ "dataInputAssociation;\n" + "\t $sourceRef isa " + getBPMNEntityNamePrefix() + "sourceRef, has "
-					+ getBPMNTextContentAttributeName() + " $source;\n" + "\t $source = $data_id;\n"
-					+ "\t (bpmnEntity: $dataObject, conceptualModel: $resource) isa "
-					+ getBPMNConceptualModelMappingName() + ";\n"
-					+ "\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa " + getBPMNConceptualModelMappingName()
-					+ ";\n" + "\t (parent: $bpmntask, child: $dataInputAssociation) isa "
-					+ getBPMNParentChildRelationName() + ";\n"
-					+ "\t (parent: $dataInputAssociation, child: $sourceRef) isa " + getBPMNParentChildRelationName()
-					+ ";\n" + "} then {\n" + "\t (task: $task, resource: $resource) isa requires;\n" + "};");
-			writer.println();
+			// Rule to connect Asset-Service
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataInputAssociation")
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObject")
+					&& declaredAttributes.contains(getBPMNTextContentAttributeName())
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "id")) {
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "sourceRef")) {
+					writer.println("## Asset provides Service (from input data)");
+					writer.println("rule rule_source_asset_provides_service:");
+					writer.println("when {");
+					writer.println(
+							"\t $dataInputAssociation isa " + getBPMNEntityNamePrefix() + "dataInputAssociation;");
+					writer.println("\t $ref isa " + getBPMNEntityNamePrefix() + "sourceRef, has "
+							+ getBPMNTextContentAttributeName() + " $ref_id;");
+					writer.println("\t $dataObject isa " + getBPMNEntityNamePrefix() + "dataObject, has "
+							+ getBPMNAttributeNamePrefix() + "id $data_id;");
+					writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
+					writer.println("\t $service isa Service;");
+					writer.println("\t $asset isa Asset; ");
+					writer.println("\t $data_id = $ref_id;");
+					writer.println("\t (parent: $bpmntask, child: $dataInputAssociation) isa "
+							+ getBPMNParentChildRelationName() + ";");
+					writer.println("\t (parent: $dataInputAssociation, child: $ref) isa "
+							+ getBPMNParentChildRelationName() + ";");
+					writer.println("\t (bpmnEntity: $dataObject, conceptualModel: $asset) isa "
+							+ getBPMNConceptualModelMappingName() + ";");
+					writer.println("\t (bpmnEntity: $dataInputAssociation, conceptualModel: $service) isa "
+							+ getBPMNConceptualModelMappingName() + ";");
+					writer.println("} then {");
+					writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
+					writer.println("};");
+					writer.println();
+				}
+				// Another rule to connect Asset-Service
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "targetRef")) {
+					writer.println("## Asset provides Service (from output data)");
+					writer.println("rule rule_target_asset_provides_service:");
+					writer.println("when {");
+					writer.println(
+							"\t $dataInputAssociation isa " + getBPMNEntityNamePrefix() + "dataInputAssociation;");
+					writer.println("\t $ref isa " + getBPMNEntityNamePrefix() + "targetRef, has "
+							+ getBPMNTextContentAttributeName() + " $ref_id;");
+					writer.println("\t $dataObject isa " + getBPMNEntityNamePrefix() + "dataObject, has "
+							+ getBPMNAttributeNamePrefix() + "id $data_id;");
+					writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
+					writer.println("\t $service isa Service;");
+					writer.println("\t $asset isa Asset; ");
+					writer.println("\t $data_id = $ref_id;");
+					writer.println("\t (parent: $bpmntask, child: $dataInputAssociation) isa "
+							+ getBPMNParentChildRelationName() + ";");
+					writer.println("\t (parent: $dataInputAssociation, child: $ref) isa "
+							+ getBPMNParentChildRelationName() + ";");
+					writer.println("\t (bpmnEntity: $dataObject, conceptualModel: $asset) isa "
+							+ getBPMNConceptualModelMappingName() + ";");
+					writer.println("\t (bpmnEntity: $dataInputAssociation, conceptualModel: $service) isa "
+							+ getBPMNConceptualModelMappingName() + ";");
+					writer.println("} then {");
+					writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
+					writer.println("};");
+					writer.println();
+				}
+			}
 
 			// Show sample queries
 			writer.println("## Sample queries for the above rules");
 			writer.println();
 
-			writer.println("## query isCompoundBy");
-			writer.println("# match \n" + "# $r isa isCompoundBy; \n" + "# $m isa Mission, has uid $muid; \n"
-					+ "# $t isa Task, has uid $tuid; \n"
-					+ "# (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;\n"
-					+ "# $bpmntask isa BPMN_Entity, has uid $buid;\n" + "# get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;");
+			writer.println("## query " + getIsCompoundByRelationName());
+			writer.println("# match ");
+			writer.println("# $r isa " + getIsCompoundByRelationName() + "; ");
+			writer.println("# $m isa Mission, has uid $muid; ");
+			writer.println("# $t isa Task, has uid $tuid; ");
+			writer.println("# $bpmntask isa " + getBPMNEntityName() + ", has uid $buid;");
+			writer.println(
+					"# (bpmnEntity: $bpmntask, conceptualModel: $t) isa " + getBPMNConceptualModelMappingName() + ";");
+			writer.println("# get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;");
 			writer.println();
 
-			writer.println("## query isPerformedBy");
-			writer.println("# match\n" + "# $task isa Task, has uid $uid1;\n"
-					+ "# $performer isa Performer, has uid $uid2;\n" + "# $bpmntask isa BPMN_Entity, has uid $uid3;\n"
-					+ "# $bpmnlane isa BPMN_lane, has uid $uid4;\n"
-					+ "# $rel (task: $task, performer: $performer) isa isPerformedBy;\n"
-					+ "# (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;\n"
-					+ "# (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa BPMN_hasConceptualModelElement;\n"
-					+ "# get $rel, $uid1, $uid2, $uid3, $uid4, $bpmntask, $bpmnlane;");
+			writer.println("## query " + getIsPerformedByRelationName());
+			writer.println("# match");
+			writer.println("# $bpmntask isa " + getBPMNEntityName() + ", has uid $uid1;");
+			writer.println("# $bpmnperfomer isa " + getBPMNEntityName() + ", has uid $uid2;");
+			writer.println("# $rel1 (task: $task, performer: $performer) isa " + getIsPerformedByRelationName() + ";");
+			writer.println("# $rel2 (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("# $rel3 (bpmnEntity: $bpmnperfomer, conceptualModel: $performer) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("# get $rel1, $rel2, $rel3, $uid1, $uid2;");
 			writer.println();
 
-			writer.println("## query requires");
-			writer.println("# match\n" + "# $dataObject isa BPMN_dataObject, has uid $uid1;\n"
-					+ "# $resource isa Resource, has uid $uid2;\n" + "# $bpmntask isa BPMN_Entity, has uid $uid3;\n"
-					+ "# $task isa Task, has uid $uid4;\n" + "# $rel (task: $task, resource: $resource) isa requires;\n"
-					+ "# (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;\n"
-					+ "# (bpmnEntity: $dataObject, conceptualModel: $resource) isa BPMN_hasConceptualModelElement;\n"
-					+ "# get $rel, $dataObject, $resource, $bpmntask, $task , $uid1, $uid2, $uid3, $uid4;");
+			writer.println("## query " + getProvidesRelationName());
+			writer.println("# match");
+			writer.println("# $asset isa Asset, has uid $uid1;");
+			writer.println("# $service isa Service, has uid $uid2;");
+			writer.println("# $bpmnasset isa " + getBPMNEntityName() + ", has uid $uid3;");
+			writer.println("# $bpmnservice isa " + getBPMNEntityName() + ", has uid $uid4;");
+			writer.println("# $rel1 (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
+			writer.println("# $rel2 (bpmnEntity: $bpmnasset, conceptualModel: $asset) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("# $rel3 (bpmnEntity: $bpmnservice, conceptualModel: $service) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("# get $rel1, $rel2, $rel3, $uid1, $uid2, $uid3, $uid4;");
 			writer.println();
 
 		} // else ignore mappings to conceptual model
 
+	}
+
+	/**
+	 * Parses the content of {@link #getJSONConceptsNotToAddRole()}
+	 * 
+	 * @return collection of concept names not to be included as roles in
+	 *         relationships (probably because the super-entity already does declare
+	 *         such role).
+	 */
+	protected Collection<String> parseJSONConceptsNotToAddRole() {
+
+		Collection<String> ret = new HashSet<>();
+
+		try {
+			JSONArray array = new JSONArray(getJSONConceptsNotToAddRole());
+			array.forEach(obj -> ret.add(obj.toString()));
+		} catch (Exception e) {
+			logger.warn("Failed to parse list of concepts not to add roles: {}", getJSONConceptsNotToAddRole());
+		}
+
+		return ret;
 	}
 
 	/**
@@ -1370,6 +1507,87 @@ public class EncoderImpl implements Encoder {
 			}
 		} // end of iteration on definitions
 
+		// All rules must refer to declared entities, attributes, and relations.
+		List<Rule> rules = define.rules();
+		// use an index to keep track of which rule we are verifying now
+		for (int ruleIndex = 0; ruleIndex < rules.size(); ruleIndex++) {
+
+			// check the current rule
+			Rule rule = rules.get(ruleIndex);
+
+			// check for referred entity/relation/attribute names
+			// in the list of conditions
+			for (Pattern pattern : rule.when().patterns()) {
+				BoundVariable variable = pattern.asVariable();
+				if (variable.isThing()) {
+					ThingVariable<?> thing = variable.asThing();
+					Optional<Relation> relation = thing.relation();
+					Optional<Isa> isa = thing.isa();
+					if (relation.isPresent()) {
+						// this is a relation
+						if (isa.isPresent()) {
+							String relationName = isa.get().type().toString();
+							if (!declaredRelationRoles.containsKey(relationName)) {
+								throw new ParseException(
+										"No declaration found for relation " + relationName + " in " + pattern,
+										ruleIndex);
+							}
+						}
+					} else {
+						// entity or attribute
+						if (isa.isPresent()) {
+							// extract what's after "isa"
+							String entityOrAttribName = isa.get().type().toString();
+							// verify only the names that start with the expected prefixes
+							if (entityOrAttribName.startsWith(getBPMNEntityNamePrefix())
+									&& !declaredEntities.contains(entityOrAttribName)) {
+								throw new ParseException(
+										"No declaration found for entity " + entityOrAttribName + " in " + pattern,
+										ruleIndex);
+							} else if (entityOrAttribName.startsWith(getBPMNAttributeNamePrefix())
+									&& !declaredAttributes.contains(entityOrAttribName)) {
+								throw new ParseException(
+										"No declaration found for attribute " + entityOrAttribName + " in " + pattern,
+										ruleIndex);
+							}
+						}
+						// check the list of attributes
+						for (Has has : thing.has()) {
+							Optional<Isa> attribIsA = has.attribute().isa();
+							if (attribIsA.isPresent()) {
+								// get attribute type
+								String attribName = attribIsA.get().type().toString();
+								// only consider attributes starting with BPMN prefix
+								if (attribName.startsWith(getBPMNAttributeNamePrefix())
+										&& !declaredAttributes.contains(attribName)) {
+									throw new ParseException(
+											"No declaration found for attrbute " + attribName + " in " + pattern,
+											ruleIndex);
+								}
+							}
+
+						} // end of iteration on attributes
+
+					} // end of if relation else
+
+				} // else variable is not a "thing" (so ignore)
+
+			} // end of iteration on patterns inside the condition of this rule
+
+			// No need to check referred relations in the conclusion
+			// because these are likely to be relations in the concept model
+			// (which are not declared in the BPMN schema).
+//			Optional<Isa> isa = rule.then().isa();
+//			if (isa.isPresent()) {
+//				String thingName = isa.get().type().toString();
+//				if (!declaredRelationRoles.containsKey(thingName) && !declaredEntities.contains(thingName)
+//						&& !declaredAttributes.contains(thingName)) {
+//					throw new ParseException("No declaration found for " + thingName + " in " + rule, ruleIndex);
+//				}
+//			}
+
+		} // end of iteration on all rules
+
 		// all referred entities must have a declaration
 		if (!declaredEntities.containsAll(referredEntities)) {
 			throw new ParseException("All entities must have a declaration. Declared = " + declaredEntities
@@ -1692,17 +1910,36 @@ public class EncoderImpl implements Encoder {
 	}
 
 	/**
-	 * @return the requiresRelationName
+	 * @return the providesRelationName
 	 */
-	public String getRequiresRelationName() {
-		return requiresRelationName;
+	public String getProvidesRelationName() {
+		return providesRelationName;
 	}
 
 	/**
-	 * @param requiresRelationName the requiresRelationName to set
+	 * @param providesRelationName the requiresRelationName to set
 	 */
-	public void setRequiresRelationName(String requiresRelationName) {
-		this.requiresRelationName = requiresRelationName;
+	public void setProvidesRelationName(String providesRelationName) {
+		this.providesRelationName = providesRelationName;
+	}
+
+	/**
+	 * @return JSON array containing the names of concepts not to include in roles.
+	 * @see #getJSONBPMNConceptualModelMap()
+	 * @see #parseJSONConceptsNotToAddRole()
+	 */
+	public String getJSONConceptsNotToAddRole() {
+		return jsonConceptsNotToAddRole;
+	}
+
+	/**
+	 * @param jsonConceptsNotToAddRole : JSON array containing the names of concepts
+	 *                                 not to include in roles.
+	 * @see #getJSONBPMNConceptualModelMap()
+	 * @see #parseJSONConceptsNotToAddRole()
+	 */
+	public void setJSONConceptsNotToAddRole(String jsonConceptsNotToAddRole) {
+		this.jsonConceptsNotToAddRole = jsonConceptsNotToAddRole;
 	}
 
 }
