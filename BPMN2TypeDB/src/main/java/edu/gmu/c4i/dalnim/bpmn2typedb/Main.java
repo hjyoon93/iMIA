@@ -64,12 +64,9 @@ public class Main {
 	 *             <pre>
 	 * --help,  -h :	Prints this help. See application.properties for more configurable parameters.
 	 * --input, -i :	The input BPMN file. 
-	 * 					Will be ignored if "--url" is present.
 	 * 					Default is "input.bpmn"
 	 * 
-	 * --output, -o :	Output directory. 
-	 * 					If running with "--url", then this program will output a BPMN file read from TypeDB.
-	 * 					If not running with "--url", then this will be the folder to write 
+	 * --output, -o :	Output directory to save the
 	 * 					TypeQL schema (schema.tql) and data (data.tql).
 	 * 					Default is "./output/"
 	 *             </pre>
@@ -93,7 +90,7 @@ public class Main {
 
 		// print help if argument is set
 		if (cmd.hasOption('h')) {
-			new HelpFormatter().printHelp("sparql.http.request", options);
+			new HelpFormatter().printHelp("BPMN2TypeDB", options);
 			return;
 		}
 
