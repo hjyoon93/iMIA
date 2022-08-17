@@ -12,7 +12,7 @@ See *pom.xml* (the maven configuration file) for details about this project's co
 
 3. Run the command below. Make sure you are connected to the Internet because Maven will attempt to automatically download some dependencies.
 
-				maven clean package
+				mvn clean package
 
 4. An executable JAR file called *BPMN2TypeDB-<VERSION>-jar-with-dependencies.jar* will be created in the *target* folder. This file can be executed with a Java Runtime Environment (version 11 or newer suggested).
 	* Similarly, a source JAR file called *BPMN2TypeDB-<VERSION>-sources.jar* will be created in the *target* folder. This is a standard JAR container with the project's source code. A JAR file is an ordinary ZIP file that can be extracted with any ZIP package extraction tool of your choice.
