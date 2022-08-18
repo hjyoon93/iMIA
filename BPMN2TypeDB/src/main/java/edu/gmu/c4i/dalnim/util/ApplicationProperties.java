@@ -116,31 +116,6 @@ public class ApplicationProperties extends Properties {
 
 		Class<? extends Object> clazz = obj.getClass();
 
-//		this.entrySet().stream()
-//				// key is in the format <CLASS>.<ATTRIBUTE NAME>.
-//				// Only consider keys with same class name.
-//				.filter(entry -> entry.getKey().toString().startsWith(clazz.getName()))
-//				// Inject attribute values
-//				.forEach(entry -> {
-//					try {
-//						logger.debug("Processing property {}", entry);
-//
-//						// Extract <ATTRIBUTE NAME>
-//						String attributeName = entry.getKey().toString().substring(clazz.getName().length()
-//								// +1 to ignore "."
-//								+ 1);
-//						logger.debug("Attribute name = {}", attributeName);
-//
-//						// use reflection to set
-//						// assume string argument by default
-//						Method setter = clazz.getMethod("set" + StringUtils.capitalize(attributeName), String.class);
-//						logger.debug("Setter = {}", setter);
-//
-//						setter.invoke(obj, entry.getValue().toString());
-//					} catch (Exception e) {
-//						logger.warn("Failed to handle property {}", entry, e);
-//					}
-//				});
 		for (java.util.Map.Entry<Object, Object> entry : this.entrySet()) {
 			if (!entry.getKey().toString().startsWith(clazz.getName())) {
 				continue;
