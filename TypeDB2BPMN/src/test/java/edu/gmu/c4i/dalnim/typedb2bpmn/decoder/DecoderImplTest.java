@@ -42,7 +42,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +61,7 @@ import com.vaticle.typeql.lang.query.TypeQLQuery;
  * 
  * @author shou
  */
-@Ignore("A TypeDB instance must be running in localhos:1729. Remove this annotation if TypeDB is running fine.")
+//@Ignore("A TypeDB instance must be running in localhos:1729. Remove this annotation if TypeDB is running fine.")
 public class DecoderImplTest {
 
 	private static Logger logger = LoggerFactory.getLogger(DecoderImplTest.class);

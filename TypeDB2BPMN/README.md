@@ -10,9 +10,9 @@ See *pom.xml* (the maven configuration file) for details about this project's co
 
 2. Access (cd) this project's root directory (where the *pom.xml* resides).
 
-3. Run the command below. Make sure you are connected to the Internet because Maven will attempt to automatically download some dependencies.
+3. Run the command below. Make sure you are connected to the Internet because Maven will attempt to automatically download some dependencies. You'll need to use the *-Dmaven.test.skip=true* option if you do not have an instance of TypeDB running in the default port (test units will try to access TypeDB).
 
-				mvn clean package
+				mvn clean package [-Dmaven.test.skip=true]
 
 4. An executable JAR file called *TypeDB2BPMN-<VERSION>-jar-with-dependencies.jar* will be created in the *target* folder. This file can be executed with a Java Runtime Environment (version 11 or newer suggested).
 	* Similarly, a source JAR file called *TypeDB2BPMN-<VERSION>-sources.jar* will be created in the *target* folder. This is a standard JAR container with the project's source code. A JAR file is an ordinary ZIP file that can be extracted with any ZIP package extraction tool of your choice.
