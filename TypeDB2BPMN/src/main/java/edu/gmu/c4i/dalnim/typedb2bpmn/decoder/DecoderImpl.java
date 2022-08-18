@@ -2,15 +2,18 @@ package edu.gmu.c4i.dalnim.typedb2bpmn.decoder;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.camunda.bpm.model.bpmn.Bpmn;
+import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.instance.Definitions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +23,8 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.concept.Concept;
+import com.vaticle.typedb.client.api.concept.thing.Attribute;
 
 import edu.gmu.c4i.dalnim.util.ApplicationProperties;
 
@@ -44,15 +49,23 @@ public class DecoderImpl implements Decoder {
 	// TODO substitute entity/relation names with "@{key}" tags
 	private String rootQueryTemplate = "## Query BPMN root by regex on UID (regex matches BPMN definitions or Mission in concept model)\n"
 			+ "match\n" + "$query like \"@{rootUID}\";\n"
-			+ "$bpmnroot isa BPMN_definitions, has uid $uid_b, has attribute $attrib;\n"
+			+ "$entity isa BPMN_definitions, has uid $uid_b, has attribute $attribute;\n"
 			+ "$mission isa Mission, has uid $uid_m;\n" + "{ $uid_m = $query; } or {  $uid_b = $query ;};\n"
-			+ "(bpmnEntity: $bpmnroot, conceptualModel: $mission) isa BPMN_hasConceptualModelElement;\n"
-			+ "get $bpmnroot, $attrib;";
+			+ "(bpmnEntity: $entity, conceptualModel: $mission) isa BPMN_hasConceptualModelElement;\n"
+			+ "get $entity, $attribute;";
 
 	// TODO substitute entity/relation names with "@{key}" tags
 	private String childQueryTemplate = "## query BPMN child and its attributes\n" + "match\n"
-			+ "$parent has uid \"@{parentUID}\";\n" + "$child isa BPMN_Entity, has attribute $attrib;\n"
-			+ "(parent: $parent, child: $child) isa BPMN_hasChildTag;\n" + "get $child, $attrib;";
+			+ "$parent has uid \"@{parentUID}\";\n" + "$entity isa BPMN_Entity, has attribute $attribute;\n"
+			+ "(parent: $parent, child: $entity) isa BPMN_hasChildTag;\n" + "get $entity, $attribute;";
+
+	private String bpmnEntityNamePrefix = "BPMN_";
+
+	private String bpmnAttributeNamePrefix = "BPMNattrib_";
+
+	private String bpmnTextContentAttributeName = bpmnEntityNamePrefix + "textContent";
+
+	private boolean runSanityCheck = true;
 
 	/**
 	 * Default constructor is protected from public access. Use
@@ -96,34 +109,88 @@ public class DecoderImpl implements Decoder {
 		// Prepare a query the root BPMN tag (aka 'definitions')
 		String rootQuery = getQuery(getRootQueryTemplate(), properties);
 
-		// start a session to query the database
+		// the database name to query
 		String database = getDatabaseName();
+
+		// prepare the BPMN model to write
+		BpmnModelInstance bpmnModel = Bpmn.createEmptyModel();
+
+		// start a session to query the database
 		logger.info("Creating a session to database '{}'", database);
 		try (TypeDBSession session = client.session(database, TypeDBSession.Type.DATA, infer)) {
 
 			// prepare writer for output stream
-			try (PrintWriter writer = new PrintWriter(outputStream)) {
+			// Run a transaction to extract the BPMN 'definitions' node from the answer
+			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.READ, infer)) {
 
-				// Run a transaction to extract the BPMN 'definitions' node from the answer
-				try (TypeDBTransaction readTransaction = session.transaction(TypeDBTransaction.Type.READ, infer)) {
-					Stream<ConceptMap> answers = readTransaction.query().match(rootQuery);
-					for (ConceptMap conceptMap : answers.collect(Collectors.toList())) {
-						// TODO extract the definitions tag and its attributes
+				// Run query.
+				// This query is supposed to return an entity and its attributes
+				List<ConceptMap> response = transaction.query().match(rootQuery).collect(Collectors.toList());
 
+				// Assume we have only 1 entity (the root) in the response. Get it.
+				Concept entity = response.stream().flatMap(map -> map.concepts().stream()).filter(Concept::isEntity)
+						.findAny().orElseThrow(() -> new IOException(
+								"No root entity (BPMN definitions) found. Response: " + response));
+
+				// extract the attributes
+				Collection<Attribute<?>> attributes = response.stream()
+						// only consider those related to the root entity
+						.filter(map -> map.concepts().contains(entity)).flatMap(map -> map.concepts().stream())
+						// convert to attributes
+						.filter(Concept::isAttribute).map(Concept::asAttribute).distinct().collect(Collectors.toSet());
+
+				// save the root entity as 'definitions'
+				Definitions definitions = bpmnModel.newInstance(Definitions.class);
+
+				// save the attributes
+				for (Attribute<?> attrib : attributes) {
+
+					String attribName = attrib.getType().getLabel().name();
+					String attribValue = attrib.asString().getValue();
+
+					// handle uid, namespace, id, and name as special attributes
+					if (attribName.equals(getBPMNAttributeNamePrefix() + "xmlns")) {
+						logger.warn("xmlns of definition {} is {}", entity, attribName);
+					} else if (attribName.equals(getBPMNAttributeNamePrefix() + "targetNamespace")) {
+						definitions.setTargetNamespace(attribValue);
+					} else if (attribName.equals(getBPMNAttributeNamePrefix() + "id")) {
+						definitions.setId(attribValue);
+					} else if (attribName.equals(getBPMNAttributeNamePrefix() + "name")) {
+						definitions.setName(attribValue);
+					} else {
+						// handle ordinary attributes
+						if (attribName.startsWith(getBPMNAttributeNamePrefix())) {
+							// remove prefix if any
+							attribName = attribName.substring(getBPMNAttributeNamePrefix().length());
+						}
+						definitions.setAttributeValue(attribName, attribValue);
 					}
 				}
 
-				// TODO recursively access children
+				// update the definitions in BPMN model
+				bpmnModel.setDefinitions(definitions);
 
-			}
+			} // end of TypeDB transaction
 
-		}
+			// TODO recursively access children
+//			ModelElementType type = bpmnModel.getModel().getTypeForName(bpmnModel.getDocument().getRootElement().getNamespaceURI(), "process");
+//			ModelElementInstance child = bpmnModel.newInstance(type);
+//			bpmnModel.getDefinitions().addChildElement(child);
+
+		} // end of TypeDB session
 
 		// make sure to close the connection to TypeDB
 		logger.debug("Closing connection to TypeDB: {}", client);
 		client.close();
 
-		throw new UnsupportedOperationException("Not finished yet");
+		// save the BPMN model
+		logger.debug("Saving the model...");
+		Bpmn.writeModelToStream(outputStream, bpmnModel);
+
+		if (isRunSanityCheck()) {
+			logger.debug("Checking model validation");
+			Bpmn.validateModel(bpmnModel);
+		}
 	}
 
 	/**
@@ -361,6 +428,68 @@ public class DecoderImpl implements Decoder {
 	 */
 	public void setChildQueryTemplate(String template) {
 		this.childQueryTemplate = template;
+	}
+
+	/**
+	 * @return the prefix to be used in all entities/relations generated by this
+	 *         class.
+	 */
+	public String getBPMNEntityNamePrefix() {
+		return bpmnEntityNamePrefix;
+	}
+
+	/**
+	 * @param bpmnEntityNamePrefix : the prefix to be used in all entities/relations
+	 *                             generated by this class.
+	 */
+	public void setBPMNEntityNamePrefix(String bpmnEntityNamePrefix) {
+		this.bpmnEntityNamePrefix = bpmnEntityNamePrefix;
+	}
+
+	/**
+	 * @return : the prefix to be used in all attributes generated by this class.
+	 */
+	public String getBPMNAttributeNamePrefix() {
+		return bpmnAttributeNamePrefix;
+	}
+
+	/**
+	 * @param bpmnAttributeNamePrefix : the prefix to be used in all attributes
+	 *                                generated by this class.
+	 */
+	public void setBPMNAttributeNamePrefix(String bpmnAttributeNamePrefix) {
+		this.bpmnAttributeNamePrefix = bpmnAttributeNamePrefix;
+	}
+
+	/**
+	 * @return name of the artificial attribute that will store text XML child.
+	 */
+	public String getBPMNTextContentAttributeName() {
+		return bpmnTextContentAttributeName;
+	}
+
+	/**
+	 * @param attributeName : name of the artificial attribute that will store text
+	 *                      XML child.
+	 */
+	public void setBPMNTextContentAttributeName(String attributeName) {
+		this.bpmnTextContentAttributeName = attributeName;
+	}
+
+	/**
+	 * @return if true, a sanity check will be executed at the end of
+	 *         {@link #saveBPMN(OutputStream)}
+	 */
+	public boolean isRunSanityCheck() {
+		return runSanityCheck;
+	}
+
+	/**
+	 * @param run : if true, a sanity check will be executed at the end of
+	 *            {@link #saveBPMN(OutputStream)}
+	 */
+	public void setRunSanityCheck(boolean run) {
+		this.runSanityCheck = run;
 	}
 
 }
