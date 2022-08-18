@@ -530,6 +530,7 @@ public class DecoderImpl implements Decoder {
 	/**
 	 * @param address : address of TypeDB (e.g., "localhost:1729").
 	 */
+	@Override
 	public void setTypeDBAddress(String address) {
 		this.typeDBAddress = address;
 	}
@@ -544,6 +545,7 @@ public class DecoderImpl implements Decoder {
 	/**
 	 * @param databaseName : name of the database in TypeDB to access.
 	 */
+	@Override
 	public void setDatabaseName(String databaseName) {
 		this.databaseName = databaseName;
 	}
@@ -560,6 +562,7 @@ public class DecoderImpl implements Decoder {
 	 * @param uid : the uid attribute to query in the TypeDB database to retrieve
 	 *            the root of the BPMN model. Regular expression is supported.
 	 */
+	@Override
 	public void setRootUID(String uid) {
 		this.rootUID = uid;
 	}

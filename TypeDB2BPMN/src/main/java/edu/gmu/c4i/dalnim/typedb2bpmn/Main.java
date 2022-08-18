@@ -61,8 +61,24 @@ public class Main {
 			new HelpFormatter().printHelp("TypeDB2BPMN", options);
 			return;
 		}
-
-		// TODO read other parameters
+		
+		// the decoder to run
+		Decoder decoder = Decoder.getDefaultDecoder();
+		
+		// read URL
+		if (cmd.hasOption("url")) {
+			decoder.setTypeDBAddress(cmd.getOptionValue("url"));
+		}
+		
+		// read database name
+		if (cmd.hasOption("database")) {
+			decoder.setDatabaseName(cmd.getOptionValue("database"));
+		}
+		
+		// read uid of BPMN definitions to query
+		if (cmd.hasOption("uid")) {
+			decoder.setRootUID(cmd.getOptionValue("uid"));
+		}
 
 		// read some properties from application.properties
 		ApplicationProperties properties = ApplicationProperties.getInstance();
@@ -75,8 +91,6 @@ public class Main {
 		File outputFile = new File(cmd.getOptionValue("output", bpmnFileName)).getAbsoluteFile();
 		logger.debug("Output location is: {}", outputFile);
 
-		// the decoder to run
-		Decoder decoder = Decoder.getDefaultDecoder();
 
 		// Generate the BPMN file...
 		try (OutputStream bpmnOutput = new BufferedOutputStream(new FileOutputStream(outputFile))) {
