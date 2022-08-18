@@ -13,7 +13,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.Definitions;
+import org.camunda.bpm.model.xml.instance.ModelElementInstance;
+import org.camunda.bpm.model.xml.type.ModelElementType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +28,7 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
+import com.vaticle.typedb.client.api.concept.thing.Entity;
 
 import edu.gmu.c4i.dalnim.util.ApplicationProperties;
 
@@ -43,6 +47,8 @@ public class DecoderImpl implements Decoder {
 	private String databaseName = "BPMN";
 
 	private String rootUID = "https://camunda.org/examples/#.*";
+
+	private String parentUIDAttributeName = "parentUID";
 
 	private String parentUID = rootUID;
 
@@ -100,32 +106,39 @@ public class DecoderImpl implements Decoder {
 		TypeDBClient client = TypeDB.coreClient(dbAddress);
 		logger.debug("Created connection to TypeDB: {}", client);
 
-		// option to enable inference
-		TypeDBOptions infer = TypeDBOptions.core().infer(true);
-
-		// obtains a property object pre-filled with attributes in this class.
-		Properties properties = this.getPropertiesFromFields();
-
-		// Prepare a query the root BPMN tag (aka 'definitions')
-		String rootQuery = getQuery(getRootQueryTemplate(), properties);
-
 		// the database name to query
 		String database = getDatabaseName();
+
+		// Obtains a property object pre-filled with attributes in this class.
+		// This information will be used to build queries.
+		Properties queryProperties = this.getQueryPropertiesFromFields();
+
+		// query the root node (definitions)
+		String query = getQuery(getRootQueryTemplate(), queryProperties);
 
 		// prepare the BPMN model to write
 		BpmnModelInstance bpmnModel = Bpmn.createEmptyModel();
 
+		// option to turn inference mode on
+		TypeDBOptions inferOption = TypeDBOptions.core().infer(true);
+
 		// start a session to query the database
 		logger.info("Creating a session to database '{}'", database);
-		try (TypeDBSession session = client.session(database, TypeDBSession.Type.DATA, infer)) {
+		try (TypeDBSession session = client.session(database, TypeDBSession.Type.DATA,
+				// enable inference mode
+				inferOption)) {
 
-			// prepare writer for output stream
+			// save the root entity as 'definitions'
+			Definitions definitions = bpmnModel.newInstance(Definitions.class);
+
 			// Run a transaction to extract the BPMN 'definitions' node from the answer
-			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.READ, infer)) {
+			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.READ,
+					// enable inference mode
+					inferOption)) {
 
 				// Run query.
 				// This query is supposed to return an entity and its attributes
-				List<ConceptMap> response = transaction.query().match(rootQuery).collect(Collectors.toList());
+				List<ConceptMap> response = transaction.query().match(query).collect(Collectors.toList());
 
 				// Assume we have only 1 entity (the root) in the response. Get it.
 				Concept entity = response.stream().flatMap(map -> map.concepts().stream()).filter(Concept::isEntity)
@@ -139,18 +152,23 @@ public class DecoderImpl implements Decoder {
 						// convert to attributes
 						.filter(Concept::isAttribute).map(Concept::asAttribute).distinct().collect(Collectors.toSet());
 
-				// save the root entity as 'definitions'
-				Definitions definitions = bpmnModel.newInstance(Definitions.class);
-
-				// save the attributes
+				// Save the attributes.
+				// Store the uid.
+				String uid = null;
 				for (Attribute<?> attrib : attributes) {
 
 					String attribName = attrib.getType().getLabel().name();
 					String attribValue = attrib.asString().getValue();
 
-					// handle uid, namespace, id, and name as special attributes
+					// handle some special attributes
 					if (attribName.equals(getBPMNAttributeNamePrefix() + "xmlns")) {
-						logger.warn("xmlns of definition {} is {}", entity, attribName);
+						// No need to change the model's BPMN namespace
+						// because it is already set by camunda library.
+						logger.debug("xmlns of entity {} is {}", entity, attribName);
+					} else if (attribName.equals("uid")) {
+						uid = attribValue;
+						// no need to store UID in BPMN
+						logger.debug("uid of entity {} is {}", entity, attribName);
 					} else if (attribName.equals(getBPMNAttributeNamePrefix() + "targetNamespace")) {
 						definitions.setTargetNamespace(attribValue);
 					} else if (attribName.equals(getBPMNAttributeNamePrefix() + "id")) {
@@ -167,15 +185,16 @@ public class DecoderImpl implements Decoder {
 					}
 				}
 
-				// update the definitions in BPMN model
+				// update the definitions (root) in BPMN model
 				bpmnModel.setDefinitions(definitions);
+
+				// update the parent uid for the recursive call
+				queryProperties.setProperty(getParentUIDAttributeName(), uid);
 
 			} // end of TypeDB transaction
 
-			// TODO recursively access children
-//			ModelElementType type = bpmnModel.getModel().getTypeForName(bpmnModel.getDocument().getRootElement().getNamespaceURI(), "process");
-//			ModelElementInstance child = bpmnModel.newInstance(type);
-//			bpmnModel.getDefinitions().addChildElement(child);
+			// recursively access children
+			visitChildrenRecursive(bpmnModel, definitions, session, queryProperties);
 
 		} // end of TypeDB session
 
@@ -187,10 +206,190 @@ public class DecoderImpl implements Decoder {
 		logger.debug("Saving the model...");
 		Bpmn.writeModelToStream(outputStream, bpmnModel);
 
+		// run basic sanity check
 		if (isRunSanityCheck()) {
-			logger.debug("Checking model validation");
+			logger.debug("Checking model validity");
 			Bpmn.validateModel(bpmnModel);
 		}
+	}
+
+	/**
+	 * Recursively visit the children.
+	 * 
+	 * @param currentNode
+	 * @param parentNode
+	 * @param definitions
+	 * @param session
+	 * @param queryProperties
+	 * 
+	 * @throws IOException
+	 */
+	protected void visitChildrenRecursive(BpmnModelInstance bpmnModel, ModelElementInstance parentNode,
+			TypeDBSession session, Properties queryProperties) throws IOException {
+
+		// Prepare a query to the child BPMN tags
+		// use the template to query the child node
+		String query = getQuery(getChildQueryTemplate(), queryProperties);
+
+		// Run a transaction to extract the child nodes
+		List<ConceptMap> response = null;
+		logger.debug("Querying children of {}. Query is:\n{}", parentNode, query);
+		try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.READ,
+				// enable inference mode
+				TypeDBOptions.core().infer(true))) {
+
+			// Run query.
+			// This query is supposed to return multiple entities and their attributes
+			response = transaction.query().match(query).collect(Collectors.toList());
+
+		} // end of TypeDB transaction
+
+		// Keep transaction life short: run recursive calls outside transaction.
+
+		// we should have some response
+		if (response == null) {
+			throw new IOException(
+					"Null response obtained while querying children of " + parentNode + ". Query was:\n " + query);
+		}
+
+		// retrieve the children
+		for (Entity childTypeDBEntity : response.stream().flatMap(map -> map.concepts().stream())
+				// iterate on entities only
+				.filter(Concept::isEntity).map(Concept::asEntity).collect(Collectors.toSet())) {
+
+			logger.debug("Creating BPMN child for entity {}", childTypeDBEntity);
+
+			// extract the child entity name
+			String childEntityName = childTypeDBEntity.getType().getLabel().name();
+			// remove prefix, if any
+			if (childEntityName.startsWith(getBPMNEntityNamePrefix())) {
+				childEntityName = childEntityName.substring(getBPMNEntityNamePrefix().length());
+			}
+
+			// create a BPMN node accordingly to the name of the entity
+			// translate TypeDB-type to BPMN-type.
+			ModelElementType childBPMNType = getElementTypeByName(bpmnModel, childEntityName);
+			if (childBPMNType == null) {
+				logger.error("BPMN node of type '{}' is not supported. Ignoring...", childEntityName);
+				continue;
+			}
+
+			// create a new BPMN node of this type
+			logger.debug("Creating BPMN child of type '{}'", childEntityName);
+			ModelElementInstance childBPMNNode = bpmnModel.newInstance(childBPMNType);
+
+			// add the new node as child of the parent node
+			parentNode.addChildElement(childBPMNNode);
+
+			// extract the attributes associated with current entity
+			Collection<Attribute<?>> attributes = response.stream()
+					// only consider those related to the current entity
+					.filter(map -> map.concepts().contains(childTypeDBEntity)).flatMap(map -> map.concepts().stream())
+					// convert to attributes
+					.filter(Concept::isAttribute).map(Concept::asAttribute).distinct().collect(Collectors.toSet());
+
+			// Keep track of the uid.
+			String uid = null;
+			// Save the attributes.
+			for (Attribute<?> attrib : attributes) {
+
+				String attribName = attrib.getType().getLabel().name();
+				String attribValue = attrib.asString().getValue();
+
+				// handle some special attributes
+				if (attribName.equals("uid")) {
+					uid = attribValue;
+					// no need to store UID in BPMN
+					logger.debug("uid of entity {} is {}", childTypeDBEntity, attribName);
+				} else if (attribName.equals(getBPMNTextContentAttributeName())) {
+					// in BPMN, text content is a child instead of attribute.
+					logger.debug("Text content found for {}. Text is '{}'", childBPMNNode, attribValue);
+					childBPMNNode.setTextContent(attribValue);
+				} else {
+					// handle ordinary attributes
+					if (attribName.startsWith(getBPMNAttributeNamePrefix())) {
+						// remove prefix if any
+						attribName = attribName.substring(getBPMNAttributeNamePrefix().length());
+					}
+					childBPMNNode.setAttributeValue(attribName, attribValue);
+				}
+			} // end of iteration on attributes
+
+			// update parent UID in next recursive call
+			queryProperties.setProperty(getParentUIDAttributeName(), uid);
+
+			// call recursive
+			visitChildrenRecursive(bpmnModel, childBPMNNode, session, queryProperties);
+
+		} // end of iteration on each child entity
+
+	}
+
+	protected ModelElementType getElementTypeByName(BpmnModelInstance bpmnModel, String name) {
+
+		// try default root namespace first
+		ModelElementType elementType = bpmnModel.getModel()
+				.getTypeForName(bpmnModel.getDocument().getRootElement().getNamespaceURI(), name);
+		if (elementType != null) {
+			logger.debug("Found type {} from root namespace {}.", elementType,
+					bpmnModel.getDocument().getRootElement().getNamespaceURI());
+			return elementType;
+		}
+
+		// Try other namespaces if we did not find with default namespace
+		// These are ordered by relevance...
+
+		// The BPMN 2.0 namespace
+		elementType = bpmnModel.getModel().getTypeForName(BpmnModelConstants.BPMN20_NS, name);
+		if (elementType != null) {
+			logger.debug("Found type {} from BPMN 2.0 namespace.", elementType);
+			return elementType;
+		}
+
+		// The BPMNDI namespace
+		elementType = bpmnModel.getModel().getTypeForName(BpmnModelConstants.BPMNDI_NS, name);
+		if (elementType != null) {
+			logger.debug("Found type {} from BPMNDI namespace.", elementType);
+			return elementType;
+		}
+
+		// The DC namespace
+		elementType = bpmnModel.getModel().getTypeForName(BpmnModelConstants.DC_NS, name);
+		if (elementType != null) {
+			logger.debug("Found type {} from DC namespace.", elementType);
+			return elementType;
+		}
+
+		// The DI namespace
+		elementType = bpmnModel.getModel().getTypeForName(BpmnModelConstants.DI_NS, name);
+		if (elementType != null) {
+			logger.debug("Found type {} from DI namespace.", elementType);
+			return elementType;
+		}
+
+		// The XSI namespace
+		elementType = bpmnModel.getModel().getTypeForName(BpmnModelConstants.XSI_NS, name);
+		if (elementType != null) {
+			logger.debug("Found type {} from XSI namespace.", elementType);
+			return elementType;
+		}
+
+		// Xml Schema is the default type language
+		elementType = bpmnModel.getModel().getTypeForName(BpmnModelConstants.XML_SCHEMA_NS, name);
+		if (elementType != null) {
+			logger.debug("Found type {} from XML Schema namespace.", elementType);
+			return elementType;
+		}
+
+		// XPATH namespace
+		elementType = bpmnModel.getModel().getTypeForName(BpmnModelConstants.XPATH_NS, name);
+		if (elementType != null) {
+			logger.debug("Found type {} from XPATH namespace.", elementType);
+			return elementType;
+		}
+
+		logger.warn("No type of name {} found in the known namespaces...", name);
+		return null;
 	}
 
 	/**
@@ -265,7 +464,7 @@ public class DecoderImpl implements Decoder {
 	 * 
 	 * @see ApplicationProperties
 	 */
-	protected Properties getPropertiesFromFields() {
+	protected Properties getQueryPropertiesFromFields() {
 
 		// the properties to return
 		Properties properties = new Properties(
@@ -490,6 +689,22 @@ public class DecoderImpl implements Decoder {
 	 */
 	public void setRunSanityCheck(boolean run) {
 		this.runSanityCheck = run;
+	}
+
+	/**
+	 * @return Name of the @{key} to hold the UID of parent node in the template at
+	 *         {@link #getChildQueryTemplate()}.
+	 */
+	public String getParentUIDAttributeName() {
+		return parentUIDAttributeName;
+	}
+
+	/**
+	 * @param key : Name of the @{key} to hold the UID of parent node in the
+	 *            template at {@link #getChildQueryTemplate()}.
+	 */
+	public void setParentUIDAttributeName(String key) {
+		this.parentUIDAttributeName = key;
 	}
 
 }
