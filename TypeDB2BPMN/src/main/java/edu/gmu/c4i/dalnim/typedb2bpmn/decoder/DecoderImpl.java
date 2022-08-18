@@ -41,12 +41,18 @@ public class DecoderImpl implements Decoder {
 
 	private String parentUID = rootUID;
 
+	// TODO substitute entity/relation names with "@{key}" tags
 	private String rootQueryTemplate = "## Query BPMN root by regex on UID (regex matches BPMN definitions or Mission in concept model)\n"
 			+ "match\n" + "$query like \"@{rootUID}\";\n"
 			+ "$bpmnroot isa BPMN_definitions, has uid $uid_b, has attribute $attrib;\n"
 			+ "$mission isa Mission, has uid $uid_m;\n" + "{ $uid_m = $query; } or {  $uid_b = $query ;};\n"
 			+ "(bpmnEntity: $bpmnroot, conceptualModel: $mission) isa BPMN_hasConceptualModelElement;\n"
 			+ "get $bpmnroot, $attrib;";
+
+	// TODO substitute entity/relation names with "@{key}" tags
+	private String childQueryTemplate = "## query BPMN child and its attributes\n" + "match\n"
+			+ "$parent has uid \"@{parentUID}\";\n" + "$child isa BPMN_Entity, has attribute $attrib;\n"
+			+ "(parent: $parent, child: $child) isa BPMN_hasChildTag;\n" + "get $child, $attrib;";
 
 	/**
 	 * Default constructor is protected from public access. Use
@@ -103,7 +109,7 @@ public class DecoderImpl implements Decoder {
 					Stream<ConceptMap> answers = readTransaction.query().match(rootQuery);
 					for (ConceptMap conceptMap : answers.collect(Collectors.toList())) {
 						// TODO extract the definitions tag and its attributes
-						
+
 					}
 				}
 
@@ -296,6 +302,9 @@ public class DecoderImpl implements Decoder {
 	 * @return template of TypeQL to be used to retrieve the root BPMN object.
 	 *         Annotated keywords between "@{" and "}" will be retrieved from
 	 *         attributes in this class. (see application.properties).
+	 * 
+	 * @see #getRootUID()
+	 * @see #getQuery(String, Properties)
 	 */
 	public String getRootQueryTemplate() {
 		return rootQueryTemplate;
@@ -306,6 +315,9 @@ public class DecoderImpl implements Decoder {
 	 *                 object. Annotated keywords between "@{" and "}" will be
 	 *                 retrieved from attributes in this class. (see
 	 *                 application.properties).
+	 * 
+	 * @see #getRootUID()
+	 * @see #getQuery(String, Properties)
 	 */
 	public void setRootQueryTemplate(String template) {
 		this.rootQueryTemplate = template;
@@ -323,6 +335,32 @@ public class DecoderImpl implements Decoder {
 	 */
 	public void setParentUID(String parentUID) {
 		this.parentUID = parentUID;
+	}
+
+	/**
+	 * @return template of TypeQL to be used to retrieve the children of a BPMN
+	 *         object identified by its UID. Annotated keywords between "@{" and "}"
+	 *         will be retrieved from attributes in this class. (see
+	 *         application.properties).
+	 * 
+	 * @see #getParentUID()
+	 * @see #getQuery(String, Properties)
+	 */
+	public String getChildQueryTemplate() {
+		return childQueryTemplate;
+	}
+
+	/**
+	 * @param template : template of TypeQL to be used to retrieve the children of a
+	 *                 BPMN object identified by its UID. Annotated keywords between
+	 *                 "@{" and "}" will be retrieved from attributes in this class.
+	 *                 (see application.properties).
+	 * 
+	 * @see #getParentUID()
+	 * @see #getQuery(String, Properties)
+	 */
+	public void setChildQueryTemplate(String template) {
+		this.childQueryTemplate = template;
 	}
 
 }
