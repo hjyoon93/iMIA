@@ -672,10 +672,11 @@ public class EncoderImpl implements Encoder {
 				writer.println("};");
 				writer.println();
 			}
-			// Another rule to connect Task-Performer when Performer == Service
+			// Another rule to connect Task-Performer when Performer == Service 
+			// when there is input data
 			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataInputAssociation")) {
-				writer.println("## Task isPerformedBy Service if Asset provides Service");
-				writer.println("rule rule_task_isPerformedBy_service_if_asset_provides_service:");
+				writer.println("## Task isPerformedBy Service if Asset provides Service input");
+				writer.println("rule rule_task_isPerformedBy_service_if_asset_provides_service_input:");
 				writer.println("when {");
 				writer.println("$bpmntask isa " + getBPMNEntityName() + ";");
 				writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
@@ -693,26 +694,77 @@ public class EncoderImpl implements Encoder {
 				writer.println("};");
 				writer.println();
 			}
+			// Another rule to connect Task-Performer when Performer == Service 
+			// when there is output data
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataOutputAssociation")) {
+				writer.println("## Task isPerformedBy Service if Asset provides Service output");
+				writer.println("rule rule_task_isPerformedBy_service_if_asset_provides_service_output:");
+				writer.println("when {");
+				writer.println("$bpmntask isa " + getBPMNEntityName() + ";");
+				writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
+				writer.println("\t $dataOutputAssociation isa " + getBPMNEntityNamePrefix() + "dataOutputAssociation;");
+				writer.println("\t $task isa Task; ");
+				writer.println("\t $service isa Service;");
+				writer.println("\t (parent: $bpmntask, child: $dataOutputAssociation) isa "
+						+ getBPMNParentChildRelationName() + ";");
+				writer.println("\t (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("\t (bpmnEntity: $dataOutputAssociation, conceptualModel: $service) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("} then {");
+				writer.println("\t (task: $task, performer: $service) isa " + getIsPerformedByRelationName() + ";");
+				writer.println("};");
+				writer.println();
+			}
 
 			// Rule to connect Asset-Service
 			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataInputAssociation")
 					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObject")
 					&& declaredAttributes.contains(getBPMNTextContentAttributeName())
-					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "id")) {
-				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "sourceRef")) {
-					writer.println("## Asset provides Service (from input data)");
-					writer.println("rule rule_source_asset_provides_service:");
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "id")
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "sourceRef")) {
+				writer.println("## Asset provides Service (from input data)");
+				writer.println("rule rule_source_asset_provides_service:");
+				writer.println("when {");
+				writer.println("\t $dataInputAssociation isa " + getBPMNEntityNamePrefix() + "dataInputAssociation;");
+				writer.println("\t $ref isa " + getBPMNEntityNamePrefix() + "sourceRef, has "
+						+ getBPMNTextContentAttributeName() + " $ref_id;");
+				writer.println("\t $dataObject isa " + getBPMNEntityNamePrefix() + "dataObject, has "
+						+ getBPMNAttributeNamePrefix() + "id $data_id;");
+				writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
+				writer.println("\t $service isa Service;");
+				writer.println("\t $asset isa Asset; ");
+				writer.println("\t $data_id = $ref_id;");
+				writer.println("\t (parent: $bpmntask, child: $dataInputAssociation) isa "
+						+ getBPMNParentChildRelationName() + ";");
+				writer.println("\t (parent: $dataInputAssociation, child: $ref) isa " + getBPMNParentChildRelationName()
+						+ ";");
+				writer.println("\t (bpmnEntity: $dataObject, conceptualModel: $asset) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("\t (bpmnEntity: $dataInputAssociation, conceptualModel: $service) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("} then {");
+				writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
+				writer.println("};");
+				writer.println();
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObjectReference")) {
+					writer.println("## Asset provides Service (from reference to input data)");
+					writer.println("rule rule_source_asset_reference_provides_service:");
 					writer.println("when {");
 					writer.println(
 							"\t $dataInputAssociation isa " + getBPMNEntityNamePrefix() + "dataInputAssociation;");
 					writer.println("\t $ref isa " + getBPMNEntityNamePrefix() + "sourceRef, has "
-							+ getBPMNTextContentAttributeName() + " $ref_id;");
+							+ getBPMNTextContentAttributeName() + " $association_ref;");
 					writer.println("\t $dataObject isa " + getBPMNEntityNamePrefix() + "dataObject, has "
 							+ getBPMNAttributeNamePrefix() + "id $data_id;");
+					writer.println("\t $dataObjectReference isa " + getBPMNEntityNamePrefix()
+							+ "dataObjectReference, has " + getBPMNAttributeNamePrefix()
+							+ "dataObjectRef $data_ref, has " + getBPMNAttributeNamePrefix() + "id $ref_id;");
 					writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
 					writer.println("\t $service isa Service;");
 					writer.println("\t $asset isa Asset; ");
-					writer.println("\t $data_id = $ref_id;");
+					writer.println("\t $ref_id = $association_ref;");
+					writer.println("\t $data_id = $data_ref;");
 					writer.println("\t (parent: $bpmntask, child: $dataInputAssociation) isa "
 							+ getBPMNParentChildRelationName() + ";");
 					writer.println("\t (parent: $dataInputAssociation, child: $ref) isa "
@@ -725,29 +777,64 @@ public class EncoderImpl implements Encoder {
 					writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
 					writer.println("};");
 					writer.println();
+
 				}
-				// Another rule to connect Asset-Service
-				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "targetRef")) {
-					writer.println("## Asset provides Service (from output data)");
+			}
+			// Another rule to connect Asset-Service
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataOutputAssociation")
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObject")
+					&& declaredAttributes.contains(getBPMNTextContentAttributeName())
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "id")
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "targetRef")) {
+				writer.println("## Asset provides Service (from output data)");
+				writer.println("rule rule_target_asset_reference_provides_service:");
+				writer.println("when {");
+				writer.println("\t $dataOutputAssociation isa " + getBPMNEntityNamePrefix() + "dataOutputAssociation;");
+				writer.println("\t $ref isa " + getBPMNEntityNamePrefix() + "targetRef, has "
+						+ getBPMNTextContentAttributeName() + " $ref_id;");
+				writer.println("\t $dataObject isa " + getBPMNEntityNamePrefix() + "dataObject, has "
+						+ getBPMNAttributeNamePrefix() + "id $data_id;");
+				writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
+				writer.println("\t $service isa Service;");
+				writer.println("\t $asset isa Asset; ");
+				writer.println("\t $data_id = $ref_id;");
+				writer.println("\t (parent: $bpmntask, child: $dataOutputAssociation) isa "
+						+ getBPMNParentChildRelationName() + ";");
+				writer.println("\t (parent: $dataOutputAssociation, child: $ref) isa "
+						+ getBPMNParentChildRelationName() + ";");
+				writer.println("\t (bpmnEntity: $dataObject, conceptualModel: $asset) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("\t (bpmnEntity: $dataOutputAssociation, conceptualModel: $service) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("} then {");
+				writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
+				writer.println("};");
+				writer.println();
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObjectReference")) {
+					writer.println("## Asset provides Service (from reference to output data)");
 					writer.println("rule rule_target_asset_provides_service:");
 					writer.println("when {");
 					writer.println(
-							"\t $dataInputAssociation isa " + getBPMNEntityNamePrefix() + "dataInputAssociation;");
+							"\t $dataOutputAssociation isa " + getBPMNEntityNamePrefix() + "dataOutputAssociation;");
 					writer.println("\t $ref isa " + getBPMNEntityNamePrefix() + "targetRef, has "
-							+ getBPMNTextContentAttributeName() + " $ref_id;");
+							+ getBPMNTextContentAttributeName() + " $association_ref;");
 					writer.println("\t $dataObject isa " + getBPMNEntityNamePrefix() + "dataObject, has "
 							+ getBPMNAttributeNamePrefix() + "id $data_id;");
+					writer.println("\t $dataObjectReference isa " + getBPMNEntityNamePrefix()
+							+ "dataObjectReference, has " + getBPMNAttributeNamePrefix()
+							+ "dataObjectRef $data_ref, has " + getBPMNAttributeNamePrefix() + "id $ref_id;");
 					writer.println("\t $bpmntask isa " + getBPMNEntityName() + ";");
 					writer.println("\t $service isa Service;");
 					writer.println("\t $asset isa Asset; ");
-					writer.println("\t $data_id = $ref_id;");
-					writer.println("\t (parent: $bpmntask, child: $dataInputAssociation) isa "
+					writer.println("\t $ref_id = $association_ref;");
+					writer.println("\t $data_id = $data_ref;");
+					writer.println("\t (parent: $bpmntask, child: $dataOutputAssociation) isa "
 							+ getBPMNParentChildRelationName() + ";");
-					writer.println("\t (parent: $dataInputAssociation, child: $ref) isa "
+					writer.println("\t (parent: $dataOutputAssociation, child: $ref) isa "
 							+ getBPMNParentChildRelationName() + ";");
 					writer.println("\t (bpmnEntity: $dataObject, conceptualModel: $asset) isa "
 							+ getBPMNConceptualModelMappingName() + ";");
-					writer.println("\t (bpmnEntity: $dataInputAssociation, conceptualModel: $service) isa "
+					writer.println("\t (bpmnEntity: $dataOutputAssociation, conceptualModel: $service) isa "
 							+ getBPMNConceptualModelMappingName() + ";");
 					writer.println("} then {");
 					writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
