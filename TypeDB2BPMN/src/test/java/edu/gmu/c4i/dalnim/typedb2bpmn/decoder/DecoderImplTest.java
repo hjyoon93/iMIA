@@ -324,7 +324,7 @@ public class DecoderImplTest {
 		// the UID of the BPMN node to query
 		decoder.setRootUID(
 				// use the UID of Mission in concept model instead
-				"http://c4i.gmu.edu/dalnim/examples/dataObject/#Mission_Definitions_1");
+				"http://c4i.gmu.edu/dalnim/examples/#Mission_Definitions_1");
 
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		decoder.saveBPMN(stream);
@@ -347,7 +347,7 @@ public class DecoderImplTest {
 		// check namespaces
 		assertEquals("http://www.omg.org/spec/BPMN/20100524/MODEL",
 				bpmn.getDocument().getRootElement().getNamespaceURI());
-		assertEquals("http://c4i.gmu.edu/dalnim/examples/dataObject", definitions.getAttributeValue("targetNamespace"));
+		assertEquals("http://c4i.gmu.edu/dalnim/examples", definitions.getAttributeValue("targetNamespace"));
 
 		// check process
 		Collection<Process> processes = definitions.getChildElementsByType(Process.class);

@@ -287,6 +287,9 @@ BPMN_definitions owns BPMNattrib_xmlns;
 BPMN_waypoint owns BPMNattrib_x;
 BPMN_waypoint owns BPMNattrib_y;
 
+BPMNattrib_sort sub attribute, value string;
+BPMN_waypoint owns BPMNattrib_sort;
+
 ## =============== Mapping to conceptual model ===============
 BPMN_hasConceptualModelElement sub relation, relates bpmnEntity, relates conceptualModel;
 BPMN_Entity plays BPMN_hasConceptualModelElement:bpmnEntity;
@@ -327,8 +330,8 @@ when {
      (task: $task, performer: $performer) isa isPerformedBy;
 };
 
-## Task isPerformedBy Service if Asset provides Service
-rule rule_task_isPerformedBy_service_if_asset_provides_service:
+## Task isPerformedBy Service if Asset provides Service input
+rule rule_task_isPerformedBy_service_if_asset_provides_service_input:
 when {
 $bpmntask isa BPMN_Entity;
      $bpmntask isa BPMN_Entity;
@@ -347,24 +350,6 @@ rule rule_source_asset_provides_service:
 when {
      $dataInputAssociation isa BPMN_dataInputAssociation;
      $ref isa BPMN_sourceRef, has BPMN_textContent $ref_id;
-     $dataObject isa BPMN_dataObject, has BPMNattrib_id $data_id;
-     $bpmntask isa BPMN_Entity;
-     $service isa Service;
-     $asset isa Asset; 
-     $data_id = $ref_id;
-     (parent: $bpmntask, child: $dataInputAssociation) isa BPMN_hasChildTag;
-     (parent: $dataInputAssociation, child: $ref) isa BPMN_hasChildTag;
-     (bpmnEntity: $dataObject, conceptualModel: $asset) isa BPMN_hasConceptualModelElement;
-     (bpmnEntity: $dataInputAssociation, conceptualModel: $service) isa BPMN_hasConceptualModelElement;
-} then {
-     (asset: $asset, service: $service) isa provides;
-};
-
-## Asset provides Service (from output data)
-rule rule_target_asset_provides_service:
-when {
-     $dataInputAssociation isa BPMN_dataInputAssociation;
-     $ref isa BPMN_targetRef, has BPMN_textContent $ref_id;
      $dataObject isa BPMN_dataObject, has BPMNattrib_id $data_id;
      $bpmntask isa BPMN_Entity;
      $service isa Service;

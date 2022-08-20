@@ -9,7 +9,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1"
 	exporter="org.eclipse.bpmn2.modeler.core"
 	exporterVersion="1.5.3.Final-v20210519-2007-B1"
-	targetNamespace="https://camunda.org/examples">
+	targetNamespace="http://c4i.gmu.edu/dalnim/examples">
 	<process id="Process_1" isExecutable="false"
 		name="dataObjectProcess">
 		<laneSet id="LaneSet_1" name="Lane Set 1">

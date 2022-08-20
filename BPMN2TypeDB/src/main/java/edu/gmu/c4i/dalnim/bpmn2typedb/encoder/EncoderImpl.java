@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -114,7 +115,7 @@ public class EncoderImpl implements Encoder {
 			+ "'participant':'Performer'," + "'@org.camunda.bpm.model.bpmn.instance.ItemAwareElement':'Asset',"
 			+ "'@org.camunda.bpm.model.bpmn.instance.DataAssociation':'Service'" + "}";
 
-	private String jsonConceptsNotToAddRole = "[" + "'Service'" + "]";
+	private String jsonConceptsNotToAddRole = "['Service']";
 
 	private boolean ignoreInvalidAttributeName = true;
 
@@ -125,6 +126,10 @@ public class EncoderImpl implements Encoder {
 	private String isPerformedByRelationName = "isPerformedBy";
 
 	private String providesRelationName = "provides";
+
+	private String jsonSortableEntities = "['waypoint']";
+
+	private String sortAttributeName = "sort";
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
@@ -581,6 +586,23 @@ public class EncoderImpl implements Encoder {
 		}
 		writer.println();
 
+		// declare the "sort" special attribute for sorting order-sensitive entities
+		if (!inheritedAttributes.contains(getBPMNAttributeNamePrefix() + getSortAttributeName())) {
+			if (!declaredAttributes.contains(getBPMNAttributeNamePrefix() + getSortAttributeName())) {
+				// it's a number, but use a string type for compatibility with other attributes
+				writer.println(getBPMNAttributeNamePrefix() + getSortAttributeName() + " sub attribute, value string;");
+				// mark as declared
+				declaredAttributes.add(getBPMNAttributeNamePrefix() + getSortAttributeName());
+			}
+			for (String sortableEntity : parseJSONSortableEntities()) {
+				if (visitedNodes.contains(getBPMNEntityNamePrefix() + sortableEntity)) {
+					writer.println(getBPMNEntityNamePrefix() + sortableEntity + " owns " + getBPMNAttributeNamePrefix()
+							+ getSortAttributeName() + ";");
+				}
+			}
+			writer.println();
+		}
+
 		// We should be able to map an entity in the conceptual model to BPMN entity
 		if (isMapBPMNToConceptualModel()) {
 			String mappingRelationName = getBPMNConceptualModelMappingName();
@@ -672,7 +694,7 @@ public class EncoderImpl implements Encoder {
 				writer.println("};");
 				writer.println();
 			}
-			// Another rule to connect Task-Performer when Performer == Service 
+			// Another rule to connect Task-Performer when Performer == Service
 			// when there is input data
 			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataInputAssociation")) {
 				writer.println("## Task isPerformedBy Service if Asset provides Service input");
@@ -694,7 +716,7 @@ public class EncoderImpl implements Encoder {
 				writer.println("};");
 				writer.println();
 			}
-			// Another rule to connect Task-Performer when Performer == Service 
+			// Another rule to connect Task-Performer when Performer == Service
 			// when there is output data
 			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataOutputAssociation")) {
 				writer.println("## Task isPerformedBy Service if Asset provides Service output");
@@ -1072,6 +1094,9 @@ public class EncoderImpl implements Encoder {
 		}
 		logger.debug("Namespace: {}", namespace);
 
+		// Entities that are sensitive to ordering (like points in edge)
+		Collection<String> sortableEntities = parseJSONSortableEntities();
+
 		// prepare writer for output stream
 		try (PrintWriter writer = new PrintWriter(outputStream)) {
 
@@ -1093,7 +1118,9 @@ public class EncoderImpl implements Encoder {
 					// UIDs should be unique, so keep track of them with a set
 					new HashSet<>(),
 					// specify a map from BPMN element to entity in conceptual model
-					parseBPMNtoConceptualModelJSONMap());
+					parseBPMNtoConceptualModelJSONMap(),
+					// some entities (e.g., points in edge) should be sorted
+					sortableEntities);
 
 			writer.println("## =============== End ===============");
 
@@ -1101,6 +1128,20 @@ public class EncoderImpl implements Encoder {
 
 		} // this will close writer
 
+	}
+
+	/**
+	 * @return parsed {@link #getJSONSortableEntities()}
+	 */
+	protected Collection<String> parseJSONSortableEntities() {
+		Collection<String> ret = new HashSet<>();
+
+		JSONArray array = new JSONArray(getJSONSortableEntities());
+		for (Object obj : array) {
+			ret.add(obj.toString());
+		}
+
+		return ret;
 	}
 
 	/**
@@ -1116,9 +1157,14 @@ public class EncoderImpl implements Encoder {
 	 *                                 {@link #parseBPMNtoConceptualModelJSONMap()},
 	 *                                 {@link #getJSONBPMNConceptualModelMap()}, and
 	 *                                 {@link #getBPMNConceptualModelMappingName()}.
+	 * @param sortableEntities         : some entities (e.g., points in edges)
+	 *                                 should be sorted.
+	 * @see #getSortAttributeName()
+	 * @see #parseJSONSortableEntities()
 	 */
 	protected void visitBPMNDataRecursive(PrintWriter writer, ModelElementInstance currentNode, String namespace,
-			String parentUID, Set<String> usedUIDs, Map<String, String> bpmnToConceptualModelMap) throws IOException {
+			String parentUID, Set<String> usedUIDs, Map<String, String> bpmnToConceptualModelMap,
+			Collection<String> sortableEntities) throws IOException {
 
 		logger.debug("Visiting BPMN tag/node {}", currentNode);
 
@@ -1323,11 +1369,23 @@ public class EncoderImpl implements Encoder {
 		 * previously, so re-visit children to make sure new parent-child relations are
 		 * built normally.
 		 */
-		Collection<ModelElementInstance> childrenToVisit = new ArrayList<>();
+		List<ModelElementInstance> childrenToVisit = new ArrayList<>();
 
 		for (ModelElementType childType : currentNode.getElementType().getAllChildElementTypes()) {
 			// Consider only known child elements
-			childrenToVisit.addAll(currentNode.getChildElementsByType(childType));
+			Collection<ModelElementInstance> children = currentNode.getChildElementsByType(childType);
+			if (sortableEntities.contains(childType.getTypeName())) {
+				// These children should have an attribute for explicit sorting.
+				logger.debug("Entity {} should be sorted. Adding attribute {}.", childType.getTypeName(),
+						getSortAttributeName());
+				// Iterate on children and add such attribute explicitly...
+				Iterator<ModelElementInstance> iterator = children.iterator();
+				for (int order = 0; iterator.hasNext(); order++) {
+					ModelElementInstance child = iterator.next();
+					child.setAttributeValue(getSortAttributeName(), String.valueOf(order));
+				}
+			}
+			childrenToVisit.addAll(children);
 		}
 
 		// Do recursive call
@@ -1342,7 +1400,9 @@ public class EncoderImpl implements Encoder {
 					// always avoid duplicate UIDs
 					usedUIDs,
 					// reuse same mapping from BPMN to conceptual model
-					bpmnToConceptualModelMap);
+					bpmnToConceptualModelMap,
+					// some entities (e.g., points in edges) should be sorted
+					sortableEntities);
 		}
 
 	}
@@ -2027,6 +2087,42 @@ public class EncoderImpl implements Encoder {
 	 */
 	public void setJSONConceptsNotToAddRole(String jsonConceptsNotToAddRole) {
 		this.jsonConceptsNotToAddRole = jsonConceptsNotToAddRole;
+	}
+
+	/**
+	 * @return JSON list of entity name that should contain a numeric attribute for
+	 *         sorting.
+	 */
+	public String getJSONSortableEntities() {
+		return jsonSortableEntities;
+	}
+
+	/**
+	 * @param entities : JSON list of entity name that should contain a numeric
+	 *                 attribute for sorting.
+	 */
+	public void setJSONSortableEntities(String entities) {
+		this.jsonSortableEntities = entities;
+	}
+
+	/**
+	 * @return attribute name used in {@link #getJSONSortableEntities()} to sort the
+	 *         entities that are sensitive to the ordering. Prefix
+	 *         {@link #getBPMNAttributeNamePrefix()} will be appended.
+	 */
+	public String getSortAttributeName() {
+		return sortAttributeName;
+	}
+
+	/**
+	 * @param sortAttributeName : attribute name used in
+	 *                          {@link #getJSONSortableEntities()} to sort the
+	 *                          entities that are sensitive to the ordering. Prefix
+	 *                          {@link #getBPMNAttributeNamePrefix()} will be
+	 *                          appended.
+	 */
+	public void setSortAttributeName(String sortAttributeName) {
+		this.sortAttributeName = sortAttributeName;
 	}
 
 }

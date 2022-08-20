@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.gmu.c4i.dalnim</groupId>
 	<artifactId>BPMN2TypeDB</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<name>DALNIM BPMN2 to TypeQL converter</name>
 	<description>Tool to convert BPMN2 files to TypeQL insert scripts.</description>
 

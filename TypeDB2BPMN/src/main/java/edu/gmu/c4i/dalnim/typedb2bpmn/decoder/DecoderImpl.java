@@ -5,8 +5,13 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -72,6 +77,10 @@ public class DecoderImpl implements Decoder {
 	private String bpmnTextContentAttributeName = bpmnEntityNamePrefix + "textContent";
 
 	private boolean runSanityCheck = true;
+
+	private String jsonSortableEntities = "['waypoint']";
+
+	private String sortAttributeName = "sort";
 
 	/**
 	 * Default constructor is protected from public access. Use
@@ -252,10 +261,19 @@ public class DecoderImpl implements Decoder {
 					"Null response obtained while querying children of " + parentNode + ". Query was:\n " + query);
 		}
 
-		// retrieve the children
-		for (Entity childTypeDBEntity : response.stream().flatMap(map -> map.concepts().stream())
+		// retrieve all children
+		List<Entity> children = response.stream().flatMap(map -> map.concepts().stream())
 				// iterate on entities only
-				.filter(Concept::isEntity).map(Concept::asEntity).collect(Collectors.toSet())) {
+				.filter(Concept::isEntity).map(Concept::asEntity).distinct().collect(Collectors.toList());
+
+		// keep track of new generated BPMN nodes
+		List<Entry<ModelElementInstance, String>> childBPMNNodes = new ArrayList<>();
+
+		// the integer in this map will contain the order of this child element
+		Map<ModelElementInstance, Integer> childPosition = new HashMap<>();
+
+		// iterate on retrieved children
+		for (Entity childTypeDBEntity : children) {
 
 			logger.debug("Creating BPMN child for entity {}", childTypeDBEntity);
 
@@ -278,15 +296,15 @@ public class DecoderImpl implements Decoder {
 			logger.debug("Creating BPMN child of type '{}'", childEntityName);
 			ModelElementInstance childBPMNNode = bpmnModel.newInstance(childBPMNType);
 
-			// add the new node as child of the parent node
-			parentNode.addChildElement(childBPMNNode);
+			// do not add the new node as child of the parent node now
+			// because we may need to sort them first.
 
 			// extract the attributes associated with current entity
 			Collection<Attribute<?>> attributes = response.stream()
 					// only consider those related to the current entity
 					.filter(map -> map.concepts().contains(childTypeDBEntity)).flatMap(map -> map.concepts().stream())
 					// convert to attributes
-					.filter(Concept::isAttribute).map(Concept::asAttribute).distinct().collect(Collectors.toSet());
+					.filter(Concept::isAttribute).map(Concept::asAttribute).distinct().collect(Collectors.toList());
 
 			// Keep track of the uid.
 			String uid = null;
@@ -301,6 +319,15 @@ public class DecoderImpl implements Decoder {
 					uid = attribValue;
 					// no need to store UID in BPMN
 					logger.debug("uid of entity {} is {}", childTypeDBEntity, attribName);
+				} else if (attribName.equals(getBPMNAttributeNamePrefix() + getSortAttributeName())) {
+					// this is used to sort the child
+					logger.debug("Sort attribute found for {}. Position = {}.", childEntityName, attribValue);
+					try {
+						childPosition.put(childBPMNNode, Integer.valueOf(attribValue));
+					} catch (Exception e) {
+						logger.warn("Failed to parse sort attribute {} of entity {}. Value was {}. Skipping...",
+								attribName, childEntityName, attribValue);
+					}
 				} else if (attribName.equals(getBPMNTextContentAttributeName())) {
 					// in BPMN, text content is a child instead of attribute.
 					logger.debug("Text content found for {}. Text is '{}'", childBPMNNode, attribValue);
@@ -315,13 +342,40 @@ public class DecoderImpl implements Decoder {
 				}
 			} // end of iteration on attributes
 
-			// update parent UID in next recursive call
-			queryProperties.setProperty(getParentUIDAttributeName(), uid);
-
-			// call recursive
-			visitChildrenRecursive(bpmnModel, childBPMNNode, session, queryProperties);
+			// Keep track of the new child nodes
+			// so that we can recursively fill it later
+			// and sort them before connecting it to parent, if needed.
+			childBPMNNodes.add(Collections.singletonMap(childBPMNNode,
+					// Also keep track of its UID
+					uid)
+					// convert to Entry
+					.entrySet().iterator().next());
 
 		} // end of iteration on each child entity
+
+		// sort the child nodes if they have the "BPMNattrib_sort" attribute
+		childBPMNNodes.sort((arg1, arg2) -> {
+			try {
+				// use the position map to retrieve their positions
+				int position1 = childPosition.get(arg1.getKey()).intValue();
+				int position2 = childPosition.get(arg2.getKey()).intValue();
+				// compare their positions
+				return position1 - position2;
+			} catch (Exception e) {
+				// no need to handle exception
+			}
+			// they are only comparable if both have a valid "sort" attribute
+			return 0;
+		});
+
+		// add the new node as child of the parent node
+		// and call recursive
+		for (Entry<ModelElementInstance, String> entry : childBPMNNodes) {
+			parentNode.addChildElement(entry.getKey());
+			// update parent UID for the next recursive call
+			queryProperties.setProperty(getParentUIDAttributeName(), entry.getValue());
+			visitChildrenRecursive(bpmnModel, entry.getKey(), session, queryProperties);
+		}
 
 	}
 
@@ -708,6 +762,42 @@ public class DecoderImpl implements Decoder {
 	 */
 	public void setParentUIDAttributeName(String key) {
 		this.parentUIDAttributeName = key;
+	}
+
+	/**
+	 * @return JSON list of entity name that should contain a numeric attribute for
+	 *         sorting.
+	 */
+	public String getJSONSortableEntities() {
+		return jsonSortableEntities;
+	}
+
+	/**
+	 * @param entities : JSON list of entity name that should contain a numeric
+	 *                 attribute for sorting.
+	 */
+	public void setJSONSortableEntities(String entities) {
+		this.jsonSortableEntities = entities;
+	}
+
+	/**
+	 * @return attribute name used in {@link #getJSONSortableEntities()} to sort the
+	 *         entities that are sensitive to the ordering. Prefix
+	 *         {@link #getBPMNAttributeNamePrefix()} will be appended.
+	 */
+	public String getSortAttributeName() {
+		return sortAttributeName;
+	}
+
+	/**
+	 * @param sortAttributeName : attribute name used in
+	 *                          {@link #getJSONSortableEntities()} to sort the
+	 *                          entities that are sensitive to the ordering. Prefix
+	 *                          {@link #getBPMNAttributeNamePrefix()} will be
+	 *                          appended.
+	 */
+	public void setSortAttributeName(String sortAttributeName) {
+		this.sortAttributeName = sortAttributeName;
 	}
 
 }

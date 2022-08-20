@@ -285,6 +285,9 @@ BPMN_definitions owns BPMNattrib_xmlns;
 BPMN_waypoint owns BPMNattrib_x;
 BPMN_waypoint owns BPMNattrib_y;
 
+BPMNattrib_sort sub attribute, value string;
+BPMN_waypoint owns BPMNattrib_sort;
+
 ## =============== Mapping to conceptual model ===============
 BPMN_hasConceptualModelElement sub relation, relates bpmnEntity, relates conceptualModel;
 BPMN_Entity plays BPMN_hasConceptualModelElement:bpmnEntity;
