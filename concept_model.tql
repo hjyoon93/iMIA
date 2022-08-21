@@ -1,0 +1,235 @@
+#shared concept model schema for VT AND GMU 
+
+#define entity
+define 
+MIAEntity sub entity;
+performer sub MIAEntity;
+#attack is same as cyber attack in the model
+attack sub MIAEntity;
+attacker sub performer;
+defender sub performer;
+service sub performer;
+#defense is same as defense mechanism in the model
+defense sub MIAEntity;
+#ips and ids are subtpyes of defense mechanism
+ips sub defense;
+ids sub defense; 
+
+asset sub MIAEntity;
+vulnerabilities sub MIAEntity;
+capacity sub MIAEntity;
+task sub MIAEntity;
+precedenceTask sub entity;
+orPrecedenceTaskList sub precedenceTask;
+andPrecedenceTaskList sub precedenceTask;
+
+mission sub MIAEntity;
+mSTRA_metrics sub MIAEntity;
+vulnerabilityMetrics sub MIAEntity;
+goal sub MIAEntity;
+outcome sub MIAEntity;
+
+#define attributes - attribute can only be instantiated at the leaves. A parent attribute can't be instantiated with data
+# I don't have UID attributes for other entity node other than the super-entity node here due to inheritance.
+define 
+UID sub attribute,
+    value string; 
+MIAEntity sub entity,
+    owns UID @key;
+
+####### define relation between entities
+define
+hasVulnerabilities sub relation,
+    relates ownerVulnerabilities, 
+    relates ownedVulnerabilities;
+
+asset sub MIAEntity,
+    plays hasVulnerabilities:ownerVulnerabilities;
+vulnerabilities sub MIAEntity,
+    plays hasVulnerabilities:ownedVulnerabilities;
+    
+
+#####################
+define
+hasCapacity sub relation,
+    relates ownerCapacity, 
+    relates ownedCapacity;
+
+asset sub MIAEntity,
+    plays hasCapacity:ownerCapacity;
+capacity sub MIAEntity,
+    plays hasCapacity:ownedCapacity;
+    
+###############
+define
+hasGoal sub relation,
+    relates ownerGoal, 
+    relates ownedGoal;
+
+mission sub MIAEntity,
+    plays hasGoal:ownerGoal;
+goal sub MIAEntity,
+    plays hasGoal:ownedGoal;
+    
+####
+define
+hasOutcome sub relation,
+    relates ownerOutcome, 
+    relates ownedOutcome;
+
+mission sub MIAEntity,
+    plays hasOutcome:ownerOutcome;
+outcome sub MIAEntity,
+    plays hasOutcome:ownedOutcome;    
+    
+    
+####
+define
+isMeasuredByMstra sub relation,
+    relates meterOutcome, 
+    relates measureeOutcome;
+
+outcome sub MIAEntity,
+    plays isMeasuredByMstra:measureeOutcome;
+mSTRA_metrics sub MIAEntity,
+    plays isMeasuredByMstra:meterOutcome;   
+    
+    
+####
+define
+isMeasuredByVmetrics sub relation,
+    relates meterVulnerabilities, 
+    relates measureeVulnerabilities;
+
+vulnerabilities sub MIAEntity,
+    plays isMeasuredByVmetrics:measureeVulnerabilities;
+vulnerabilityMetrics sub MIAEntity,
+    plays isMeasuredByVmetrics:meterVulnerabilities;   
+
+
+####
+define
+performAttack sub relation,
+    relates performerAttack, 
+    relates performedAttack;
+
+attacker sub performer,
+    plays performAttack:performerAttack;
+attack sub MIAEntity,
+    plays performAttack:performedAttack;  
+    
+####
+define
+performDefense sub relation,
+    relates performerDefense, 
+    relates performedDefense;
+
+defender sub performer,
+    plays performDefense:performerDefense;
+defense sub MIAEntity,
+    plays performDefense:performedDefense;  
+
+
+####
+define
+detects sub relation,
+    relates detector, 
+    relates detected;
+
+ids sub defense,
+    plays detects:detector;
+attack sub MIAEntity,
+    plays detects:detected;
+    
+####
+define
+deters sub relation,
+    relates deterrer, 
+    relates deterred;
+
+ips sub defense,
+    plays deters:deterrer;
+attack sub MIAEntity,
+    plays deters:deterred;
+    
+####
+define
+exploits sub relation,
+    relates exploiter, 
+    relates exploited;
+
+attack sub MIAEntity,
+    plays exploits:exploiter;
+vulnerabilities sub MIAEntity,
+    plays exploits:exploited;
+  
+####
+define
+mitigates sub relation,
+    relates mitigator, 
+    relates mitigated;
+
+defense sub MIAEntity,
+    plays mitigates:mitigator;
+vulnerabilities sub MIAEntity,
+    plays mitigates:mitigated;
+    
+####
+define
+provides sub relation,
+    relates provider, 
+    relates receiver;
+
+asset sub MIAEntity,
+    plays provides:provider;
+service sub performer,
+    plays provides:receiver;
+
+
+####
+#define
+#enablement sub relation,
+ #   relates enabler, 
+  #  relates enabled;
+
+#service sub entity,
+ #   plays enablement:enabler;
+#task sub entity,
+ #   plays enablement:enabled;
+   
+
+####
+define
+isCompundedBy sub relation,
+    relates fragment, 
+    relates whole;
+
+task sub MIAEntity,
+    plays isCompundedBy:fragment;
+mission sub MIAEntity,
+    plays isCompundedBy:whole;
+    
+####
+define
+isCompoundBySetOfTask sub relation,
+    relates precedent, 
+    relates posterior;
+
+task sub MIAEntity,
+    plays isCompoundBySetOfTask:posterior;
+precedenceTask sub entity,
+    plays isCompoundBySetOfTask:precedent;
+    
+    
+#######
+define 
+isPerformedBy sub relation,
+    relates performer,
+    relates performed;
+performer sub MIAEntity,
+    plays isPerformedBy:performer;
+task sub MIAEntity,
+    plays isPerformedBy:performed;
+    
+
+########
