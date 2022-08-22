@@ -56,18 +56,20 @@ public class DecoderImpl implements Decoder {
 	private String parentUIDAttributeName = "parentUID";
 
 	private String parentUID = rootUID;
+	
+	private String uidAttributeName = "UID";
 
 	// TODO substitute entity/relation names with "@{key}" tags
 	private String rootQueryTemplate = "## Query BPMN root by regex on UID (regex matches BPMN definitions or Mission in concept model)\n"
 			+ "match\n" + "$query like \"@{rootUID}\";\n"
-			+ "$entity isa BPMN_definitions, has uid $uid_b, has attribute $attribute;\n"
-			+ "$mission isa Mission, has uid $uid_m;\n" + "{ $uid_m = $query; } or {  $uid_b = $query ;};\n"
+			+ "$entity isa BPMN_definitions, has UID $uid_b, has attribute $attribute;\n"
+			+ "$mission isa Mission, has UID $uid_m;\n" + "{ $uid_m = $query; } or {  $uid_b = $query ;};\n"
 			+ "(bpmnEntity: $entity, conceptualModel: $mission) isa BPMN_hasConceptualModelElement;\n"
 			+ "get $entity, $attribute;";
 
 	// TODO substitute entity/relation names with "@{key}" tags
 	private String childQueryTemplate = "## query BPMN child and its attributes\n" + "match\n"
-			+ "$parent has uid \"@{parentUID}\";\n" + "$entity isa BPMN_Entity, has attribute $attribute;\n"
+			+ "$parent has UID \"@{parentUID}\";\n" + "$entity isa BPMN_Entity, has attribute $attribute;\n"
 			+ "(parent: $parent, child: $entity) isa BPMN_hasChildTag;\n" + "get $entity, $attribute;";
 
 	private String bpmnEntityNamePrefix = "BPMN_";
@@ -174,7 +176,7 @@ public class DecoderImpl implements Decoder {
 						// No need to change the model's BPMN namespace
 						// because it is already set by camunda library.
 						logger.debug("xmlns of entity {} is {}", entity, attribName);
-					} else if (attribName.equals("uid")) {
+					} else if (attribName.equals(getUIDAttributeName())) {
 						uid = attribValue;
 						// no need to store UID in BPMN
 						logger.debug("uid of entity {} is {}", entity, attribName);
@@ -315,7 +317,7 @@ public class DecoderImpl implements Decoder {
 				String attribValue = attrib.asString().getValue();
 
 				// handle some special attributes
-				if (attribName.equals("uid")) {
+				if (attribName.equals(getUIDAttributeName())) {
 					uid = attribValue;
 					// no need to store UID in BPMN
 					logger.debug("uid of entity {} is {}", childTypeDBEntity, attribName);
@@ -798,6 +800,21 @@ public class DecoderImpl implements Decoder {
 	 */
 	public void setSortAttributeName(String sortAttributeName) {
 		this.sortAttributeName = sortAttributeName;
+	}
+	
+
+	/**
+	 * @return name of the universal identifier attribute.
+	 */
+	public String getUIDAttributeName() {
+		return uidAttributeName;
+	}
+
+	/**
+	 * @param name : name of the universal identifier attribute.
+	 */
+	public void setUIDAttributeName(String name) {
+		this.uidAttributeName = name;
 	}
 
 }

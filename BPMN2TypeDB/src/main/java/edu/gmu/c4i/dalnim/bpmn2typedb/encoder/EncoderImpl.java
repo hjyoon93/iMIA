@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -131,6 +130,10 @@ public class EncoderImpl implements Encoder {
 
 	private String sortAttributeName = "sort";
 
+	private String rootConceptualModelEntityName = "MIAEntity";
+
+	private String uidAttributeName = "UID";
+
 	/**
 	 * Default constructor is protected to avoid public access. Use
 	 * {@link #getInstance()} instead.
@@ -214,12 +217,16 @@ public class EncoderImpl implements Encoder {
 			if (isMapBPMNToConceptualModel()) {
 				writer.println(
 						"## Note: conceptual model is required in DALNIM. Uncomment the following if not declared yet.");
-				writer.println("# uid sub attribute, value string;");
-				writer.println("# Mission sub entity, owns uid @key;");
-				writer.println("# Task sub entity, owns uid @key;");
-				writer.println("# Performer sub entity, owns uid @key;");
+				writer.println("# " + getUIDAttributeName() + " sub attribute, value string;");
+				writer.println("# MIAEntity sub entity, owns " + getUIDAttributeName() + " @key;");
+				writer.println("# Mission sub MIAEntity;");
+				writer.println("# Task sub MIAEntity;");
+				writer.println("# Performer sub MIAEntity;");
 				writer.println("# Service sub Performer;");
-				writer.println("# Asset sub entity, owns uid @key;");
+				writer.println("# Asset sub MIAEntity;");
+				writer.println("# PrecedenceTask sub MIAEntity;");
+				writer.println("# ORPrecedenceTaskList sub PrecedenceTask;");
+				writer.println("# ANDPrecedenceTaskList sub PrecedenceTask;");
 				writer.println("# isCompoundBy sub relation, relates mission, relates task;");
 				writer.println("# Mission plays isCompoundBy:mission;");
 				writer.println("# Task plays isCompoundBy:task;");
@@ -229,8 +236,12 @@ public class EncoderImpl implements Encoder {
 				writer.println("# provides sub relation, relates asset, relates service;");
 				writer.println("# Asset plays provides:asset;");
 				writer.println("# Service plays provides:service;");
+				writer.println(
+						"# isCompoundBySetOfTask sub relation, relates precedenceTask, relates task;");
+				writer.println("# PrecedenceTask plays isCompoundBySetOfTask:precedenceTask;");
+				writer.println("# Task plays isCompoundBySetOfTask:task;");
 			} else {
-				writer.println("uid sub attribute, value string;");
+				writer.println(getUIDAttributeName() + " sub attribute, value string;");
 			}
 			writer.println();
 
@@ -239,8 +250,8 @@ public class EncoderImpl implements Encoder {
 			writer.println(getBPMNAttributeNamePrefix() + "name sub attribute, value string;");
 			writer.println(getBPMNTextContentAttributeName() + " sub attribute, value string;");
 			writer.println(getBPMNEntityName() + " sub entity, owns " + getBPMNAttributeNamePrefix() + "id, owns "
-					+ getBPMNAttributeNamePrefix() + "name, owns " + getBPMNTextContentAttributeName()
-					+ ", owns uid @key;");
+					+ getBPMNAttributeNamePrefix() + "name, owns " + getBPMNTextContentAttributeName() + ", owns "
+					+ getUIDAttributeName() + " @key;");
 			writer.println();
 
 			writer.println("## Parent-child relationship of BPMN/XML tags");
@@ -254,7 +265,7 @@ public class EncoderImpl implements Encoder {
 			// Some attributes are already declared in root "BPMN" entity,
 			// so children do not have to re-declare
 			Set<String> attributesInRootEntity = new HashSet<>();
-			attributesInRootEntity.add("uid");
+			attributesInRootEntity.add(getUIDAttributeName());
 			attributesInRootEntity.add(getBPMNAttributeNamePrefix() + "id");
 			attributesInRootEntity.add(getBPMNAttributeNamePrefix() + "name");
 			attributesInRootEntity.add(getBPMNTextContentAttributeName());
@@ -497,18 +508,18 @@ public class EncoderImpl implements Encoder {
 	 * ## query isCompoundBy
 	 * match 
 	 * $r isa isCompoundBy; 
-	 * $m isa Mission, has uid $muid; 
-	 * $t isa Task, has uid $tuid; 
+	 * $m isa Mission, has UID $muid; 
+	 * $t isa Task, has UID $tuid; 
 	 * (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;
-	 * $bpmntask isa BPMN_Entity, has uid $buid;
+	 * $bpmntask isa BPMN_Entity, has UID $buid;
 	 * get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;
 	 * 
 	 * ## query isPerformedBy
 	 * match
-	 * $task isa Task, has uid $uid1;
-	 * $performer isa Performer, has uid $uid2;
-	 * $bpmntask isa BPMN_Entity, has uid $uid3;
-	 * $bpmnlane isa BPMN_lane, has uid $uid4;
+	 * $task isa Task, has UID $uid1;
+	 * $performer isa Performer, has UID $uid2;
+	 * $bpmntask isa BPMN_Entity, has UID $uid3;
+	 * $bpmnlane isa BPMN_lane, has UID $uid4;
 	 * $rel (task: $task, performer: $performer) isa isPerformedBy;
 	 * (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
 	 * (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa BPMN_hasConceptualModelElement;
@@ -516,10 +527,10 @@ public class EncoderImpl implements Encoder {
 	 * 
 	 * ## query requires
 	 * match
-	 * $dataObject isa BPMN_dataObject, has uid $uid1;
-	 * $resource isa Resource, has uid $uid2;
-	 * $bpmntask isa BPMN_Entity, has uid $uid3;
-	 * $task isa Task, has uid $uid4;
+	 * $dataObject isa BPMN_dataObject, has UID $uid1;
+	 * $resource isa Resource, has UID $uid2;
+	 * $bpmntask isa BPMN_Entity, has UID $uid3;
+	 * $task isa Task, has UID $uid4;
 	 * $rel (task: $task, resource: $resource) isa requires;
 	 * (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
 	 * (bpmnEntity: $dataObject, conceptualModel: $resource) isa BPMN_hasConceptualModelElement;
@@ -613,27 +624,28 @@ public class EncoderImpl implements Encoder {
 
 				// Specify the roles
 				writer.println(getBPMNEntityName() + " plays " + mappingRelationName + ":bpmnEntity;");
+				writer.println(
+						getRootConceptualModelEntityName() + " plays " + mappingRelationName + ":conceptualModel;");
 
-				// obtain names of concepts not to include in roles.
-				Collection<String> conceptsNotToAddRole = parseJSONConceptsNotToAddRole();
-
-				// TypeDB does not allow 'entity' to play a role.
-				// Need to explicitly enumerate...
-				// TODO create an abstract conceptual model entity instead of enumerating each
-				parseBPMNtoConceptualModelJSONMap()
-						// get all values (values are entities in conceptual model)
-						.values().stream()
-						// remove repetitions
-						.distinct()
-						// ignore nulls and blanks.
-						.filter(Objects::nonNull).filter(name -> !name.trim().isEmpty())
-						// do not re-declare roles if super-entity already declared it
-						.filter(name -> !conceptsNotToAddRole.contains(name))
-						// add entry: <entityName> plays BPMN_hasConceptualModelElement:conceptualModel
-						.forEach(entityName -> {
-							logger.debug("'{}' will play some role in {}", entityName, mappingRelationName);
-							writer.println(entityName + " plays " + mappingRelationName + ":conceptualModel;");
-						});
+//				// obtain names of concepts not to include in roles.
+//				Collection<String> conceptsNotToAddRole = parseJSONConceptsNotToAddRole();
+//
+//				// TypeDB does not allow 'entity' to play a role.
+//				// Need to explicitly enumerate...
+//				parseBPMNtoConceptualModelJSONMap()
+//						// get all values (values are entities in conceptual model)
+//						.values().stream()
+//						// remove repetitions
+//						.distinct()
+//						// ignore nulls and blanks.
+//						.filter(Objects::nonNull).filter(name -> !name.trim().isEmpty())
+//						// do not re-declare roles if super-entity already declared it
+//						.filter(name -> !conceptsNotToAddRole.contains(name))
+//						// add entry: <entityName> plays BPMN_hasConceptualModelElement:conceptualModel
+//						.forEach(entityName -> {
+//							logger.debug("'{}' will play some role in {}", entityName, mappingRelationName);
+//							writer.println(entityName + " plays " + mappingRelationName + ":conceptualModel;");
+//						});
 
 				// mark relation as declared
 				declaredRelations.add(mappingRelationName);
@@ -872,9 +884,9 @@ public class EncoderImpl implements Encoder {
 			writer.println("## query " + getIsCompoundByRelationName());
 			writer.println("# match ");
 			writer.println("# $r isa " + getIsCompoundByRelationName() + "; ");
-			writer.println("# $m isa Mission, has uid $muid; ");
-			writer.println("# $t isa Task, has uid $tuid; ");
-			writer.println("# $bpmntask isa " + getBPMNEntityName() + ", has uid $buid;");
+			writer.println("# $m isa Mission, has " + getUIDAttributeName() + " $muid; ");
+			writer.println("# $t isa Task, has " + getUIDAttributeName() + " $tuid; ");
+			writer.println("# $bpmntask isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " $buid;");
 			writer.println(
 					"# (bpmnEntity: $bpmntask, conceptualModel: $t) isa " + getBPMNConceptualModelMappingName() + ";");
 			writer.println("# get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;");
@@ -882,8 +894,8 @@ public class EncoderImpl implements Encoder {
 
 			writer.println("## query " + getIsPerformedByRelationName());
 			writer.println("# match");
-			writer.println("# $bpmntask isa " + getBPMNEntityName() + ", has uid $uid1;");
-			writer.println("# $bpmnperfomer isa " + getBPMNEntityName() + ", has uid $uid2;");
+			writer.println("# $bpmntask isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " $uid1;");
+			writer.println("# $bpmnperfomer isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " $uid2;");
 			writer.println("# $rel1 (task: $task, performer: $performer) isa " + getIsPerformedByRelationName() + ";");
 			writer.println("# $rel2 (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
 					+ getBPMNConceptualModelMappingName() + ";");
@@ -894,10 +906,10 @@ public class EncoderImpl implements Encoder {
 
 			writer.println("## query " + getProvidesRelationName());
 			writer.println("# match");
-			writer.println("# $asset isa Asset, has uid $uid1;");
-			writer.println("# $service isa Service, has uid $uid2;");
-			writer.println("# $bpmnasset isa " + getBPMNEntityName() + ", has uid $uid3;");
-			writer.println("# $bpmnservice isa " + getBPMNEntityName() + ", has uid $uid4;");
+			writer.println("# $asset isa Asset, has " + getUIDAttributeName() + " $uid1;");
+			writer.println("# $service isa Service, has " + getUIDAttributeName() + " $uid2;");
+			writer.println("# $bpmnasset isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " $uid3;");
+			writer.println("# $bpmnservice isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " $uid4;");
 			writer.println("# $rel1 (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
 			writer.println("# $rel2 (bpmnEntity: $bpmnasset, conceptualModel: $asset) isa "
 					+ getBPMNConceptualModelMappingName() + ";");
@@ -959,109 +971,109 @@ public class EncoderImpl implements Encoder {
 	insert $def isa BPMN_definitions, 
 	has BPMN_targetNamespace "https://camunda.org/examples", 
 	has BPMN_xmlns "http://www.omg.org/spec/BPMN/20100524/MODEL", 
-	has uid "https://camunda.org/examples#definitions123";
+	has UID "https://camunda.org/examples#definitions123";
 	
 	insert $proc isa BPMN_process,
-	has uid "https://camunda.org/examples#proc123";
+	has UID "https://camunda.org/examples#proc123";
 	match
-	$parent isa BPMN_definitions, has uid "https://camunda.org/examples#definitions123";
-	$child isa BPMN_process, has uid "https://camunda.org/examples#proc123";
+	$parent isa BPMN_definitions, has UID "https://camunda.org/examples#definitions123";
+	$child isa BPMN_process, has UID "https://camunda.org/examples#proc123";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $startEvent isa BPMN_startEvent,
 	has BPMN_id "start",
-	has uid "https://camunda.org/examples#start";
+	has UID "https://camunda.org/examples#start";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#proc123";
-	$child isa entity, has uid "https://camunda.org/examples#start";
+	$parent isa entity, has UID "https://camunda.org/examples#proc123";
+	$child isa entity, has UID "https://camunda.org/examples#start";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $outgoing isa BPMN_outgoing,
 	has BPMN_textContent "flow1",
-	has uid "https://camunda.org/examples#outgoing1";
+	has UID "https://camunda.org/examples#outgoing1";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#start";
-	$child isa entity, has uid "https://camunda.org/examples#outgoing1";
+	$parent isa entity, has UID "https://camunda.org/examples#start";
+	$child isa entity, has UID "https://camunda.org/examples#outgoing1";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $userTask isa BPMN_userTask,
 	has BPMN_id "task",
 	has BPMN_name "User Task",
-	has uid "https://camunda.org/examples#task";
+	has UID "https://camunda.org/examples#task";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#proc123";
-	$child isa entity, has uid "https://camunda.org/examples#task";
+	$parent isa entity, has UID "https://camunda.org/examples#proc123";
+	$child isa entity, has UID "https://camunda.org/examples#task";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $incoming isa BPMN_incoming,
 	has BPMN_textContent "flow1",
-	has uid "https://camunda.org/examples#taskincoming";
+	has UID "https://camunda.org/examples#taskincoming";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#task";
-	$child isa entity, has uid "https://camunda.org/examples#taskincoming";
+	$parent isa entity, has UID "https://camunda.org/examples#task";
+	$child isa entity, has UID "https://camunda.org/examples#taskincoming";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $outgoing isa BPMN_outgoing,
 	has BPMN_textContent "flow2",
-	has uid "https://camunda.org/examples#taskoutgoing";
+	has UID "https://camunda.org/examples#taskoutgoing";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#task";
-	$child isa entity, has uid "https://camunda.org/examples#taskoutgoing";
+	$parent isa entity, has UID "https://camunda.org/examples#task";
+	$child isa entity, has UID "https://camunda.org/examples#taskoutgoing";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $sequenceFlow isa BPMN_sequenceFlow,
 	has BPMN_id "flow1",
 	has BPMN_sourceRef "start",
 	has BPMN_targetRef "task",
-	has uid "https://camunda.org/examples#flow1";
+	has UID "https://camunda.org/examples#flow1";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#proc123";
-	$child isa entity, has uid "https://camunda.org/examples#flow1";
+	$parent isa entity, has UID "https://camunda.org/examples#proc123";
+	$child isa entity, has UID "https://camunda.org/examples#flow1";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $endEvent isa BPMN_endEvent,
 	has BPMN_id "end",
-	has uid "https://camunda.org/examples#end";
+	has UID "https://camunda.org/examples#end";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#proc123";
-	$child isa entity, has uid "https://camunda.org/examples#end";
+	$parent isa entity, has UID "https://camunda.org/examples#proc123";
+	$child isa entity, has UID "https://camunda.org/examples#end";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $incoming isa BPMN_incoming,
 	has BPMN_textContent "flow2",
-	has uid "https://camunda.org/examples#endincoming";
+	has UID "https://camunda.org/examples#endincoming";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#end";
-	$child isa entity, has uid "https://camunda.org/examples#endincoming";
+	$parent isa entity, has UID "https://camunda.org/examples#end";
+	$child isa entity, has UID "https://camunda.org/examples#endincoming";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	insert $sequenceFlow isa BPMN_sequenceFlow,
 	has BPMN_id "flow2",
 	has BPMN_sourceRef "task",
 	has BPMN_targetRef "end",
-	has uid "https://camunda.org/examples#flow2";
+	has UID "https://camunda.org/examples#flow2";
 	match
-	$parent isa entity, has uid "https://camunda.org/examples#proc123";
-	$child isa entity, has uid "https://camunda.org/examples#flow2";
+	$parent isa entity, has UID "https://camunda.org/examples#proc123";
+	$child isa entity, has UID "https://camunda.org/examples#flow2";
 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 	
 	## references to the conceptual model
 	insert $mission isa Mission,
-	has uid "https://camunda.org/examples#Mission_proc123";
+	has UID "https://camunda.org/examples#Mission_proc123";
 	match
-	$bpmnEntity isa BPMN_Entity, has uid 'https://camunda.org/examples#proc123';
-	$conceptualModel isa entity, has uid 'https://camunda.org/examples#Mission_proc123';
+	$bpmnEntity isa BPMN_Entity, has UID 'https://camunda.org/examples#proc123';
+	$conceptualModel isa entity, has UID 'https://camunda.org/examples#Mission_proc123';
 	insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $conceptualModel) isa BPMN_hasConceptualModelElement;
 	
 	insert $task isa Task,
-	has uid "https://camunda.org/examples#Task_task";
+	has UID "https://camunda.org/examples#Task_task";
 	match
-	$bpmnEntity isa BPMN_Entity, has uid 'https://camunda.org/examples#task';
-	$conceptualModel isa entity, has uid 'https://camunda.org/examples#Task_task';
+	$bpmnEntity isa BPMN_Entity, has UID 'https://camunda.org/examples#task';
+	$conceptualModel isa entity, has UID 'https://camunda.org/examples#Task_task';
 	insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $conceptualModel) isa BPMN_hasConceptualModelElement;
 	match
-	$task isa Task, has uid 'https://camunda.org/examples#Task_task';
-	$mission isa Mission, has uid 'https://camunda.org/examples#Mission_proc123';
+	$task isa Task, has UID 'https://camunda.org/examples#Task_task';
+	$mission isa Mission, has UID 'https://camunda.org/examples#Mission_proc123';
 	insert $rel (mission: $mission, task: $task) isa isCompoundBy;
 	 * </pre>
 	 */
@@ -1193,7 +1205,7 @@ public class EncoderImpl implements Encoder {
 		 * 		has BPMN_targetNamespace "https://camunda.org/examples", 
 		 * 		has BPMN_xmlns "http://www.omg.org/spec/BPMN/20100524/MODEL", 
 		 * 		has BPMN_textContent "flow2",
-		 * 		has uid "https://camunda.org/examples#definitions123";
+		 * 		has UID "https://camunda.org/examples#definitions123";
 		 * </pre>
 		 */
 
@@ -1255,7 +1267,7 @@ public class EncoderImpl implements Encoder {
 		usedUIDs.add(currentUID);
 
 		// has uid "<UID>"
-		writer.println("\t has uid \"" + currentUID + "\";");
+		writer.println("\t has " + getUIDAttributeName() + " \"" + currentUID + "\";");
 
 		// Connect the current BPMN/XML tag to its parent tag.
 		ModelElementInstance parentNode = currentNode.getParentElement();
@@ -1273,8 +1285,10 @@ public class EncoderImpl implements Encoder {
 				 * </pre>
 				 */
 				writer.println("match");
-				writer.println("\t $parent isa " + getBPMNEntityName() + ", has uid \"" + parentUID + "\";");
-				writer.println("\t $child isa " + getBPMNEntityName() + ", has uid \"" + currentUID + "\";");
+				writer.println("\t $parent isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " \""
+						+ parentUID + "\";");
+				writer.println("\t $child isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " \""
+						+ currentUID + "\";");
 				writer.println(
 						"insert $rel (parent: $parent, child: $child) isa " + getBPMNParentChildRelationName() + ";");
 			} else {
@@ -1352,11 +1366,13 @@ public class EncoderImpl implements Encoder {
 				 */
 				writer.println("## Mapping to the conceptual model");
 				// Add the new concept instance
-				writer.println("insert $concept isa " + conceptModelEntity + ", has uid \"" + conceptUID + "\";");
+				writer.println("insert $concept isa " + conceptModelEntity + ", has " + getUIDAttributeName() + " \""
+						+ conceptUID + "\";");
 				// Add the relation to the above instance
 				writer.println("match");
-				writer.println("\t $bpmnEntity isa " + getBPMNEntityName() + ", has uid '" + currentUID + "';");
-				writer.println("\t $concept isa entity, has uid '" + conceptUID + "';");
+				writer.println("\t $bpmnEntity isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " '"
+						+ currentUID + "';");
+				writer.println("\t $concept isa entity, has " + getUIDAttributeName() + " '" + conceptUID + "';");
 				writer.println("insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa "
 						+ getBPMNConceptualModelMappingName() + ";");
 				writer.println();
@@ -1598,7 +1614,8 @@ public class EncoderImpl implements Encoder {
 			if (typeVar.sub().isPresent()
 					&& "attribute".equals(typeVar.sub().orElseThrow().type().reference().asLabel().label())
 					// ignore "uid" since it's part of conceptual model, if we're mapping to it
-					&& !(isMapBPMNToConceptualModel() && typeVar.reference().asLabel().label().equals("uid"))) {
+					&& !(isMapBPMNToConceptualModel()
+							&& typeVar.reference().asLabel().label().equals(getUIDAttributeName()))) {
 				declaredAttributes.add(typeVar.reference().asLabel().label());
 				// attributes must declare value type
 				if (!typeVar.valueType().isPresent()) {
@@ -1635,7 +1652,7 @@ public class EncoderImpl implements Encoder {
 						// extract the labels after 'owns'
 						.map(ownVar -> ownVar.reference().asLabel().label())
 						// ignore "uid" since it's part of conceptual model
-						.filter(label -> (!label.equals("uid"))).collect(Collectors.toSet()));
+						.filter(label -> (!label.equals(getUIDAttributeName()))).collect(Collectors.toSet()));
 			}
 			// store references to relations/roles in 'plays' declaration
 			for (Plays plays : typeVar.plays()) {
@@ -2123,6 +2140,34 @@ public class EncoderImpl implements Encoder {
 	 */
 	public void setSortAttributeName(String sortAttributeName) {
 		this.sortAttributeName = sortAttributeName;
+	}
+
+	/**
+	 * @return the name of the root entity in the conceptual model
+	 */
+	public String getRootConceptualModelEntityName() {
+		return rootConceptualModelEntityName;
+	}
+
+	/**
+	 * @param name : the name of the root entity in the conceptual model
+	 */
+	public void setRootConceptualModelEntityName(String name) {
+		rootConceptualModelEntityName = name;
+	}
+
+	/**
+	 * @return name of the universal identifier attribute.
+	 */
+	public String getUIDAttributeName() {
+		return uidAttributeName;
+	}
+
+	/**
+	 * @param name : name of the universal identifier attribute.
+	 */
+	public void setUIDAttributeName(String name) {
+		this.uidAttributeName = name;
 	}
 
 }

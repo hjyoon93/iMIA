@@ -377,7 +377,7 @@ public class EncoderImplTest {
 		boolean foundConcept = false;
 		for (int i = 0; i < parsedList.size(); i++) {
 			TypeQLQuery insertQuery = parsedList.get(i);
-			if (insertQuery.toString().startsWith("insert $concept isa Asset, has uid ")) {
+			if (insertQuery.toString().startsWith("insert $concept isa Asset, has UID")) {
 				foundConcept = true;
 				// the next element should be the "match" command
 				TypeQLQuery matchQuery = parsedList.get(i + 1);
@@ -405,7 +405,7 @@ public class EncoderImplTest {
 		foundConcept = false;
 		for (int i = 0; i < parsedList.size(); i++) {
 			TypeQLQuery insertQuery = parsedList.get(i);
-			if (insertQuery.toString().startsWith("insert $concept isa Service, has uid ")) {
+			if (insertQuery.toString().startsWith("insert $concept isa Service, has UID")) {
 				foundConcept = true;
 				// the next element should be the "match" command
 				TypeQLQuery matchQuery = parsedList.get(i + 1);

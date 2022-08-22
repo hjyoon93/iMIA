@@ -2,12 +2,16 @@
 define
 
 ## Note: conceptual model is required in DALNIM. Uncomment the following if not declared yet.
- uid sub attribute, value string;
- Mission sub entity, owns uid @key;
- Task sub entity, owns uid @key;
- Performer sub entity, owns uid @key;
+ UID sub attribute, value string;
+ MIAEntity sub entity, owns UID @key;
+ Mission sub MIAEntity;
+ Task sub MIAEntity;
+ Performer sub MIAEntity;
  Service sub Performer;
- Asset sub entity, owns uid @key;
+ Asset sub MIAEntity;
+ PrecedenceTask sub MIAEntity;
+ ORPrecedenceTaskList sub PrecedenceTask;
+ ANDPrecedenceTaskList sub PrecedenceTask;
  isCompoundBy sub relation, relates mission, relates task;
  Mission plays isCompoundBy:mission;
  Task plays isCompoundBy:task;
@@ -17,12 +21,15 @@ define
  provides sub relation, relates asset, relates service;
  Asset plays provides:asset;
  Service plays provides:service;
+ isCompoundBySetOfTask sub relation, relates precedenceTask, relates task;
+ PrecedenceTask plays isCompoundBySetOfTask:precedenceTask;
+ Task plays isCompoundBySetOfTask:task;
 
 ## BPMN entities in general
 BPMNattrib_id sub attribute, value string;
 BPMNattrib_name sub attribute, value string;
 BPMN_textContent sub attribute, value string;
-BPMN_Entity sub entity, owns BPMNattrib_id, owns BPMNattrib_name, owns BPMN_textContent, owns uid @key;
+BPMN_Entity sub entity, owns BPMNattrib_id, owns BPMNattrib_name, owns BPMN_textContent, owns UID @key;
 
 ## Parent-child relationship of BPMN/XML tags
 BPMN_hasChildTag sub relation, relates parent, relates child;
@@ -293,10 +300,7 @@ BPMN_waypoint owns BPMNattrib_sort;
 ## =============== Mapping to conceptual model ===============
 BPMN_hasConceptualModelElement sub relation, relates bpmnEntity, relates conceptualModel;
 BPMN_Entity plays BPMN_hasConceptualModelElement:bpmnEntity;
-Task plays BPMN_hasConceptualModelElement:conceptualModel;
-Mission plays BPMN_hasConceptualModelElement:conceptualModel;
-Performer plays BPMN_hasConceptualModelElement:conceptualModel;
-Asset plays BPMN_hasConceptualModelElement:conceptualModel;
+MIAEntity plays BPMN_hasConceptualModelElement:conceptualModel;
 
 ## Rules that inject BPMN semantics to entities in the conceptual model
 
@@ -368,16 +372,16 @@ when {
 ## query isCompoundBy
 # match 
 # $r isa isCompoundBy; 
-# $m isa Mission, has uid $muid; 
-# $t isa Task, has uid $tuid; 
-# $bpmntask isa BPMN_Entity, has uid $buid;
+# $m isa Mission, has UID $muid; 
+# $t isa Task, has UID $tuid; 
+# $bpmntask isa BPMN_Entity, has UID $buid;
 # (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;
 # get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;
 
 ## query isPerformedBy
 # match
-# $bpmntask isa BPMN_Entity, has uid $uid1;
-# $bpmnperfomer isa BPMN_Entity, has uid $uid2;
+# $bpmntask isa BPMN_Entity, has UID $uid1;
+# $bpmnperfomer isa BPMN_Entity, has UID $uid2;
 # $rel1 (task: $task, performer: $performer) isa isPerformedBy;
 # $rel2 (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
 # $rel3 (bpmnEntity: $bpmnperfomer, conceptualModel: $performer) isa BPMN_hasConceptualModelElement;
@@ -385,10 +389,10 @@ when {
 
 ## query provides
 # match
-# $asset isa Asset, has uid $uid1;
-# $service isa Service, has uid $uid2;
-# $bpmnasset isa BPMN_Entity, has uid $uid3;
-# $bpmnservice isa BPMN_Entity, has uid $uid4;
+# $asset isa Asset, has UID $uid1;
+# $service isa Service, has UID $uid2;
+# $bpmnasset isa BPMN_Entity, has UID $uid3;
+# $bpmnservice isa BPMN_Entity, has UID $uid4;
 # $rel1 (asset: $asset, service: $service) isa provides;
 # $rel2 (bpmnEntity: $bpmnasset, conceptualModel: $asset) isa BPMN_hasConceptualModelElement;
 # $rel3 (bpmnEntity: $bpmnservice, conceptualModel: $service) isa BPMN_hasConceptualModelElement;
