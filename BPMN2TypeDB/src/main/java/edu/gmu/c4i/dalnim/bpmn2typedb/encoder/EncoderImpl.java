@@ -112,7 +112,12 @@ public class EncoderImpl implements Encoder {
 	private String jsonBPMNConceptualModelMap = "{" + "'definitions':'Mission',"
 			+ "'@org.camunda.bpm.model.bpmn.instance.Task':'Task'," + "'lane':'Performer',"
 			+ "'participant':'Performer'," + "'@org.camunda.bpm.model.bpmn.instance.ItemAwareElement':'Asset',"
-			+ "'@org.camunda.bpm.model.bpmn.instance.DataAssociation':'Service'" + "}";
+			+ "'@org.camunda.bpm.model.bpmn.instance.DataAssociation':'Service',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.ParallelGateway':'ANDPrecedenceTaskList',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.ExclusiveGateway':'ORPrecedenceTaskList',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.ComplexGateway':'ORPrecedenceTaskList',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.InclusiveGateway':'ORPrecedenceTaskList',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.SequenceFlow':'PrecedenceTask'" + "}";
 
 	private String jsonConceptsNotToAddRole = "['Service']";
 
@@ -236,8 +241,7 @@ public class EncoderImpl implements Encoder {
 				writer.println("# provides sub relation, relates asset, relates service;");
 				writer.println("# Asset plays provides:asset;");
 				writer.println("# Service plays provides:service;");
-				writer.println(
-						"# isCompoundBySetOfTask sub relation, relates precedenceTask, relates task;");
+				writer.println("# isCompoundBySetOfTask sub relation, relates precedenceTask, relates task;");
 				writer.println("# PrecedenceTask plays isCompoundBySetOfTask:precedenceTask;");
 				writer.println("# Task plays isCompoundBySetOfTask:task;");
 			} else {
@@ -917,6 +921,43 @@ public class EncoderImpl implements Encoder {
 					+ getBPMNConceptualModelMappingName() + ";");
 			writer.println("# get $rel1, $rel2, $rel3, $uid1, $uid2, $uid3, $uid4;");
 			writer.println();
+
+			/**
+			 * TODO we might need new rules related to PrecedenceTask:
+			 * 
+			 * <pre>
+			 * define
+			 * ## Task isCompoundBySetOfTask precedence tasks (sequence flow)
+			 * rule rule_task_isCompoundBySetOfTask_precedenceTask_sequenceFlow:
+			 * when {
+			 * 		$precedenceTask isa PrecedenceTask;
+			 * 		$task isa Task;
+			 * 		$bpmntask isa BPMN_Entity, has BPMNattrib_id $taskID;
+			 * 		$sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_targetRef $targetRef;
+			 * 		$taskID = $targetRef;
+			 * 		(bpmnEntity: $sequenceFlow, conceptualModel: $precedenceTask) isa BPMN_hasConceptualModelElement;
+			 * 		(bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
+			 * } then {
+			 * 		(precedenceTask: $precedenceTask, task: $task) isa isCompoundBySetOfTask;
+			 * };
+			 * </pre>
+			 */
+
+			/**
+			 * TODO the respective query would be like:
+			 * 
+			 * <pre>
+			 * ## query isCompoundBySetOfTask
+			 * match 
+			 * $p isa PrecedenceTask, has attribute $puid; 
+			 * $t isa Task, has attribute $tuid; 
+			 * $bpmntask isa BPMN_Entity, has attribute $buid;
+			 * $seq isa BPMN_Entity, has attribute $suid;
+			 * $r  (precedenceTask: $p, task: $t) isa isCompoundBySetOfTask; 
+			 * (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;
+			 * (bpmnEntity: $seq, conceptualModel: $p) isa BPMN_hasConceptualModelElement;
+			 * </pre>
+			 */
 
 		} // else ignore mappings to conceptual model
 
