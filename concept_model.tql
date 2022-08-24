@@ -19,7 +19,7 @@ Asset sub MIAEntity;
 Vulnerabilities sub MIAEntity;
 Capacity sub MIAEntity;
 Task sub MIAEntity;
-PrecedenceTask sub entity;
+PrecedenceTask sub MIAEntity;
 ORPrecedenceTaskList sub PrecedenceTask;
 ANDPrecedenceTaskList sub PrecedenceTask;
 
