@@ -81,7 +81,7 @@ public class EncoderImplTest {
 		out.flush();
 
 		String schema = out.toString();
-		logger.debug("Generated typeql schema: \n{}", schema);
+//		logger.debug("Generated typeql schema: \n{}", schema);
 
 		assertFalse(schema.trim().isEmpty());
 
@@ -499,12 +499,8 @@ public class EncoderImplTest {
 		// the 1st command should be an insert
 		assertNotNull(parsedList.get(0).asInsert());
 
-		// check presence of relations that represent
-		// mapping between BPMN and concept model
-		assertTrue(encoder.isMapBPMNToConceptualModel());
-
 	}
-	
+
 	/**
 	 * Test method for
 	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
@@ -516,34 +512,201 @@ public class EncoderImplTest {
 	 */
 	@Test
 	public final void testEncodeBPMNSequence() throws Exception {
-		
+
 		// make sure the schema can be generated
 		testEncodeSchema("/sequence.bpmn");
-		
+
 		// generate the data
 		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
-		
+
 		encoder.loadInput(getClass().getResourceAsStream("/sequence.bpmn"));
 		String dataTypeQL;
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 			encoder.encodeData(out);
 			dataTypeQL = out.toString();
 		}
-		
+
 		logger.debug("Generated typeql data: \n{}", dataTypeQL);
 		assertFalse(dataTypeQL.trim().isEmpty());
-		
+
 		// make sure the typeql data can be parsed
 		List<TypeQLQuery> parsedList = TypeQL.parseQueries(dataTypeQL).collect(Collectors.toList());
 		// there should be many commands
 		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
 		// the 1st command should be an insert
 		assertNotNull(parsedList.get(0).asInsert());
-		
-		// check presence of relations that represent
-		// mapping between BPMN and concept model
-		assertTrue(encoder.isMapBPMNToConceptualModel());
-		
+
+		/**
+		 * We should also find declarations like the following:
+		 * 
+		 * <pre>
+		 * insert $concept isa PrecedenceTask, has UID "http://c4i.gmu.edu/dalnim/sequence/#PrecedenceTask_SequenceFlow_1";
+		 * match
+		 * $bpmnEntity isa BPMN_Entity, has UID 'http://c4i.gmu.edu/dalnim/sequence/#SequenceFlow_1';
+		 * $concept isa entity, has UID 'http://c4i.gmu.edu/dalnim/sequence/#PrecedenceTask_SequenceFlow_1';
+		 * insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+		 * </pre>
+		 */
+		boolean foundConcept = false;
+		for (int i = 0; i < parsedList.size(); i++) {
+			TypeQLQuery insertQuery = parsedList.get(i);
+			if (insertQuery.toString().startsWith("insert $concept isa PrecedenceTask, has UID")) {
+				foundConcept = true;
+				// the next element should be the "match" command
+				TypeQLQuery matchQuery = parsedList.get(i + 1);
+				assertTrue(matchQuery.toString(),
+						// should be an insert command with a "match" block
+						matchQuery.asInsert().match().get()
+								// it should contain reference to the sequenceFlow ID
+								.toString().contains("SequenceFlow_1"));
+				break;
+			}
+		}
+		assertTrue(foundConcept);
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
+	 * and
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeD(java.io.OutputStream)}
+	 * for parallelGateway.bpmn.
+	 * 
+	 * @see #testEncodeSchema(String)
+	 */
+	@Test
+	public final void testEncodeBPMNParallel() throws Exception {
+
+		// make sure the schema can be generated
+		testEncodeSchema("/parallelGateway.bpmn");
+
+		// generate the data
+		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+
+		encoder.loadInput(getClass().getResourceAsStream("/parallelGateway.bpmn"));
+		String dataTypeQL;
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			encoder.encodeData(out);
+			dataTypeQL = out.toString();
+		}
+
+		logger.debug("Generated typeql data: \n{}", dataTypeQL);
+		assertFalse(dataTypeQL.trim().isEmpty());
+
+		// make sure the typeql data can be parsed
+		List<TypeQLQuery> parsedList = TypeQL.parseQueries(dataTypeQL).collect(Collectors.toList());
+		// there should be many commands
+		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
+		// the 1st command should be an insert
+		assertNotNull(parsedList.get(0).asInsert());
+
+		/**
+		 * We should also find declarations like the following:
+		 * 
+		 * <pre>
+		 * insert $concept isa ANDPrecedenceTaskList, has UID (...);
+		 * match
+		 * $bpmnEntity isa BPMN_Entity, has UID  (...);
+		 * $concept isa entity, has UID (...);
+		 * insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+		 * </pre>
+		 */
+		boolean foundConcept = false;
+		for (int i = 0; i < parsedList.size(); i++) {
+			TypeQLQuery insertQuery = parsedList.get(i);
+			if (insertQuery.toString().startsWith("insert $concept isa ANDPrecedenceTaskList, has UID")) {
+				// the next element should be the "match" command
+				TypeQLQuery matchQuery = parsedList.get(i + 1);
+				// should be an insert command with a "match" block
+				if (matchQuery.asInsert().match().get()
+						// it should contain reference to the parallelGateway ID
+						.toString().contains("ParallelGateway_1")) {
+					foundConcept = true;
+					break;
+				}
+			}
+		}
+		assertTrue(foundConcept);
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
+	 * and
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeD(java.io.OutputStream)}
+	 * for gatewayChain.bpmn.
+	 * 
+	 * @see #testEncodeSchema(String)
+	 */
+	@Test
+	public final void testEncodeBPMNGatewayChain() throws Exception {
+
+		// make sure the schema can be generated
+		testEncodeSchema("/gatewayChain.bpmn");
+
+		// generate the data
+		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+
+		encoder.loadInput(getClass().getResourceAsStream("/gatewayChain.bpmn"));
+		String dataTypeQL;
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			encoder.encodeData(out);
+			dataTypeQL = out.toString();
+		}
+
+		logger.debug("Generated typeql data: \n{}", dataTypeQL);
+		assertFalse(dataTypeQL.trim().isEmpty());
+
+		// make sure the typeql data can be parsed
+		List<TypeQLQuery> parsedList = TypeQL.parseQueries(dataTypeQL).collect(Collectors.toList());
+		// there should be many commands
+		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
+		// the 1st command should be an insert
+		assertNotNull(parsedList.get(0).asInsert());
+
+		/**
+		 * We should also find declarations like the following:
+		 * 
+		 * <pre>
+		 * insert $concept isa ORPrecedenceTaskList, has UID (...);
+		 * match
+		 * $bpmnEntity isa BPMN_Entity, has UID  (...);
+		 * $concept isa entity, has UID (...);
+		 * insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+		 * </pre>
+		 */
+		boolean foundConcept = false;
+		for (int i = 0; i < parsedList.size(); i++) {
+			TypeQLQuery insertQuery = parsedList.get(i);
+			if (insertQuery.toString().startsWith("insert $concept isa ORPrecedenceTaskList, has UID")) {
+				// the next element should be the "match" command
+				TypeQLQuery matchQuery = parsedList.get(i + 1);
+				// should be an insert command with a "match" block
+				if (matchQuery.asInsert().match().get()
+						// it should contain reference to the inclusiveGateway ID
+						.toString().contains("InclusiveGateway_")) {
+					foundConcept = true;
+					break;
+				}
+			}
+		}
+		assertTrue(foundConcept);
+		foundConcept = false;
+		for (int i = 0; i < parsedList.size(); i++) {
+			TypeQLQuery insertQuery = parsedList.get(i);
+			if (insertQuery.toString().startsWith("insert $concept isa ORPrecedenceTaskList, has UID")) {
+				// the next element should be the "match" command
+				TypeQLQuery matchQuery = parsedList.get(i + 1);
+				// should be an insert command with a "match" block
+				if (matchQuery.asInsert().match().get()
+						// it should contain reference to the complexGateway ID
+						.toString().contains("ComplexGateway_")) {
+					foundConcept = true;
+					break;
+				}
+			}
+		}
+		assertTrue(foundConcept);
 	}
 
 }

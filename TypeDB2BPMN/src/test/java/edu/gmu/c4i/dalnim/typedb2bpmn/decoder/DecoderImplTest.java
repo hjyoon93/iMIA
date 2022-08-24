@@ -83,6 +83,23 @@ public class DecoderImplTest {
 
 		// populate the test database
 
+		// load the conceptual model schema
+		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
+			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+				Stream<TypeQLQuery> queries = TypeQL.parseQueries(
+						Files.readString(Path.of(DecoderImplTest.class.getResource("/concept model.tql").toURI())));
+				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+					QueryFuture<Void> response = transaction.query().define(query.asDefine());
+					// wait for the transaction to finish
+					response.get();
+					logger.debug("Processed query {}", query);
+				}
+				logger.debug("Committing transaction...");
+				transaction.commit();
+			}
+			logger.debug("Loaded conceptual model.");
+		}
+
 		// set up schema from file
 		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
 			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {

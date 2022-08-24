@@ -817,6 +817,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0m7fyk1";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa ANDPrecedenceTaskList, has UID "http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_0m7fyk1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Gateway_0m7fyk1';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_0m7fyk1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## incoming
 insert $x isa BPMN_incoming,
      has BPMN_textContent "Flow_1yj8ik5",
@@ -862,6 +869,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_1ilh1pw";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa ANDPrecedenceTaskList, has UID "http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_1ilh1pw";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Gateway_1ilh1pw';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_1ilh1pw';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
 insert $x isa BPMN_incoming,
@@ -909,6 +923,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0qaps1c";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa ANDPrecedenceTaskList, has UID "http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_0qaps1c";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Gateway_0qaps1c';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_0qaps1c';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## incoming
 insert $x isa BPMN_incoming,
      has BPMN_textContent "Flow_0qesozf",
@@ -945,6 +966,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_1r3kg4s";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa ANDPrecedenceTaskList, has UID "http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_1r3kg4s";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Gateway_1r3kg4s';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_1r3kg4s';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
 insert $x isa BPMN_incoming,
@@ -984,6 +1012,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0dke4wa";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0dke4wa";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0dke4wa';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0dke4wa';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Activity_1xfvehm",
@@ -994,6 +1029,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0zvo261";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0zvo261";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0zvo261';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0zvo261';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1006,6 +1048,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_095emxy";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_095emxy";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_095emxy';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_095emxy';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Activity_1uhybch",
@@ -1016,6 +1065,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1kjiq0a";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1kjiq0a";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1kjiq0a';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1kjiq0a';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1028,6 +1084,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0d21g9n";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0d21g9n";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0d21g9n';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0d21g9n';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Gateway_0m7fyk1",
@@ -1038,6 +1101,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1yj8ik5";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1yj8ik5";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1yj8ik5';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1yj8ik5';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1050,6 +1120,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1fue4z2";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1fue4z2";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1fue4z2';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1fue4z2';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Gateway_1ilh1pw",
@@ -1060,6 +1137,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0e918yq";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0e918yq";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0e918yq';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0e918yq';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1072,6 +1156,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1crh0vx";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1crh0vx";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1crh0vx';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1crh0vx';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Activity_0i7x6hw",
@@ -1082,6 +1173,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1qsy4z7";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1qsy4z7";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1qsy4z7';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1qsy4z7';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1094,6 +1192,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1b3ibsr";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1b3ibsr";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1b3ibsr';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1b3ibsr';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Gateway_0qaps1c",
@@ -1104,6 +1209,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0qesozf";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0qesozf";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0qesozf';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0qesozf';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1116,6 +1228,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0ygose6";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0ygose6";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0ygose6';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0ygose6';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Activity_0ke1h6y",
@@ -1126,6 +1245,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0raulo1";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0raulo1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0raulo1';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0raulo1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1138,6 +1264,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0x2kctu";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0x2kctu";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0x2kctu';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0x2kctu';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Gateway_1r3kg4s",
@@ -1148,6 +1281,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_10u452g";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_10u452g";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_10u452g';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_10u452g';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1160,6 +1300,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1jnp1p3";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1jnp1p3";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1jnp1p3';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1jnp1p3';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Activity_04oyr68",
@@ -1170,6 +1317,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_104d3xb";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_104d3xb";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_104d3xb';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_104d3xb';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
@@ -1182,6 +1336,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1siteaf";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1siteaf";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1siteaf';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1siteaf';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Activity_1wb9z8r",
@@ -1193,6 +1354,13 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1xe8ag1";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1xe8ag1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1xe8ag1';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1xe8ag1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Event_0qgsj26",
@@ -1203,6 +1371,13 @@ match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1p5oird";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1p5oird";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1p5oird';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1p5oird';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## process
 insert $x isa BPMN_process,

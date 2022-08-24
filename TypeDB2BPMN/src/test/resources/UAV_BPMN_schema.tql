@@ -21,8 +21,8 @@ define
  provides sub relation, relates asset, relates service;
  Asset plays provides:asset;
  Service plays provides:service;
- isCompoundBySetOfTask sub relation, relates precedenceTask, relates task;
- PrecedenceTask plays isCompoundBySetOfTask:precedenceTask;
+ isCompoundBySetOfTask sub relation, relates precedence_task, relates task;
+ PrecedenceTask plays isCompoundBySetOfTask:precedence_task;
  Task plays isCompoundBySetOfTask:task;
 
 ## BPMN entities in general

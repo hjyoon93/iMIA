@@ -139,6 +139,11 @@ public class EncoderImpl implements Encoder {
 
 	private String uidAttributeName = "UID";
 
+	private String jsonCommonBPMNSuperEntityMap = "{ " + "'@org.camunda.bpm.model.bpmn.instance.Activity' : 'Activity',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.Gateway' : 'Gateway'" + " }";
+
+	private String bpmnGatewayTransitiveChainRelationName = bpmnEntityNamePrefix + "gatewayTransitiveChain";
+
 	/**
 	 * Default constructor is protected to avoid public access. Use
 	 * {@link #getInstance()} instead.
@@ -258,11 +263,33 @@ public class EncoderImpl implements Encoder {
 					+ getUIDAttributeName() + " @key;");
 			writer.println();
 
+			// extract the names of common super-entities
+			Map<String, String> commonBPMNSuperEntityMap = parseJSONMap(getJSONCommonBPMNSuperEntityMap());
+			if (commonBPMNSuperEntityMap != null && !commonBPMNSuperEntityMap.isEmpty()) {
+				writer.println("## Common BPMN super-entities");
+				// Common super entities are values in the above map.
+				// Avoid duplicates
+				for (String superEntityName : new HashSet<>(commonBPMNSuperEntityMap.values())) {
+					writer.println(getBPMNEntityNamePrefix() + superEntityName + " sub " + getBPMNEntityName() + ";");
+					writer.println();
+				}
+				writer.println();
+			}
+
 			writer.println("## Parent-child relationship of BPMN/XML tags");
 			writer.println(getBPMNParentChildRelationName() + " sub relation, relates parent, relates child;");
 			// A BPMN tag/entity can be a parent or child of another BPMN tag/entity
 			writer.println(getBPMNEntityName() + " plays " + getBPMNParentChildRelationName() + ":child;");
 			writer.println(getBPMNEntityName() + " plays " + getBPMNParentChildRelationName() + ":parent;");
+
+			writer.println();
+
+			// transitive chain of gateways
+			// (useful when retrieving previous tasks regardless of gateways)
+			writer.println("## relation about chain of gateways");
+			writer.println(getBPMNGatewayTransitiveChainRelationName() + " sub relation, relates previous, relates next;");
+			writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":previous;");
+			writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":next;");
 
 			writer.println();
 
@@ -283,12 +310,15 @@ public class EncoderImpl implements Encoder {
 
 			Set<String> declaredRelations = new HashSet<>();
 			declaredRelations.add(getBPMNParentChildRelationName());
+			declaredRelations.add(getBPMNGatewayTransitiveChainRelationName());
 
-			Set<String> visitedNodes = new HashSet<>();
+			Set<String> visitedNodes = new HashSet<>(
+					// indicate that the common super-entities were already visited.
+					commonBPMNSuperEntityMap.values());
 
 			// recursively visit what's below "definitions" tag
 			visitBPMNSchemaRecursive(writer, bpmn.getDefinitions(), visitedNodes, attributesInRootEntity,
-					declaredAttributes, declaredRelations);
+					declaredAttributes, declaredRelations, commonBPMNSuperEntityMap);
 
 			// declare some attributes specific to our implementation
 			addImplementationSpecificSchemaEntries(writer, bpmn, visitedNodes, attributesInRootEntity,
@@ -303,6 +333,29 @@ public class EncoderImpl implements Encoder {
 			logger.info("Finished TypeQL schema definitions.");
 
 		} // this will close writer
+
+	}
+
+	/**
+	 * Parses a JSON string to a map.
+	 * 
+	 * @param jsonText : text in JSON format.
+	 * @return JSON object parsed to a map
+	 */
+	protected Map<String, String> parseJSONMap(String jsonText) {
+
+		Map<String, String> ret = new HashMap<>();
+
+		// parse the JSON
+		JSONObject json = new JSONObject(jsonText);
+
+		// keys are names of BPMN entities (or camunda classes),
+		// values are entities in the concept model.
+		for (String bpmnEntity : json.keySet()) {
+			ret.put(bpmnEntity, json.getString(bpmnEntity));
+		}
+
+		return ret;
 
 	}
 
@@ -389,19 +442,28 @@ public class EncoderImpl implements Encoder {
 	 * <li>Task -> requires -> Resource (or Asset)</li>
 	 * </ul>
 	 * 
-	 * @param writer              : where to write the script block.
-	 * @param currentNode         : current BPMN tag to handle
-	 * @param visitedNodes        : names of BPMN tags that were already visited
-	 *                            (attributes of these tags will be skipped)
-	 * @param inheritedAttributes : these attributes will not be re-declared (it's
-	 *                            supposed to inherit from root "BPMN" entity).
-	 * @param declaredAttributes  : attributes that were already declared
-	 *                            previously.
-	 * @param declaredRelations   : relations that were already declared previously.
+	 * @param writer                   : where to write the script block.
+	 * @param currentNode              : current BPMN tag to handle
+	 * @param visitedNodes             : names of BPMN tags that were already
+	 *                                 visited (attributes of these tags will be
+	 *                                 skipped)
+	 * @param inheritedAttributes      : these attributes will not be re-declared
+	 *                                 (it's supposed to inherit from root "BPMN"
+	 *                                 entity).
+	 * @param declaredAttributes       : attributes that were already declared
+	 *                                 previously.
+	 * @param declaredRelations        : relations that were already declared
+	 *                                 previously.
+	 * @param commonBPMNSuperEntityMap : mapping of BPMN entities to their common
+	 *                                 super-entities (the names will not come with
+	 *                                 prefixes). If an entity is not found here,
+	 *                                 then it will be added as a sub-entity of the
+	 *                                 top BPMN entity
+	 *                                 ({@link #getBPMNEntityName()}).
 	 */
 	protected void visitBPMNSchemaRecursive(PrintWriter writer, ModelElementInstance currentNode,
 			Set<String> visitedNodes, Set<String> inheritedAttributes, Set<String> declaredAttributes,
-			Set<String> declaredRelations) throws IOException {
+			Set<String> declaredRelations, Map<String, String> commonBPMNSuperEntityMap) throws IOException {
 
 		logger.debug("Visiting BPMN tag/node {}", currentNode);
 
@@ -418,7 +480,8 @@ public class EncoderImpl implements Encoder {
 		}
 
 		// Extract the entity name
-		String currentEntityName = getBPMNEntityNamePrefix() + currentNode.getDomElement().getLocalName();
+		String originalEntityName = currentNode.getDomElement().getLocalName();
+		String currentEntityName = getBPMNEntityNamePrefix() + originalEntityName;
 		logger.debug("Entity: {}", currentEntityName);
 
 		// skip declaration if this node was already visited
@@ -426,7 +489,14 @@ public class EncoderImpl implements Encoder {
 
 			// declare the current entity
 			writer.println("## BPMN '" + currentEntityName + "' tag/node");
-			writer.println(currentEntityName + " sub " + getBPMNEntityName() + ";");
+			String resolvedSuperEntityName = resolveName(commonBPMNSuperEntityMap, originalEntityName,
+					currentNode.getClass());
+			if (resolvedSuperEntityName != null) {
+				writer.println(currentEntityName + " sub " + getBPMNEntityNamePrefix() + resolvedSuperEntityName + ";");
+			} else {
+				// use the top BPMN entity by default
+				writer.println(currentEntityName + " sub " + getBPMNEntityName() + ";");
+			}
 			writer.println();
 
 			// declare all attributes
@@ -494,8 +564,65 @@ public class EncoderImpl implements Encoder {
 		// recursive call
 		for (ModelElementInstance child : childrenToVisit) {
 			visitBPMNSchemaRecursive(writer, child, visitedNodes, inheritedAttributes, declaredAttributes,
-					declaredRelations);
+					declaredRelations, commonBPMNSuperEntityMap);
 		}
+	}
+
+	/**
+	 * Resolves the keys in a name/class mapping and retrieve the associated value.
+	 * 
+	 * @param nameClassMapping   : a map from entity name or camunda class to entity
+	 *                           name.
+	 * @param entityNameNoPrefix : name to find in the key of the map.
+	 * @param entityClass        : class to find in the key of the map.
+	 * 
+	 * @return the value respective to the key (entity name or entity class).
+	 */
+	protected String resolveName(Map<String, String> nameClassMapping, String entityNameNoPrefix,
+			Class<? extends ModelElementInstance> entityClass) {
+
+		String value = null;
+		if (entityNameNoPrefix != null) {
+			value = nameClassMapping.get(entityNameNoPrefix);
+		}
+		// just return the value if we found it.
+		if (value != null) {
+			// We found an exact match
+			logger.debug("Found exact mapping: {} -> {}", entityNameNoPrefix, value);
+			return value;
+		}
+
+		// We didn't find an exact match.
+		// Keys may also start with '@' (i.e., '@class' key).
+		// Such keys represent Java camunda classes.
+		// Search for them if value was not found yet.
+		if (entityClass != null) {
+			// Find a compatible class...
+			for (String key : nameClassMapping.keySet().stream()
+					// get all keys that starts with "@"
+					.filter(key -> key.startsWith("@")).collect(Collectors.toSet())) {
+				// Obtain the class name, which is after '@'.
+				String className = key.substring(1);
+				// load the class and check if its compatible with current BPMN node.
+				try {
+					Class<?> clz = Class.forName(className);
+					if (clz.isAssignableFrom(entityClass)) {
+						// Current node is compatible (it's equal or a subclass of the specified class).
+						value = nameClassMapping.get(key);
+						logger.debug(
+								"Found matching class {} for current BPMN entity {}. Only the 1st match will be used...",
+								key, entityClass);
+						// just use the 1st one we found
+						break;
+					}
+				} catch (ClassNotFoundException e) {
+					logger.warn("Invalid '@class' found in mapping from BPMN to conceptual model. Key = {}", key, e);
+				}
+			} // end of iteration on '@class' keys
+
+		} // else cannot search for the class because it was not specified
+
+		return value;
 	}
 
 	/**
@@ -940,9 +1067,58 @@ public class EncoderImpl implements Encoder {
 
 			} // end of rules of PrecedenceTask related to sequenceFlow
 
-			// TODO rules of ANDPrecedenceTaskList
+			// rules for transitive closure of gateway precedence
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "Gateway")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "sourceRef")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "targetRef")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "id")) {
 
-			// TODO rules of ORPrecedenceTaskList
+				// direct connection
+				writer.println("## chain of gateways, direct");
+				writer.println("rule rule_gateway_chain_direct:");
+				writer.println("when {");
+				writer.println("\t $sequenceFlow isa " + getBPMNEntityNamePrefix() + "sequenceFlow, has "
+						+ getBPMNAttributeNamePrefix() + "sourceRef $source, has " + getBPMNAttributeNamePrefix()
+						+ "targetRef $target;");
+				writer.println("\t $gateway1 isa " + getBPMNEntityNamePrefix() + "Gateway, has "
+						+ getBPMNAttributeNamePrefix() + "id $id1;");
+				writer.println("\t $gateway2 isa " + getBPMNEntityNamePrefix() + "Gateway, has "
+						+ getBPMNAttributeNamePrefix() + "id $id2;");
+				writer.println("\t $id1 = $source;");
+				writer.println("\t $id2 = $target;");
+				writer.println("} then {");
+				writer.println("\t (previous: $gateway1, next: $gateway2) isa "
+						+ getBPMNGatewayTransitiveChainRelationName() + ";");
+				writer.println("};");
+
+				// transitive connection
+				writer.println("## chain of gateways, transitive");
+				writer.println("rule rule_gateway_chain_transitive:");
+				writer.println("when {");
+				writer.println("\t $sequenceFlow isa " + getBPMNEntityNamePrefix() + "sequenceFlow, has "
+						+ getBPMNAttributeNamePrefix() + "sourceRef $source, has " + getBPMNAttributeNamePrefix()
+						+ "targetRef $target;");
+				writer.println("\t $gateway1 isa " + getBPMNEntityNamePrefix() + "Gateway, has "
+						+ getBPMNAttributeNamePrefix() + "id $id1;");
+				writer.println("\t $gateway2 isa " + getBPMNEntityNamePrefix() + "Gateway, has "
+						+ getBPMNAttributeNamePrefix() + "id $id2;");
+				writer.println("\t $gateway3 isa " + getBPMNEntityNamePrefix() + "Gateway;");
+				writer.println("\t $id1 = $source;");
+				writer.println("\t $id2 = $target;");
+				writer.println("\t (previous: $gateway2, next: $gateway3) isa "
+						+ getBPMNGatewayTransitiveChainRelationName() + ";");
+				writer.println("} then {");
+				writer.println("\t (previous: $gateway1, next: $gateway3) isa "
+						+ getBPMNGatewayTransitiveChainRelationName() + ";");
+				writer.println("};");
+
+				writer.println();
+			}
+
+			// TODO rules of ANDPrecedenceTaskList (parallel)
+
+			// TODO rules of ORPrecedenceTaskList (non-parallel)
 
 			// Show sample queries
 			writer.println("## Sample queries for the above rules");
@@ -984,7 +1160,7 @@ public class EncoderImpl implements Encoder {
 					+ getBPMNConceptualModelMappingName() + ";");
 			writer.println("# get $rel1, $rel2, $rel3, $uid1, $uid2, $uid3, $uid4;");
 			writer.println();
-			
+
 			writer.println("## query isPrecededBySetOfTask and isCompoundBySetOfTask associated with sequenceFlow");
 			writer.println("# match");
 			writer.println("# $p isa PrecedenceTask;");
@@ -995,8 +1171,10 @@ public class EncoderImpl implements Encoder {
 			writer.println("# $bpmntask1 isa BPMN_Entity;");
 			writer.println("# $bpmntask2 isa BPMN_Entity;");
 			writer.println("# $seq isa BPMN_Entity;");
-			writer.println("# $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa BPMN_hasConceptualModelElement;");
-			writer.println("# $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa BPMN_hasConceptualModelElement;");
+			writer.println(
+					"# $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa BPMN_hasConceptualModelElement;");
+			writer.println(
+					"# $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa BPMN_hasConceptualModelElement;");
 			writer.println("# $rel3  (bpmnEntity: $seq, conceptualModel: $p) isa BPMN_hasConceptualModelElement;");
 			writer.println();
 
@@ -1020,25 +1198,6 @@ public class EncoderImpl implements Encoder {
 			array.forEach(obj -> ret.add(obj.toString()));
 		} catch (Exception e) {
 			logger.warn("Failed to parse list of concepts not to add roles: {}", getJSONConceptsNotToAddRole());
-		}
-
-		return ret;
-	}
-
-	/**
-	 * @return parsed {@link #getJSONBPMNConceptualModelMap()}
-	 */
-	protected Map<String, String> parseBPMNtoConceptualModelJSONMap() {
-
-		Map<String, String> ret = new HashMap<>();
-
-		// parse the JSON
-		JSONObject json = new JSONObject(getJSONBPMNConceptualModelMap());
-
-		// keys are names of BPMN entities,
-		// values are entities in the concept model.
-		for (String bpmnEntity : json.keySet()) {
-			ret.put(bpmnEntity, json.getString(bpmnEntity));
 		}
 
 		return ret;
@@ -1212,7 +1371,7 @@ public class EncoderImpl implements Encoder {
 					// UIDs should be unique, so keep track of them with a set
 					new HashSet<>(),
 					// specify a map from BPMN element to entity in conceptual model
-					parseBPMNtoConceptualModelJSONMap(),
+					parseJSONMap(getJSONBPMNConceptualModelMap()),
 					// some entities (e.g., points in edge) should be sorted
 					sortableEntities);
 
@@ -1384,37 +1543,8 @@ public class EncoderImpl implements Encoder {
 		if (isMapBPMNToConceptualModel()) {
 			// Extract the entity in the conceptual model
 			// which is mapped with current BPMN element.
-			String conceptModelEntity = bpmnToConceptualModelMap.get(currentEntityOriginalName);
-			if (conceptModelEntity == null) {
-				// We didn't find an exact match.
-				// However, keys starting with '@' (i.e., '@class' key) represent Java classes.
-				// Find a compatible class...
-				for (String key : bpmnToConceptualModelMap.keySet().stream()
-						// get all keys that starts with "@"
-						.filter(key -> key.startsWith("@")).collect(Collectors.toSet())) {
-					// Obtain the class name, which is after '@'.
-					String className = key.substring(1);
-					// load the class and check if its compatible with current BPMN node.
-					try {
-						Class<?> clz = Class.forName(className);
-						if (clz.isAssignableFrom(currentNode.getClass())) {
-							// Current node is compatible (it's equal or a subclass of the specified class).
-							conceptModelEntity = bpmnToConceptualModelMap.get(key);
-							logger.debug(
-									"Found matching class {} for current BPMN entity {}. Only the 1st match will be used...",
-									key, currentEntityOriginalName);
-							// just use the 1st one we found
-							break;
-						}
-					} catch (ClassNotFoundException e) {
-						logger.warn("Invalid '@class' found in mapping from BPMN to conceptual model. Key = {}", key,
-								e);
-					}
-				} // end of iteration on '@class' keys
-			} else {
-				// We found an exact match
-				logger.debug("Found exact mapping: {} -> {}", currentEntityOriginalName, conceptModelEntity);
-			}
+			String conceptModelEntity = resolveName(bpmnToConceptualModelMap, currentEntityOriginalName,
+					currentNode.getClass());
 
 			// Add references/mappings to the conceptual model, if any.
 			if (conceptModelEntity != null && !conceptModelEntity.trim().isEmpty()) {
@@ -2250,6 +2380,43 @@ public class EncoderImpl implements Encoder {
 	 */
 	public void setUIDAttributeName(String name) {
 		this.uidAttributeName = name;
+	}
+
+	/**
+	 * @return JSON map specifying common super entities for some BPMN entities. For
+	 *         example, tasks/subprocesses/calls should be BPMN_Activity; and
+	 *         parallel/inclusive/exclusive/complex/event-based gateways should be
+	 *         BPMN_Gateway.
+	 */
+	public String getJSONCommonBPMNSuperEntityMap() {
+		return jsonCommonBPMNSuperEntityMap;
+	}
+
+	/**
+	 * @param jsonMap : JSON map specifying common super entities for some BPMN
+	 *                entities. For example, tasks/subprocesses/calls should be
+	 *                BPMN_Activity; and
+	 *                parallel/inclusive/exclusive/complex/event-based gateways
+	 *                should be BPMN_Gateway.
+	 */
+	public void setJSONCommonBPMNSuperEntityMap(String jsonMap) {
+		this.jsonCommonBPMNSuperEntityMap = jsonMap;
+	}
+
+	/**
+	 * @return name of the relation that represents the transitive closure of
+	 *         gateway precedence.
+	 */
+	public String getBPMNGatewayTransitiveChainRelationName() {
+		return bpmnGatewayTransitiveChainRelationName;
+	}
+
+	/**
+	 * @param name : name of the relation that represents the transitive closure of
+	 *             gateway precedence.
+	 */
+	public void setBPMNGatewayTransitiveChainRelationName(String name) {
+		bpmnGatewayTransitiveChainRelationName = name;
 	}
 
 }

@@ -2,28 +2,28 @@
 define
 
 ## Note: conceptual model is required in DALNIM. Uncomment the following if not declared yet.
- UID sub attribute, value string;
- MIAEntity sub entity, owns UID @key;
- Mission sub MIAEntity;
- Task sub MIAEntity;
- Performer sub MIAEntity;
- Service sub Performer;
- Asset sub MIAEntity;
- PrecedenceTask sub MIAEntity;
- ORPrecedenceTaskList sub PrecedenceTask;
- ANDPrecedenceTaskList sub PrecedenceTask;
- isCompoundBy sub relation, relates mission, relates task;
- Mission plays isCompoundBy:mission;
- Task plays isCompoundBy:task;
- isPerformedBy sub relation, relates task, relates performer;
- Task plays isPerformedBy:task;
- Performer plays isPerformedBy:performer;
- provides sub relation, relates asset, relates service;
- Asset plays provides:asset;
- Service plays provides:service;
- isCompoundBySetOfTask sub relation, relates precedenceTask, relates task;
- PrecedenceTask plays isCompoundBySetOfTask:precedenceTask;
- Task plays isCompoundBySetOfTask:task;
+# UID sub attribute, value string;
+# MIAEntity sub entity, owns UID @key;
+# Mission sub MIAEntity;
+# Task sub MIAEntity;
+# Performer sub MIAEntity;
+# Service sub Performer;
+# Asset sub MIAEntity;
+# PrecedenceTask sub MIAEntity;
+# ORPrecedenceTaskList sub PrecedenceTask;
+# ANDPrecedenceTaskList sub PrecedenceTask;
+# isCompoundBy sub relation, relates mission, relates task;
+# Mission plays isCompoundBy:mission;
+# Task plays isCompoundBy:task;
+# isPerformedBy sub relation, relates task, relates performer;
+# Task plays isPerformedBy:task;
+# Performer plays isPerformedBy:performer;
+# provides sub relation, relates asset, relates service;
+# Asset plays provides:asset;
+# Service plays provides:service;
+# isCompoundBySetOfTask sub relation, relates precedenceTask, relates task;
+# PrecedenceTask plays isCompoundBySetOfTask:precedenceTask;
+# Task plays isCompoundBySetOfTask:task;
 
 ## BPMN entities in general
 BPMNattrib_id sub attribute, value string;

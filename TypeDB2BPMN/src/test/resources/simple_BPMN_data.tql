@@ -114,6 +114,13 @@ match
      $child isa BPMN_Entity, has UID "https://camunda.org/examples/#flow1";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "https://camunda.org/examples/#PrecedenceTask_flow1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'https://camunda.org/examples/#flow1';
+     $concept isa entity, has UID 'https://camunda.org/examples/#PrecedenceTask_flow1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "end",
@@ -124,5 +131,12 @@ match
      $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#process";
      $child isa BPMN_Entity, has UID "https://camunda.org/examples/#flow2";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "https://camunda.org/examples/#PrecedenceTask_flow2";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'https://camunda.org/examples/#flow2';
+     $concept isa entity, has UID 'https://camunda.org/examples/#PrecedenceTask_flow2';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## =============== End ===============
