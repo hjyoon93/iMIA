@@ -241,8 +241,8 @@ public class EncoderImpl implements Encoder {
 				writer.println("# provides sub relation, relates asset, relates service;");
 				writer.println("# Asset plays provides:asset;");
 				writer.println("# Service plays provides:service;");
-				writer.println("# isCompoundBySetOfTask sub relation, relates precedenceTask, relates task;");
-				writer.println("# PrecedenceTask plays isCompoundBySetOfTask:precedenceTask;");
+				writer.println("# isCompoundBySetOfTask sub relation, relates precedence_task, relates task;");
+				writer.println("# PrecedenceTask plays isCompoundBySetOfTask:precedence_task;");
 				writer.println("# Task plays isCompoundBySetOfTask:task;");
 			} else {
 				writer.println(getUIDAttributeName() + " sub attribute, value string;");
@@ -785,6 +785,8 @@ public class EncoderImpl implements Encoder {
 				writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
 				writer.println("};");
 				writer.println();
+
+				// also support data object reference
 				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObjectReference")) {
 					writer.println("## Asset provides Service (from reference to input data)");
 					writer.println("rule rule_source_asset_reference_provides_service:");
@@ -816,8 +818,10 @@ public class EncoderImpl implements Encoder {
 					writer.println("};");
 					writer.println();
 
-				}
-			}
+				} // end of support for data object reference
+
+			} // end of rule to connect Asset-Service
+
 			// Another rule to connect Asset-Service
 			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataOutputAssociation")
 					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObject")
@@ -848,6 +852,8 @@ public class EncoderImpl implements Encoder {
 				writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
 				writer.println("};");
 				writer.println();
+
+				// support data object reference
 				if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObjectReference")) {
 					writer.println("## Asset provides Service (from reference to output data)");
 					writer.println("rule rule_target_asset_provides_service:");
@@ -878,8 +884,65 @@ public class EncoderImpl implements Encoder {
 					writer.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
 					writer.println("};");
 					writer.println();
-				}
-			}
+
+				} // end of data object reference
+
+			} // end of another rule to connect Asset-Service
+
+			// Rules of PrecedenceTask related to sequenceFlow
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "sourceRef")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "targetRef")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "id")) {
+
+				// We have 2 rules: one for isPrecededBySetOfTask, another for
+				// isCompoundBySetOfTask
+				// The two rules are only different in the "then" block,
+				// so save the "when" block as common portion.
+				StringBuilder commonPart = new StringBuilder();
+
+				// the 1st rule is about isPrecededBySetOfTask
+				writer.println("## Task isPrecededBySetOfTask precedence tasks (sequence flow)");
+				writer.println("rule rule_task_isPrecededBySetOfTask_precedenceTask_sequenceFlow:");
+				// the common "when" part
+				commonPart.append("when {\n");
+				commonPart.append("\t $precedenceTask isa PrecedenceTask;\n");
+				commonPart.append("\t $task1 isa Task;\n");
+				commonPart.append("\t $task2 isa Task;\n");
+				commonPart.append(
+						"\t $sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $sourceRef, has BPMNattrib_targetRef $targetRef;\n");
+				commonPart.append("\t $bpmntask1 isa BPMN_Entity, has BPMNattrib_id $taskID1;\n");
+				commonPart.append("\t $bpmntask2 isa BPMN_Entity, has BPMNattrib_id $taskID2;\n");
+				commonPart.append("\t $taskID1 = $sourceRef;\n");
+				commonPart.append("\t $taskID2 = $targetRef;\n");
+				commonPart.append(
+						"\t (bpmnEntity: $sequenceFlow, conceptualModel: $precedenceTask) isa BPMN_hasConceptualModelElement;\n");
+				commonPart.append(
+						"\t (bpmnEntity: $bpmntask1, conceptualModel: $task1) isa BPMN_hasConceptualModelElement;\n");
+				commonPart.append(
+						"\t (bpmnEntity: $bpmntask2, conceptualModel: $task2) isa BPMN_hasConceptualModelElement;\n");
+				commonPart.append("} then {");
+				writer.println(commonPart.toString());
+				// content of "then" is different
+				writer.println("\t (precedence_task: $precedenceTask, task: $task2) isa isPrecededBySetOfTask;");
+				writer.println("};");
+				writer.println();
+
+				// the 2nd rule is about isCompoundBySetOfTask
+				writer.println("## Precedence task isCompoundBySetOfTask tasks (sequence flow)");
+				writer.println("rule rule_precedenceTask_isCompoundBySetOfTask_task_sequenceFlow:");
+				// the common "when" part
+				writer.println(commonPart.toString());
+				// content of "then" is different
+				writer.println("\t (precedence_task: $precedenceTask, task: $task1) isa isCompoundBySetOfTask;");
+				writer.println("};");
+				writer.println();
+
+			} // end of rules of PrecedenceTask related to sequenceFlow
+
+			// TODO rules of ANDPrecedenceTaskList
+
+			// TODO rules of ORPrecedenceTaskList
 
 			// Show sample queries
 			writer.println("## Sample queries for the above rules");
@@ -921,43 +984,21 @@ public class EncoderImpl implements Encoder {
 					+ getBPMNConceptualModelMappingName() + ";");
 			writer.println("# get $rel1, $rel2, $rel3, $uid1, $uid2, $uid3, $uid4;");
 			writer.println();
-
-			/**
-			 * TODO we might need new rules related to PrecedenceTask:
-			 * 
-			 * <pre>
-			 * define
-			 * ## Task isCompoundBySetOfTask precedence tasks (sequence flow)
-			 * rule rule_task_isCompoundBySetOfTask_precedenceTask_sequenceFlow:
-			 * when {
-			 * 		$precedenceTask isa PrecedenceTask;
-			 * 		$task isa Task;
-			 * 		$bpmntask isa BPMN_Entity, has BPMNattrib_id $taskID;
-			 * 		$sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_targetRef $targetRef;
-			 * 		$taskID = $targetRef;
-			 * 		(bpmnEntity: $sequenceFlow, conceptualModel: $precedenceTask) isa BPMN_hasConceptualModelElement;
-			 * 		(bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
-			 * } then {
-			 * 		(precedenceTask: $precedenceTask, task: $task) isa isCompoundBySetOfTask;
-			 * };
-			 * </pre>
-			 */
-
-			/**
-			 * TODO the respective query would be like:
-			 * 
-			 * <pre>
-			 * ## query isCompoundBySetOfTask
-			 * match 
-			 * $p isa PrecedenceTask, has attribute $puid; 
-			 * $t isa Task, has attribute $tuid; 
-			 * $bpmntask isa BPMN_Entity, has attribute $buid;
-			 * $seq isa BPMN_Entity, has attribute $suid;
-			 * $r  (precedenceTask: $p, task: $t) isa isCompoundBySetOfTask; 
-			 * (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;
-			 * (bpmnEntity: $seq, conceptualModel: $p) isa BPMN_hasConceptualModelElement;
-			 * </pre>
-			 */
+			
+			writer.println("## query isPrecededBySetOfTask and isCompoundBySetOfTask associated with sequenceFlow");
+			writer.println("# match");
+			writer.println("# $p isa PrecedenceTask;");
+			writer.println("# $t1 isa Task;");
+			writer.println("# $t2 isa Task;");
+			writer.println("# $r1  (precedence_task: $p, task: $t2) isa isPrecededBySetOfTask; ");
+			writer.println("# $r2  (precedence_task: $p, task: $t1) isa isCompoundBySetOfTask; ");
+			writer.println("# $bpmntask1 isa BPMN_Entity;");
+			writer.println("# $bpmntask2 isa BPMN_Entity;");
+			writer.println("# $seq isa BPMN_Entity;");
+			writer.println("# $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa BPMN_hasConceptualModelElement;");
+			writer.println("# $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa BPMN_hasConceptualModelElement;");
+			writer.println("# $rel3  (bpmnEntity: $seq, conceptualModel: $p) isa BPMN_hasConceptualModelElement;");
+			writer.println();
 
 		} // else ignore mappings to conceptual model
 
