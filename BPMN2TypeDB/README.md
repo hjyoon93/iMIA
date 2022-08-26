@@ -30,12 +30,6 @@ See *pom.xml* (the maven configuration file) for details about this project's co
 				
 				 --help,  -h :	Prints this help. See application.properties for more configurable parameters.
 				 
-				 --input, -i :	The input BPMN file. 
-				 					Will be ignored if "--url" is present.
-				 					Default is "input.bpmn"
+				 --input, -i :	The input BPMN file. Default is "input.bpmn"
 				 
-				 --output, -o :	Output directory. 
-				 					If running with "--url", then this program will output a BPMN file read from TypeDB.
-				 					If not running with "--url", then this will be the folder to write 
-				 					TypeQL schema (schema.tql) and data (data.tql).
-				 					Default is "./output/"
+				 --output, -o :	Output directory to write TypeQL schema (schema.tql) and data (data.tql). Default is "./output/"
