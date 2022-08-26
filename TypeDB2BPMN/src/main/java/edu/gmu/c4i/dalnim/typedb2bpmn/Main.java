@@ -33,11 +33,11 @@ public class Main {
 	 * @param args :
 	 * 
 	 *             <pre>
-	 * --help,			-h :	Prints this help. See application.properties for more configurable parameters.
-	 * --url,			-u :	Address of TypeDB. Default is "localhost:1729"
+	 * --help,	-h :	Prints this help. See application.properties for more configurable parameters.
+	 * --url,		-u :	Address of TypeDB. Default is "localhost:1729"
 	 * --database,	-d :	Name of database in TypeDB to open a session. Default is "BPMN"
-	 * --uid,			-i :	UID of BPMN project to query (regex supported). E.g., "https://camunda.org/examples/#.*"
-	 * --output,		-o :	The output BPMN file. Default is "output.bpmn"
+	 * --uid,		-i :	UID of BPMN project to query (regex supported). E.g., "https://camunda.org/examples/#.*"
+	 * --output,	-o :	The output BPMN file. Default is "output.bpmn"
 	 *             </pre>
 	 */
 	public static void main(String[] args) throws Exception {
