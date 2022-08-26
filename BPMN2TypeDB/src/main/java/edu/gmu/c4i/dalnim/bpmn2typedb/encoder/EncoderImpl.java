@@ -794,7 +794,7 @@ public class EncoderImpl implements Encoder {
 			writer.println();
 
 			// Rule to connect Mission-Task
-			writer.println("## Task isCompoundBy Mission");
+			writer.println("## Mission isCompoundBy Task");
 			writer.println("rule rule_misson_isCompoundBy_task:");
 			writer.println("when {");
 			writer.println("\t $bpmndefinitions isa " + getBPMNEntityNamePrefix() + "definitions;");
