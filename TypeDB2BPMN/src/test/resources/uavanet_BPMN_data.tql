@@ -1,0 +1,2991 @@
+## =============== Begin ===============
+## Insert BPMN elements
+
+## definitions
+insert $x isa BPMN_definitions,
+     has BPMNattrib_exporter "bpmn-js (https://demo.bpmn.io)",
+     has BPMNattrib_exporterVersion "9.3.2",
+     has BPMNattrib_targetNamespace "http://vt.edu/dalnim/uavanet",
+     has BPMNattrib_typeLanguage "http://www.w3.org/2001/XMLSchema",
+     has BPMNattrib_expressionLanguage "http://www.w3.org/1999/XPath",
+     has BPMNattrib_id "Definitions_08ah682",
+     has UID "http://vt.edu/dalnim/uavanet/#Definitions_08ah682";
+
+## Mapping to the conceptual model
+insert $concept isa Mission, has UID "http://vt.edu/dalnim/uavanet/#Mission_Definitions_08ah682";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Definitions_08ah682';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Mission_Definitions_08ah682';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## process
+insert $x isa BPMN_process,
+     has BPMNattrib_isClosed "false",
+     has BPMNattrib_id "Process_0vkxjoy",
+     has BPMNattrib_isExecutable "false",
+     has BPMNattrib_processType "None",
+     has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Definitions_08ah682";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## laneSet
+insert $x isa BPMN_laneSet,
+     has BPMNattrib_id "LaneSet_0vb2p0i",
+     has UID "http://vt.edu/dalnim/uavanet/#LaneSet_0vb2p0i";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#LaneSet_0vb2p0i";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## lane
+insert $x isa BPMN_lane,
+     has BPMNattrib_name "User (Vehicle)",
+     has BPMNattrib_id "Lane_16gwlto",
+     has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#LaneSet_0vb2p0i";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Lane_16gwlto";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Lane_16gwlto';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_16gwlto';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "StartEvent_1mqdtq0",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_10ldz3v",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Gateway_1je0dr4",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_0sg28yy",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef3";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_193cz43",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef4";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## lane
+insert $x isa BPMN_lane,
+     has BPMNattrib_name "UAV",
+     has BPMNattrib_id "Lane_00k2irj",
+     has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#LaneSet_0vb2p0i";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Lane_00k2irj";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Lane_00k2irj';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_00k2irj';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_05i9zs1",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef5";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Gateway_1jl82ud",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef6";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## childLaneSet
+insert $x isa BPMN_childLaneSet,
+     has BPMNattrib_id "LaneSet_04sqhkk",
+     has UID "http://vt.edu/dalnim/uavanet/#LaneSet_04sqhkk";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#LaneSet_04sqhkk";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## lane
+insert $x isa BPMN_lane,
+     has BPMNattrib_name "CCS",
+     has BPMNattrib_id "Lane_02v45pe",
+     has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#LaneSet_0vb2p0i";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Lane_02v45pe";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Lane_02v45pe';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_02v45pe';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_1mol8v2",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef7";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_1lf1xjy",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef8";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Gateway_051rz7e",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef9";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_1gnpzc2",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef10";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Event_0ezjcum",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef11";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## lane
+insert $x isa BPMN_lane,
+     has BPMNattrib_name "RSU",
+     has BPMNattrib_id "Lane_0xlb3mx",
+     has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#LaneSet_0vb2p0i";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Lane_0xlb3mx";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_0xlb3mx';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Gateway_1u3r909",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef12";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_131ik1x",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef13";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_1yex75t",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef14";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "Activity_0yum48s",
+     has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef15";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#flowNodeRef15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataObject
+insert $x isa BPMN_dataObject,
+     has BPMNattrib_isCollection "false",
+     has BPMNattrib_name "DataObject_19s7gfv",
+     has BPMNattrib_id "DataObject_19s7gfv",
+     has UID "http://vt.edu/dalnim/uavanet/#DataObject_19s7gfv";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObject_19s7gfv";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataObject_19s7gfv";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataObject_19s7gfv';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObject_19s7gfv';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## dataObject
+insert $x isa BPMN_dataObject,
+     has BPMNattrib_isCollection "false",
+     has BPMNattrib_name "DataObject_1ywt8iq",
+     has BPMNattrib_id "DataObject_1ywt8iq",
+     has UID "http://vt.edu/dalnim/uavanet/#DataObject_1ywt8iq";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObject_1ywt8iq";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataObject_1ywt8iq";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataObject_1ywt8iq';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObject_1ywt8iq';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## dataObjectReference
+insert $x isa BPMN_dataObjectReference,
+     has BPMNattrib_dataObjectRef "DataObject_19s7gfv",
+     has BPMNattrib_name "Prediction results [output]",
+     has BPMNattrib_id "DataObjectReference_0948ez5",
+     has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_0948ez5";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_0948ez5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_0948ez5";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataObjectReference_0948ez5';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_0948ez5';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## dataObjectReference
+insert $x isa BPMN_dataObjectReference,
+     has BPMNattrib_dataObjectRef "DataObject_1ywt8iq",
+     has BPMNattrib_name "Pre-trained initial GM prepared for training before mission process [input]",
+     has BPMNattrib_id "DataObjectReference_11q6bj2",
+     has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_11q6bj2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_11q6bj2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_11q6bj2";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataObjectReference_11q6bj2';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_11q6bj2';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Send to RSU",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_05i9zs1",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_05i9zs1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_05i9zs1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_05i9zs1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_05i9zs1';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_05i9zs1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_0e8n7qx",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_05i9zs1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_1d1fiun",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_05i9zs1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Send to RSU through UAV",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_193cz43",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_193cz43";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_193cz43";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_193cz43";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_193cz43';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_193cz43';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_1h8jgty",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_193cz43";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_0e8n7qx",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_193cz43";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Send directly to RSU",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_0sg28yy",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0sg28yy";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0sg28yy";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_0sg28yy";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_0sg28yy';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_0sg28yy';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_0t14dtt",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0sg28yy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_01n98ku",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0sg28yy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Send updated GM to RSU for the next training",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_1gnpzc2",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_1gnpzc2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1gnpzc2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_1gnpzc2";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_1gnpzc2';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1gnpzc2';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_1t5nclh",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming3";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1gnpzc2";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_1ts4ldn",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing3";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1gnpzc2";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Send local model to CCS",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_131ik1x",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_131ik1x";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_131ik1x";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_131ik1x";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_131ik1x';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_131ik1x';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_0i9qgxx",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming4";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_131ik1x";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_0txva87",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming5";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_131ik1x";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_0y296cm",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing4";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_131ik1x";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Collect traffic sign images",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_10ldz3v",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_10ldz3v";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_10ldz3v";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_10ldz3v";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_10ldz3v';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_10ldz3v';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_0usat9c",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming6";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_10ldz3v";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_12wo90h",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing5";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_10ldz3v";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Predict image classification",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_1lf1xjy",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_1lf1xjy";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1lf1xjy";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_1lf1xjy";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_1lf1xjy';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1lf1xjy';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_0wyl8nr",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming7";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1lf1xjy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_0aoiwtj",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing6";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1lf1xjy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## ioSpecification
+insert $x isa BPMN_ioSpecification,
+     has BPMNattrib_id "InputOutputSpecification_1",
+     has UID "http://vt.edu/dalnim/uavanet/#InputOutputSpecification_1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1lf1xjy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#InputOutputSpecification_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataOutput
+insert $x isa BPMN_dataOutput,
+     has BPMNattrib_isCollection "false",
+     has BPMNattrib_name "output1",
+     has BPMNattrib_id "DataOutput_1",
+     has UID "http://vt.edu/dalnim/uavanet/#DataOutput_1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#InputOutputSpecification_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataOutput_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataOutput_1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataOutput_1';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataOutput_1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## inputSet
+insert $x isa BPMN_inputSet,
+     has BPMNattrib_name "Input Set 1",
+     has BPMNattrib_id "InputSet_1",
+     has UID "http://vt.edu/dalnim/uavanet/#InputSet_1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#InputOutputSpecification_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#InputSet_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outputSet
+insert $x isa BPMN_outputSet,
+     has BPMNattrib_name "Output Set 1",
+     has BPMNattrib_id "OutputSet_1",
+     has UID "http://vt.edu/dalnim/uavanet/#OutputSet_1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#InputOutputSpecification_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#OutputSet_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataOutputRefs
+insert $x isa BPMN_dataOutputRefs,
+     has BPMN_textContent "DataOutput_1",
+     has UID "http://vt.edu/dalnim/uavanet/#dataOutputRefs";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#OutputSet_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#dataOutputRefs";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataOutputAssociation
+insert $x isa BPMN_dataOutputAssociation,
+     has BPMNattrib_id "DataOutputAssociation_00me2z6",
+     has UID "http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1lf1xjy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Service, has UID "http://vt.edu/dalnim/uavanet/#Service_DataOutputAssociation_00me2z6";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Service_DataOutputAssociation_00me2z6';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sourceRef
+insert $x isa BPMN_sourceRef,
+     has BPMN_textContent "DataOutput_1",
+     has UID "http://vt.edu/dalnim/uavanet/#sourceRef";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#sourceRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## targetRef
+insert $x isa BPMN_targetRef,
+     has BPMN_textContent "DataObjectReference_0948ez5",
+     has UID "http://vt.edu/dalnim/uavanet/#targetRef";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#targetRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Aggregate models",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_1mol8v2",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_1mol8v2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1mol8v2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_1mol8v2";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_1mol8v2';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1mol8v2';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_0y296cm",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming8";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1mol8v2";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_0wyl8nr",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing7";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1mol8v2";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Train local models",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_1yex75t",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_1yex75t";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1yex75t";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_1yex75t";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_1yex75t';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1yex75t';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_1ts4ldn",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming9";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1yex75t";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_16z3tko",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming10";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1yex75t";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_0i9qgxx",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing8";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1yex75t";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "Initial local model training",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "Activity_0yum48s",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0yum48s";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0yum48s";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_0yum48s";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_0yum48s';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_0yum48s';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_1geumml",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming11";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0yum48s";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_0txva87",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing9";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0yum48s";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## property
+insert $x isa BPMN_property,
+     has BPMNattrib_name "__targetRef_placeholder",
+     has BPMNattrib_id "Property_1gls6oa",
+     has UID "http://vt.edu/dalnim/uavanet/#Property_1gls6oa";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0yum48s";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Property_1gls6oa";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_Property_1gls6oa";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Property_1gls6oa';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_Property_1gls6oa';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## dataInputAssociation
+insert $x isa BPMN_dataInputAssociation,
+     has BPMNattrib_id "DataInputAssociation_1pq3z0g",
+     has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0yum48s";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Service, has UID "http://vt.edu/dalnim/uavanet/#Service_DataInputAssociation_1pq3z0g";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Service_DataInputAssociation_1pq3z0g';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sourceRef
+insert $x isa BPMN_sourceRef,
+     has BPMN_textContent "DataObjectReference_11q6bj2",
+     has UID "http://vt.edu/dalnim/uavanet/#sourceRef1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#sourceRef1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## targetRef
+insert $x isa BPMN_targetRef,
+     has BPMN_textContent "Property_1gls6oa",
+     has UID "http://vt.edu/dalnim/uavanet/#targetRef1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#targetRef1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## startEvent
+insert $x isa BPMN_startEvent,
+     has BPMNattrib_parallelMultiple "false",
+     has BPMNattrib_isInterrupting "true",
+     has BPMNattrib_id "StartEvent_1mqdtq0",
+     has UID "http://vt.edu/dalnim/uavanet/#StartEvent_1mqdtq0";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#StartEvent_1mqdtq0";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_0usat9c",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing10";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#StartEvent_1mqdtq0";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## endEvent
+insert $x isa BPMN_endEvent,
+     has BPMNattrib_id "Event_0ezjcum",
+     has UID "http://vt.edu/dalnim/uavanet/#Event_0ezjcum";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Event_0ezjcum";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_04sq9wc",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming12";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Event_0ezjcum";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## exclusiveGateway
+insert $x isa BPMN_exclusiveGateway,
+     has BPMNattrib_gatewayDirection "Converging",
+     has BPMNattrib_id "Gateway_1jl82ud",
+     has UID "http://vt.edu/dalnim/uavanet/#Gateway_1jl82ud";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1jl82ud";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa ORPrecedenceTaskList, has UID "http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1jl82ud";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Gateway_1jl82ud';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1jl82ud';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_1d1fiun",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming13";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1jl82ud";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_01n98ku",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming14";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1jl82ud";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_1pjjgj3",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing11";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1jl82ud";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## exclusiveGateway
+insert $x isa BPMN_exclusiveGateway,
+     has BPMNattrib_gatewayDirection "Diverging",
+     has BPMNattrib_name "Within coverage area?",
+     has BPMNattrib_id "Gateway_1je0dr4",
+     has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa ORPrecedenceTaskList, has UID "http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1je0dr4";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1je0dr4';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_12wo90h",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming15";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_0t14dtt",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing12";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_1h8jgty",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing13";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## exclusiveGateway
+insert $x isa BPMN_exclusiveGateway,
+     has BPMNattrib_gatewayDirection "Diverging",
+     has BPMNattrib_name "Converged?",
+     has BPMNattrib_id "Gateway_051rz7e",
+     has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa ORPrecedenceTaskList, has UID "http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_051rz7e";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Gateway_051rz7e';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_051rz7e';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_0aoiwtj",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming16";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_04sq9wc",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing14";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_1t5nclh",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing15";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## exclusiveGateway
+insert $x isa BPMN_exclusiveGateway,
+     has BPMNattrib_gatewayDirection "Diverging",
+     has BPMNattrib_name "First iteration?",
+     has BPMNattrib_id "Gateway_1u3r909",
+     has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa ORPrecedenceTaskList, has UID "http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1u3r909";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Gateway_1u3r909';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1u3r909';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "Flow_1pjjgj3",
+     has UID "http://vt.edu/dalnim/uavanet/#incoming17";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#incoming17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_16z3tko",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing16";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "Flow_1geumml",
+     has UID "http://vt.edu/dalnim/uavanet/#outgoing17";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#outgoing17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_10ldz3v",
+     has BPMNattrib_id "Flow_0usat9c",
+     has BPMNattrib_sourceRef "StartEvent_1mqdtq0",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0usat9c";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0usat9c";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0usat9c";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0usat9c';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0usat9c';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Gateway_1je0dr4",
+     has BPMNattrib_id "Flow_12wo90h",
+     has BPMNattrib_sourceRef "Activity_10ldz3v",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_12wo90h";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_12wo90h";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_12wo90h";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_12wo90h';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_12wo90h';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_0sg28yy",
+     has BPMNattrib_name "Yes",
+     has BPMNattrib_id "Flow_0t14dtt",
+     has BPMNattrib_sourceRef "Gateway_1je0dr4",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0t14dtt";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0t14dtt";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0t14dtt";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0t14dtt';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0t14dtt';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_193cz43",
+     has BPMNattrib_name "No",
+     has BPMNattrib_id "Flow_1h8jgty",
+     has BPMNattrib_sourceRef "Gateway_1je0dr4",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1h8jgty";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1h8jgty";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1h8jgty";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1h8jgty';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1h8jgty';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Gateway_1jl82ud",
+     has BPMNattrib_id "Flow_1d1fiun",
+     has BPMNattrib_sourceRef "Activity_05i9zs1",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1d1fiun";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1d1fiun";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1d1fiun";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1d1fiun';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1d1fiun';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Gateway_1jl82ud",
+     has BPMNattrib_id "Flow_01n98ku",
+     has BPMNattrib_sourceRef "Activity_0sg28yy",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_01n98ku";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_01n98ku";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_01n98ku";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_01n98ku';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_01n98ku';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_131ik1x",
+     has BPMNattrib_id "Flow_0i9qgxx",
+     has BPMNattrib_sourceRef "Activity_1yex75t",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0i9qgxx";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0i9qgxx";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0i9qgxx";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0i9qgxx';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0i9qgxx';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_1mol8v2",
+     has BPMNattrib_id "Flow_0y296cm",
+     has BPMNattrib_sourceRef "Activity_131ik1x",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0y296cm";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0y296cm";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0y296cm";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0y296cm';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0y296cm';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_1lf1xjy",
+     has BPMNattrib_id "Flow_0wyl8nr",
+     has BPMNattrib_sourceRef "Activity_1mol8v2",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0wyl8nr";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0wyl8nr";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0wyl8nr";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0wyl8nr';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0wyl8nr';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Gateway_051rz7e",
+     has BPMNattrib_id "Flow_0aoiwtj",
+     has BPMNattrib_sourceRef "Activity_1lf1xjy",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0aoiwtj";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0aoiwtj";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0aoiwtj";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0aoiwtj';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0aoiwtj';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Event_0ezjcum",
+     has BPMNattrib_name "Yes",
+     has BPMNattrib_id "Flow_04sq9wc",
+     has BPMNattrib_sourceRef "Gateway_051rz7e",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_04sq9wc";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_04sq9wc";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_04sq9wc";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_04sq9wc';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_04sq9wc';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_1gnpzc2",
+     has BPMNattrib_name "No",
+     has BPMNattrib_id "Flow_1t5nclh",
+     has BPMNattrib_sourceRef "Gateway_051rz7e",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1t5nclh";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1t5nclh";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1t5nclh";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1t5nclh';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1t5nclh';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_05i9zs1",
+     has BPMNattrib_id "Flow_0e8n7qx",
+     has BPMNattrib_sourceRef "Activity_193cz43",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0e8n7qx";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0e8n7qx';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_1yex75t",
+     has BPMNattrib_id "Flow_1ts4ldn",
+     has BPMNattrib_sourceRef "Activity_1gnpzc2",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1ts4ldn";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1ts4ldn';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Gateway_1u3r909",
+     has BPMNattrib_id "Flow_1pjjgj3",
+     has BPMNattrib_sourceRef "Gateway_1jl82ud",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1pjjgj3";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1pjjgj3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1pjjgj3";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1pjjgj3';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1pjjgj3';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_1yex75t",
+     has BPMNattrib_name "No",
+     has BPMNattrib_id "Flow_16z3tko",
+     has BPMNattrib_sourceRef "Gateway_1u3r909",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_16z3tko";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_16z3tko";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_16z3tko";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_16z3tko';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_16z3tko';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_0yum48s",
+     has BPMNattrib_name "Yes",
+     has BPMNattrib_id "Flow_1geumml",
+     has BPMNattrib_sourceRef "Gateway_1u3r909",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1geumml";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1geumml";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1geumml";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1geumml';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1geumml';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "Activity_131ik1x",
+     has BPMNattrib_id "Flow_0txva87",
+     has BPMNattrib_sourceRef "Activity_0yum48s",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0txva87";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Process_0vkxjoy";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0txva87";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0txva87";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0txva87';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0txva87';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## collaboration
+insert $x isa BPMN_collaboration,
+     has BPMNattrib_isClosed "false",
+     has BPMNattrib_id "Collaboration_0bhbb91",
+     has UID "http://vt.edu/dalnim/uavanet/#Collaboration_0bhbb91";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Definitions_08ah682";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Collaboration_0bhbb91";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## participant
+insert $x isa BPMN_participant,
+     has BPMNattrib_name "Mission (Image Classification) Process",
+     has BPMNattrib_id "Participant_0j3neqm",
+     has BPMNattrib_processRef "Process_0vkxjoy",
+     has UID "http://vt.edu/dalnim/uavanet/#Participant_0j3neqm";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Collaboration_0bhbb91";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Participant_0j3neqm";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Participant_0j3neqm";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Participant_0j3neqm';
+     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Participant_0j3neqm';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## BPMNDiagram
+insert $x isa BPMN_BPMNDiagram,
+     has BPMNattrib_id "BPMNDiagram_1",
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNDiagram_1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Definitions_08ah682";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNDiagram_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNPlane
+insert $x isa BPMN_BPMNPlane,
+     has BPMNattrib_bpmnElement "Collaboration_0bhbb91",
+     has BPMNattrib_id "BPMNPlane_1",
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNDiagram_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_1ts4ldn",
+     has BPMNattrib_id "Flow_1ts4ldn_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "647",
+     has BPMNattrib_y "910",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "357",
+     has BPMNattrib_y "910",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "357",
+     has BPMNattrib_y "820",
+     has BPMNattrib_sort "2",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_0e8n7qx",
+     has BPMNattrib_id "Flow_0e8n7qx_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "547",
+     has BPMNattrib_y "340",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint3";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "547",
+     has BPMNattrib_y "440",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint4";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "417",
+     has BPMNattrib_y "440",
+     has BPMNattrib_sort "2",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint5";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_1t5nclh",
+     has BPMNattrib_id "Flow_1t5nclh_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1t5nclh_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1t5nclh_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "697",
+     has BPMNattrib_y "985",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint6";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1t5nclh_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "697",
+     has BPMNattrib_y "950",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint7";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1t5nclh_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1t5nclh_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "15",
+     has BPMNattrib_x "705",
+     has BPMNattrib_y "965",
+     has BPMNattrib_height "14",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_04sq9wc",
+     has BPMNattrib_id "Flow_04sq9wc_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_04sq9wc_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_04sq9wc_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "722",
+     has BPMNattrib_y "1010",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint8";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_04sq9wc_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "792",
+     has BPMNattrib_y "1010",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint9";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_04sq9wc_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_04sq9wc_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "19",
+     has BPMNattrib_x "748",
+     has BPMNattrib_y "994",
+     has BPMNattrib_height "14",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds1";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_0aoiwtj",
+     has BPMNattrib_id "Flow_0aoiwtj_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0aoiwtj_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0aoiwtj_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "597",
+     has BPMNattrib_y "1010",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint10";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0aoiwtj_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "672",
+     has BPMNattrib_y "1010",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint11";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0aoiwtj_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_0wyl8nr",
+     has BPMNattrib_id "Flow_0wyl8nr_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0wyl8nr_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0wyl8nr_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "417",
+     has BPMNattrib_y "1010",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint12";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0wyl8nr_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "497",
+     has BPMNattrib_y "1010",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint13";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0wyl8nr_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_0y296cm",
+     has BPMNattrib_id "Flow_0y296cm_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0y296cm_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0y296cm_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "527",
+     has BPMNattrib_y "820",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint14";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0y296cm_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "527",
+     has BPMNattrib_y "890",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint15";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0y296cm_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "367",
+     has BPMNattrib_y "890",
+     has BPMNattrib_sort "2",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint16";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0y296cm_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "367",
+     has BPMNattrib_y "970",
+     has BPMNattrib_sort "3",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint17";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0y296cm_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_0i9qgxx",
+     has BPMNattrib_id "Flow_0i9qgxx_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0i9qgxx_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0i9qgxx_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "417",
+     has BPMNattrib_y "780",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint18";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0i9qgxx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint18";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "497",
+     has BPMNattrib_y "780",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint19";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0i9qgxx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint19";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_01n98ku",
+     has BPMNattrib_id "Flow_01n98ku_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_01n98ku_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_01n98ku_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "697",
+     has BPMNattrib_y "230",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint20";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_01n98ku_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint20";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "697",
+     has BPMNattrib_y "560",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint21";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_01n98ku_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint21";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "392",
+     has BPMNattrib_y "560",
+     has BPMNattrib_sort "2",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint22";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_01n98ku_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint22";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_1d1fiun",
+     has BPMNattrib_id "Flow_1d1fiun_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1d1fiun_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1d1fiun_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "367",
+     has BPMNattrib_y "480",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint23";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1d1fiun_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint23";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "367",
+     has BPMNattrib_y "535",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint24";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1d1fiun_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint24";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_1h8jgty",
+     has BPMNattrib_id "Flow_1h8jgty_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1h8jgty_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1h8jgty_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "547",
+     has BPMNattrib_y "215",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint25";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1h8jgty_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint25";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "547",
+     has BPMNattrib_y "260",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint26";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1h8jgty_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint26";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1h8jgty_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "15",
+     has BPMNattrib_x "555",
+     has BPMNattrib_y "235",
+     has BPMNattrib_height "14",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel2";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_0t14dtt",
+     has BPMNattrib_id "Flow_0t14dtt_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0t14dtt_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0t14dtt_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "572",
+     has BPMNattrib_y "190",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint27";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0t14dtt_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint27";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "647",
+     has BPMNattrib_y "190",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint28";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0t14dtt_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint28";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel3";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0t14dtt_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "19",
+     has BPMNattrib_x "601",
+     has BPMNattrib_y "172",
+     has BPMNattrib_height "14",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds3";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel3";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_12wo90h",
+     has BPMNattrib_id "Flow_12wo90h_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_12wo90h_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_12wo90h_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "440",
+     has BPMNattrib_y "190",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint29";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_12wo90h_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint29";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "522",
+     has BPMNattrib_y "190",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint30";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_12wo90h_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint30";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_0usat9c",
+     has BPMNattrib_id "Flow_0usat9c_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0usat9c_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0usat9c_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "265",
+     has BPMNattrib_y "190",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint31";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0usat9c_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint31";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "340",
+     has BPMNattrib_y "190",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint32";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0usat9c_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint32";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_1pjjgj3",
+     has BPMNattrib_id "Flow_1pjjgj3_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1pjjgj3_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1pjjgj3_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "367",
+     has BPMNattrib_y "585",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint33";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1pjjgj3_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint33";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "367",
+     has BPMNattrib_y "621",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint34";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1pjjgj3_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint34";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_16z3tko",
+     has BPMNattrib_id "Flow_16z3tko_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_16z3tko_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_16z3tko_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "367",
+     has BPMNattrib_y "671",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint35";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_16z3tko_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint35";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "367",
+     has BPMNattrib_y "740",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint36";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_16z3tko_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint36";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel4";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_16z3tko_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "15",
+     has BPMNattrib_x "375",
+     has BPMNattrib_y "704",
+     has BPMNattrib_height "14",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds4";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel4";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_1geumml",
+     has BPMNattrib_id "Flow_1geumml_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_1geumml_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1geumml_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "392",
+     has BPMNattrib_y "646",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint37";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1geumml_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint37";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "497",
+     has BPMNattrib_y "646",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint38";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1geumml_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint38";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel5";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_1geumml_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "19",
+     has BPMNattrib_x "439",
+     has BPMNattrib_y "628",
+     has BPMNattrib_height "14",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds5";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel5";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "Flow_0txva87",
+     has BPMNattrib_id "Flow_0txva87_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Flow_0txva87_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0txva87_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "547",
+     has BPMNattrib_y "706",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint39";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0txva87_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint39";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "547",
+     has BPMNattrib_y "740",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint40";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Flow_0txva87_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint40";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "DataOutputAssociation_00me2z6",
+     has BPMNattrib_id "DataOutputAssociation_00me2z6_di",
+     has UID "http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "548",
+     has BPMNattrib_y "1050",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint41";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint41";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "549",
+     has BPMNattrib_y "1089",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint42";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint42";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "DataInputAssociation_1pq3z0g",
+     has BPMNattrib_id "DataInputAssociation_1pq3z0g_di",
+     has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "260",
+     has BPMNattrib_y "895",
+     has BPMNattrib_sort "0",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint43";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint43";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "260",
+     has BPMNattrib_y "680",
+     has BPMNattrib_sort "1",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint44";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint44";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "497",
+     has BPMNattrib_y "680",
+     has BPMNattrib_sort "2",
+     has UID "http://vt.edu/dalnim/uavanet/#waypoint45";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#waypoint45";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Participant_0j3neqm",
+     has BPMNattrib_id "Participant_0j3neqm_di",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Participant_0j3neqm_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Participant_0j3neqm_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "777",
+     has BPMNattrib_x "153",
+     has BPMNattrib_y "80",
+     has BPMNattrib_height "1100",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds6";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Participant_0j3neqm_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel6";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Participant_0j3neqm_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Lane_0xlb3mx",
+     has BPMNattrib_id "Lane_0xlb3mx_di",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "747",
+     has BPMNattrib_x "183",
+     has BPMNattrib_y "600",
+     has BPMNattrib_height "260",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds7";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel7";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Lane_02v45pe",
+     has BPMNattrib_id "Lane_02v45pe_di",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "747",
+     has BPMNattrib_x "183",
+     has BPMNattrib_y "860",
+     has BPMNattrib_height "320",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds8";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel8";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_02v45pe_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Lane_00k2irj",
+     has BPMNattrib_id "Lane_00k2irj_di",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "747",
+     has BPMNattrib_x "183",
+     has BPMNattrib_y "360",
+     has BPMNattrib_height "240",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds9";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel9";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_00k2irj_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Lane_16gwlto",
+     has BPMNattrib_id "Lane_16gwlto_di",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "747",
+     has BPMNattrib_x "183",
+     has BPMNattrib_y "80",
+     has BPMNattrib_height "280",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds10";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel10";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Lane_16gwlto_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_1mol8v2",
+     has BPMNattrib_id "Activity_0j1738h_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0j1738h_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0j1738h_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "317",
+     has BPMNattrib_y "970",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds11";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0j1738h_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_1lf1xjy",
+     has BPMNattrib_id "Activity_0tenjo4_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0tenjo4_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0tenjo4_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "497",
+     has BPMNattrib_y "970",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds12";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0tenjo4_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Gateway_051rz7e",
+     has BPMNattrib_id "Gateway_051rz7e_di",
+     has BPMNattrib_isMarkerVisible "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "50",
+     has BPMNattrib_x "672",
+     has BPMNattrib_y "985",
+     has BPMNattrib_height "50",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds13";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel11";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_051rz7e_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "60",
+     has BPMNattrib_x "667",
+     has BPMNattrib_y "1042",
+     has BPMNattrib_height "14",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds14";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel11";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_1gnpzc2",
+     has BPMNattrib_id "Activity_144z5a5_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_144z5a5_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_144z5a5_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "647",
+     has BPMNattrib_y "870",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds15";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_144z5a5_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel12";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_144z5a5_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Event_0ezjcum",
+     has BPMNattrib_id "Event_0ezjcum_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Event_0ezjcum_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Event_0ezjcum_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36",
+     has BPMNattrib_x "792",
+     has BPMNattrib_y "992",
+     has BPMNattrib_height "36",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds16";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Event_0ezjcum_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "StartEvent_1mqdtq0",
+     has BPMNattrib_id "_BPMNShape_StartEvent_2",
+     has UID "http://vt.edu/dalnim/uavanet/#_BPMNShape_StartEvent_2";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#_BPMNShape_StartEvent_2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36",
+     has BPMNattrib_x "229",
+     has BPMNattrib_y "172",
+     has BPMNattrib_height "36",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds17";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#_BPMNShape_StartEvent_2";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_10ldz3v",
+     has BPMNattrib_id "Activity_0f7u32f_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0f7u32f_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0f7u32f_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "340",
+     has BPMNattrib_y "150",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds18";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0f7u32f_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds18";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel13";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0f7u32f_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Gateway_1je0dr4",
+     has BPMNattrib_id "Gateway_1je0dr4_di",
+     has BPMNattrib_isMarkerVisible "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "50",
+     has BPMNattrib_x "522",
+     has BPMNattrib_y "165",
+     has BPMNattrib_height "50",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds19";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds19";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel14";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "79",
+     has BPMNattrib_x "508",
+     has BPMNattrib_y "136",
+     has BPMNattrib_height "27",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds20";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel14";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds20";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_0sg28yy",
+     has BPMNattrib_id "Activity_01oy3ku_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_01oy3ku_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_01oy3ku_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "647",
+     has BPMNattrib_y "150",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds21";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_01oy3ku_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds21";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_193cz43",
+     has BPMNattrib_id "Activity_0m6fnx9_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0m6fnx9_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0m6fnx9_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "497",
+     has BPMNattrib_y "260",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds22";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0m6fnx9_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds22";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_05i9zs1",
+     has BPMNattrib_id "Activity_1ojbeqo_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_1ojbeqo_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1ojbeqo_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "317",
+     has BPMNattrib_y "400",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds23";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_1ojbeqo_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds23";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "DataObjectReference_0948ez5",
+     has BPMNattrib_id "DataObjectReference_0948ez5_di",
+     has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_0948ez5_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_0948ez5_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36",
+     has BPMNattrib_x "529",
+     has BPMNattrib_y "1089",
+     has BPMNattrib_height "50",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds24";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_0948ez5_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds24";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel15";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_0948ez5_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "85",
+     has BPMNattrib_x "505",
+     has BPMNattrib_y "1146",
+     has BPMNattrib_height "27",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds25";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel15";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds25";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Gateway_1jl82ud",
+     has BPMNattrib_id "Gateway_0uuz3am_di",
+     has BPMNattrib_isMarkerVisible "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Gateway_0uuz3am_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_0uuz3am_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "50",
+     has BPMNattrib_x "342",
+     has BPMNattrib_y "535",
+     has BPMNattrib_height "50",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds26";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_0uuz3am_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds26";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Gateway_1u3r909",
+     has BPMNattrib_id "Gateway_1u3r909_di",
+     has BPMNattrib_isMarkerVisible "true",
+     has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "50",
+     has BPMNattrib_x "342",
+     has BPMNattrib_y "621",
+     has BPMNattrib_height "50",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds27";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds27";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel16";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Gateway_1u3r909_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "70",
+     has BPMNattrib_x "262",
+     has BPMNattrib_y "639",
+     has BPMNattrib_height "14",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds28";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel16";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds28";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "DataObjectReference_11q6bj2",
+     has BPMNattrib_id "DataObjectReference_1bqfoqx_di",
+     has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_1bqfoqx_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_1bqfoqx_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36",
+     has BPMNattrib_x "242",
+     has BPMNattrib_y "895",
+     has BPMNattrib_height "50",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds29";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_1bqfoqx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds29";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel17";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#DataObjectReference_1bqfoqx_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "83",
+     has BPMNattrib_x "219",
+     has BPMNattrib_y "952",
+     has BPMNattrib_height "66",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds30";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel17";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds30";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_131ik1x",
+     has BPMNattrib_id "Activity_0iatm3a_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0iatm3a_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0iatm3a_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "497",
+     has BPMNattrib_y "740",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds31";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0iatm3a_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds31";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_1yex75t",
+     has BPMNattrib_id "Activity_0yptifi_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0yptifi_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0yptifi_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "317",
+     has BPMNattrib_y "740",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds32";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0yptifi_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds32";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel18";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0yptifi_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel18";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_0yum48s",
+     has BPMNattrib_id "Activity_0eq7d9i_di",
+     has UID "http://vt.edu/dalnim/uavanet/#Activity_0eq7d9i_di";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0eq7d9i_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100",
+     has BPMNattrib_x "497",
+     has BPMNattrib_y "626",
+     has BPMNattrib_height "80",
+     has UID "http://vt.edu/dalnim/uavanet/#Bounds33";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0eq7d9i_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Bounds33";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel19";
+match
+     $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Activity_0eq7d9i_di";
+     $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#BPMNLabel19";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## =============== End ===============

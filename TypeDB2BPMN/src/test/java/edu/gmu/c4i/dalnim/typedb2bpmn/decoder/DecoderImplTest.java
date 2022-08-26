@@ -21,8 +21,10 @@ import org.camunda.bpm.model.bpmn.impl.instance.SourceRef;
 import org.camunda.bpm.model.bpmn.instance.BaseElement;
 import org.camunda.bpm.model.bpmn.instance.Collaboration;
 import org.camunda.bpm.model.bpmn.instance.DataInputAssociation;
+import org.camunda.bpm.model.bpmn.instance.DataObject;
 import org.camunda.bpm.model.bpmn.instance.Definitions;
 import org.camunda.bpm.model.bpmn.instance.EndEvent;
+import org.camunda.bpm.model.bpmn.instance.ExclusiveGateway;
 import org.camunda.bpm.model.bpmn.instance.IoSpecification;
 import org.camunda.bpm.model.bpmn.instance.Lane;
 import org.camunda.bpm.model.bpmn.instance.LaneSet;
@@ -66,6 +68,11 @@ public class DecoderImplTest {
 
 	private static Logger logger = LoggerFactory.getLogger(DecoderImplTest.class);
 
+	private static boolean isRunSimpleBPMN = true;
+	private static boolean isRunDataObjectBPMN = true;
+	private static boolean isRunGMUUAVBPMN = true;
+	private static boolean isRunUavanetBPMN = true;
+
 	private static String address = "localhost:1729";
 	private static String databaseName = DecoderImplTest.class.getName();
 
@@ -101,101 +108,149 @@ public class DecoderImplTest {
 		}
 
 		// set up schema from file
-		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
-			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
-				Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files
-						.readString(Path.of(DecoderImplTest.class.getResource("/simple_BPMN_schema.tql").toURI())));
-				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
-					QueryFuture<Void> response = transaction.query().define(query.asDefine());
-					// wait for the transaction to finish
-					response.get();
-					logger.debug("Processed query {}", query);
+		if (isRunSimpleBPMN()) {
+			try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
+				try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+					Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files
+							.readString(Path.of(DecoderImplTest.class.getResource("/simple_BPMN_schema.tql").toURI())));
+					for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+						QueryFuture<Void> response = transaction.query().define(query.asDefine());
+						// wait for the transaction to finish
+						response.get();
+						logger.debug("Processed query {}", query);
+					}
+					logger.debug("Committing transaction...");
+					transaction.commit();
 				}
-				logger.debug("Committing transaction...");
-				transaction.commit();
+				logger.debug("Generated schema.");
 			}
-			logger.debug("Generated schema.");
 		}
 		// set up 2nd schema from file
-		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
-			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
-				Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files
-						.readString(Path.of(DecoderImplTest.class.getResource("/DataObject_BPMN_Schema.tql").toURI())));
-				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
-					QueryFuture<Void> response = transaction.query().define(query.asDefine());
-					// wait for the transaction to finish
-					response.get();
-					logger.debug("Processed query {}", query);
+		if (isRunDataObjectBPMN()) {
+			try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
+				try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+					Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files.readString(
+							Path.of(DecoderImplTest.class.getResource("/DataObject_BPMN_Schema.tql").toURI())));
+					for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+						QueryFuture<Void> response = transaction.query().define(query.asDefine());
+						// wait for the transaction to finish
+						response.get();
+						logger.debug("Processed query {}", query);
+					}
+					logger.debug("Committing transaction...");
+					transaction.commit();
 				}
-				logger.debug("Committing transaction...");
-				transaction.commit();
+				logger.debug("Generated schema.");
 			}
-			logger.debug("Generated schema.");
 		}
 		// set up 3rd schema from file
-		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
-			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
-				Stream<TypeQLQuery> queries = TypeQL.parseQueries(
-						Files.readString(Path.of(DecoderImplTest.class.getResource("/UAV_BPMN_schema.tql").toURI())));
-				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
-					QueryFuture<Void> response = transaction.query().define(query.asDefine());
-					// wait for the transaction to finish
-					response.get();
-					logger.debug("Processed query {}", query);
+		if (isRunGMUUAVBPMN()) {
+			try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
+				try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+					Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files
+							.readString(Path.of(DecoderImplTest.class.getResource("/UAV_BPMN_schema.tql").toURI())));
+					for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+						QueryFuture<Void> response = transaction.query().define(query.asDefine());
+						// wait for the transaction to finish
+						response.get();
+						logger.debug("Processed query {}", query);
+					}
+					logger.debug("Committing transaction...");
+					transaction.commit();
 				}
-				logger.debug("Committing transaction...");
-				transaction.commit();
+				logger.debug("Generated schema.");
 			}
-			logger.debug("Generated schema.");
+		}
+		// set up 4th schema from file
+		if (isRunUavanetBPMN()) {
+			try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
+				try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+					Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files.readString(
+							Path.of(DecoderImplTest.class.getResource("/uavanet_BPMN_schema.tql").toURI())));
+					for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+						QueryFuture<Void> response = transaction.query().define(query.asDefine());
+						// wait for the transaction to finish
+						response.get();
+						logger.debug("Processed query {}", query);
+					}
+					logger.debug("Committing transaction...");
+					transaction.commit();
+				}
+				logger.debug("Generated schema.");
+			}
 		}
 
 		// set up the data from file
-		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.DATA)) {
-			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
-				Stream<TypeQLQuery> queries = TypeQL.parseQueries(
-						Files.readString(Path.of(DecoderImplTest.class.getResource("/simple_BPMN_data.tql").toURI())));
-				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
-					Stream<ConceptMap> response = transaction.query().insert(query.asInsert());
-					long count = response.count();
-					assertTrue("Count = " + count, count > 0);
-					logger.debug("Processed query {}", query);
+		if (isRunSimpleBPMN()) {
+			try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.DATA)) {
+				try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+					Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files
+							.readString(Path.of(DecoderImplTest.class.getResource("/simple_BPMN_data.tql").toURI())));
+					for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+						Stream<ConceptMap> response = transaction.query().insert(query.asInsert());
+						long count = response.count();
+						assertTrue("Count = " + count, count > 0);
+						logger.debug("Processed query {}", query);
+					}
+					logger.debug("Committing transaction...");
+					transaction.commit();
 				}
-				logger.debug("Committing transaction...");
-				transaction.commit();
+				logger.debug("Generated data.");
 			}
-			logger.debug("Generated data.");
 		}
 		// set up the 2nd data from file
-		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.DATA)) {
-			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
-				Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files
-						.readString(Path.of(DecoderImplTest.class.getResource("/DataObject_BPMN_Data.tql").toURI())));
-				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
-					Stream<ConceptMap> response = transaction.query().insert(query.asInsert());
-					long count = response.count();
-					assertTrue("Count = " + count, count > 0);
-					logger.debug("Processed query {}", query);
+		if (isRunDataObjectBPMN()) {
+			try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.DATA)) {
+				try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+					Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files.readString(
+							Path.of(DecoderImplTest.class.getResource("/DataObject_BPMN_Data.tql").toURI())));
+					for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+						Stream<ConceptMap> response = transaction.query().insert(query.asInsert());
+						long count = response.count();
+						assertTrue("Count = " + count, count > 0);
+						logger.debug("Processed query {}", query);
+					}
+					logger.debug("Committing transaction...");
+					transaction.commit();
 				}
-				logger.debug("Committing transaction...");
-				transaction.commit();
+				logger.debug("Generated data.");
 			}
-			logger.debug("Generated data.");
 		}
 		// set up the 3rd data from file
-		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.DATA)) {
-			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
-				Stream<TypeQLQuery> queries = TypeQL.parseQueries(
-						Files.readString(Path.of(DecoderImplTest.class.getResource("/UAV_BPMN_data.tql").toURI())));
-				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
-					Stream<ConceptMap> response = transaction.query().insert(query.asInsert());
-					long count = response.count();
-					assertTrue("Count = " + count, count > 0);
-					logger.debug("Processed query {}", query);
+		if (isRunGMUUAVBPMN()) {
+			try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.DATA)) {
+				try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+					Stream<TypeQLQuery> queries = TypeQL.parseQueries(
+							Files.readString(Path.of(DecoderImplTest.class.getResource("/UAV_BPMN_data.tql").toURI())));
+					for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+						Stream<ConceptMap> response = transaction.query().insert(query.asInsert());
+						long count = response.count();
+						assertTrue("Count = " + count, count > 0);
+						logger.debug("Processed query {}", query);
+					}
+					logger.debug("Committing transaction...");
+					transaction.commit();
 				}
-				logger.debug("Committing transaction...");
-				transaction.commit();
+				logger.debug("Generated data.");
 			}
-			logger.debug("Generated data.");
+		}
+		// set up the 4th data from file
+		if (isRunUavanetBPMN()) {
+			try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.DATA)) {
+				try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
+					Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files
+							.readString(Path.of(DecoderImplTest.class.getResource("/uavanet_BPMN_data.tql").toURI())));
+					for (TypeQLQuery query : queries.collect(Collectors.toList())) {
+						Stream<ConceptMap> response = transaction.query().insert(query.asInsert());
+						long count = response.count();
+						assertTrue("Count = " + count, count > 0);
+						logger.debug("Processed query {}", query);
+					}
+					logger.debug("Committing transaction...");
+					transaction.commit();
+				}
+				logger.debug("Generated data.");
+			}
 		}
 
 		// make sure we close the connection
@@ -225,6 +280,10 @@ public class DecoderImplTest {
 	 */
 	@Test
 	public final void testSaveBPMNSimple() throws Exception {
+		if (!isRunSimpleBPMN()) {
+			logger.warn("Skipping testSaveBPMNSimple...");
+			return;
+		}
 
 		// the object to test
 		DecoderImpl decoder = (DecoderImpl) DecoderImpl.getInstance();
@@ -328,6 +387,10 @@ public class DecoderImplTest {
 	 */
 	@Test
 	public final void testSaveBPMNDataObject() throws Exception {
+		if (!isRunDataObjectBPMN()) {
+			logger.warn("Skipping testSaveBPMNDataObject...");
+			return;
+		}
 
 		// the object to test
 		DecoderImpl decoder = (DecoderImpl) DecoderImpl.getInstance();
@@ -458,6 +521,10 @@ public class DecoderImplTest {
 	 */
 	@Test
 	public final void testSaveBPMNUAV() throws Exception {
+		if (!isRunGMUUAVBPMN()) {
+			logger.warn("Skipping testSaveBPMNUAV...");
+			return;
+		}
 
 		// the object to test
 		DecoderImpl decoder = (DecoderImpl) DecoderImpl.getInstance();
@@ -537,6 +604,150 @@ public class DecoderImplTest {
 		assertEquals(definitions.getChildElementsByType(BpmnDiagram.class).toString(), 1,
 				definitions.getChildElementsByType(BpmnDiagram.class).size());
 
+	}
+
+	/**
+	 * Test method of {@link DecoderImpl#saveBPMN(java.io.OutputStream)} with the
+	 * VATech uavanet model.
+	 */
+	@Test
+	public final void testSaveBPMNuavanet() throws Exception {
+		if (!isRunUavanetBPMN()) {
+			logger.warn("Skipping testSaveBPMNuavanet...");
+			return;
+		}
+
+		// the object to test
+		DecoderImpl decoder = (DecoderImpl) DecoderImpl.getInstance();
+
+		// the address of TypeDB
+		decoder.setTypeDBAddress(address);
+
+		// name of the test database
+		decoder.setDatabaseName(databaseName);
+
+		// the UID of the BPMN node to query
+		decoder.setRootUID("http://vt.edu/dalnim/uavanet.*");
+
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		decoder.saveBPMN(stream);
+		stream.flush();
+		stream.close();
+		String result = stream.toString();
+
+		logger.debug("Result: \n{}", result);
+
+		assertFalse(result, result.trim().isEmpty());
+
+		// parse result as BPMN
+		BpmnModelInstance bpmn = Bpmn.readModelFromStream(new ByteArrayInputStream(result.getBytes()));
+		assertNotNull(bpmn);
+
+		// load the bpmn definitions (the root node)
+		Definitions definitions = bpmn.getDefinitions();
+		assertNotNull(definitions);
+
+		// check namespaces
+		assertEquals("http://www.omg.org/spec/BPMN/20100524/MODEL",
+				bpmn.getDocument().getRootElement().getNamespaceURI());
+		assertEquals("http://vt.edu/dalnim/uavanet", definitions.getAttributeValue("targetNamespace"));
+
+		// check collaboration
+		Collection<Collaboration> collaborations = definitions.getChildElementsByType(Collaboration.class);
+		assertEquals(collaborations.toString(), 1, collaborations.size());
+		Collaboration collaboration = collaborations.iterator().next();
+		// must have 1 participant: Mission (Image Classification) Process
+		assertEquals(collaboration.getChildElementsByType(Participant.class).toString(), 1,
+				collaboration.getChildElementsByType(Participant.class).size());
+
+		// check process
+		Collection<Process> processes = definitions.getChildElementsByType(Process.class);
+		// there is only 1 process
+		assertEquals(processes.toString(), 1, processes.size());
+
+		// get the main process
+		Process process = processes.stream().filter(p -> p.getId().equals("Process_0vkxjoy")).findAny().get();
+		assertNotNull(process);
+
+		// 5 service tasks,
+		assertEquals(5, process.getChildElementsByType(ServiceTask.class).size());
+
+		// 5 send tasks,
+		assertEquals(5, process.getChildElementsByType(SendTask.class).size());
+
+		// 4 exclusive gateways,
+		assertEquals(4, process.getChildElementsByType(ExclusiveGateway.class).size());
+
+		// 1 start and 1 end events
+		assertEquals(1, process.getChildElementsByType(StartEvent.class).size());
+		assertEquals(1, process.getChildElementsByType(EndEvent.class).size());
+
+		// 2 data objects
+		assertEquals(2, process.getChildElementsByType(DataObject.class).size());
+
+		// 18 sequence flows
+		assertEquals(18, process.getChildElementsByType(SequenceFlow.class).size());
+
+		// the visual elements: BPMN diagram
+		assertEquals(definitions.getChildElementsByType(BpmnDiagram.class).toString(), 1,
+				definitions.getChildElementsByType(BpmnDiagram.class).size());
+
+	}
+
+	/**
+	 * @return the isRunSimpleBPMN
+	 */
+	public static boolean isRunSimpleBPMN() {
+		return isRunSimpleBPMN;
+	}
+
+	/**
+	 * @param isRunSimpleBPMN the isRunSimpleBPMN to set
+	 */
+	public static void setRunSimpleBPMN(boolean isRunSimpleBPMN) {
+		DecoderImplTest.isRunSimpleBPMN = isRunSimpleBPMN;
+	}
+
+	/**
+	 * @return the isRunDataObjectBPMN
+	 */
+	public static boolean isRunDataObjectBPMN() {
+		return isRunDataObjectBPMN;
+	}
+
+	/**
+	 * @param isRunDataObjectBPMN the isRunDataObjectBPMN to set
+	 */
+	public static void setRunDataObjectBPMN(boolean isRunDataObjectBPMN) {
+		DecoderImplTest.isRunDataObjectBPMN = isRunDataObjectBPMN;
+	}
+
+	/**
+	 * @return the isRunGMUUAVBPMN
+	 */
+	public static boolean isRunGMUUAVBPMN() {
+		return isRunGMUUAVBPMN;
+	}
+
+	/**
+	 * @param isRunGMUUAVBPMN the isRunGMUUAVBPMN to set
+	 */
+	public static void setRunGMUUAVBPMN(boolean isRunGMUUAVBPMN) {
+		DecoderImplTest.isRunGMUUAVBPMN = isRunGMUUAVBPMN;
+	}
+
+	/**
+	 * @return the isRunUavanetBPMN
+	 */
+	public static boolean isRunUavanetBPMN() {
+		return isRunUavanetBPMN;
+	}
+
+	/**
+	 * @param isRunUavanetBPMN the isRunUavanetBPMN to set
+	 */
+	public static void setRunUavanetBPMN(boolean isRunUavanetBPMN) {
+		DecoderImplTest.isRunUavanetBPMN = isRunUavanetBPMN;
 	}
 
 }
