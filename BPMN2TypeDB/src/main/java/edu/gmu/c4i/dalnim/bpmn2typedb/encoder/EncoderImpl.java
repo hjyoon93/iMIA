@@ -113,10 +113,8 @@ public class EncoderImpl implements Encoder {
 			+ "@org.camunda.bpm.model.bpmn.instance.Activity':'Task'," + "'lane':'Performer',"
 			+ "'participant':'Performer'," + "'@org.camunda.bpm.model.bpmn.instance.ItemAwareElement':'Asset',"
 			+ "'@org.camunda.bpm.model.bpmn.instance.DataAssociation':'Service',"
-			+ "'parallelGateway':'ANDPrecedenceTaskList',"
-			+ "'exclusiveGateway':'ORPrecedenceTaskList',"
-			+ "'complexGateway':'ORPrecedenceTaskList',"
-			+ "'inclusiveGateway':'ORPrecedenceTaskList',"
+			+ "'parallelGateway':'ANDPrecedenceTaskList'," + "'exclusiveGateway':'ORPrecedenceTaskList',"
+			+ "'complexGateway':'ORPrecedenceTaskList'," + "'inclusiveGateway':'ORPrecedenceTaskList',"
 			+ "'sequenceFlow':'PrecedenceTask'" + "}";
 
 	private String jsonConceptsNotToAddRole = "['Service']";
@@ -263,15 +261,26 @@ public class EncoderImpl implements Encoder {
 					+ getUIDAttributeName() + " @key;");
 			writer.println();
 
+			// store the nodes which were already declared
+			Set<String> visitedNodes = new HashSet<>();
+
 			// extract the names of common super-entities
 			Map<String, String> commonBPMNSuperEntityMap = parseJSONMap(getJSONCommonBPMNSuperEntityMap());
-			if (commonBPMNSuperEntityMap != null && !commonBPMNSuperEntityMap.isEmpty()) {
+			if (commonBPMNSuperEntityMap == null) {
+				// avoid nulls
+				commonBPMNSuperEntityMap = new HashMap<>();
+			}
+			if (!commonBPMNSuperEntityMap.isEmpty()) {
 				writer.println("## Common BPMN super-entities");
 				// Common super entities are values in the above map.
 				// Avoid duplicates
 				for (String superEntityName : new HashSet<>(commonBPMNSuperEntityMap.values())) {
-					writer.println(getBPMNEntityNamePrefix() + superEntityName + " sub " + getBPMNEntityName() + ";");
+					// the entity name should have a common prefix
+					String nameWithPrefix = getBPMNEntityNamePrefix() + superEntityName;
+					writer.println(nameWithPrefix + " sub " + getBPMNEntityName() + ";");
 					writer.println();
+					// also indicate that the common super-entity was already visited.
+					visitedNodes.add(nameWithPrefix);
 				}
 				writer.println();
 			}
@@ -287,7 +296,8 @@ public class EncoderImpl implements Encoder {
 			// transitive chain of gateways
 			// (useful when retrieving previous tasks regardless of gateways)
 			writer.println("## relation about chain of gateways");
-			writer.println(getBPMNGatewayTransitiveChainRelationName() + " sub relation, relates previous, relates next;");
+			writer.println(
+					getBPMNGatewayTransitiveChainRelationName() + " sub relation, relates previous, relates next;");
 			writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":previous;");
 			writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":next;");
 
@@ -305,16 +315,13 @@ public class EncoderImpl implements Encoder {
 			writer.println("## =============== Body ===============");
 			writer.println();
 
-			// store what was already declared
+			// store the attributes that were already declared
 			Set<String> declaredAttributes = new HashSet<>(attributesInRootEntity);
 
+			// store the relations that were already declared
 			Set<String> declaredRelations = new HashSet<>();
 			declaredRelations.add(getBPMNParentChildRelationName());
 			declaredRelations.add(getBPMNGatewayTransitiveChainRelationName());
-
-			Set<String> visitedNodes = new HashSet<>(
-					// indicate that the common super-entities were already visited.
-					commonBPMNSuperEntityMap.values());
 
 			// recursively visit what's below "definitions" tag
 			visitBPMNSchemaRecursive(writer, bpmn.getDefinitions(), visitedNodes, attributesInRootEntity,
@@ -1036,18 +1043,21 @@ public class EncoderImpl implements Encoder {
 				commonPart.append("\t $precedenceTask isa PrecedenceTask;\n");
 				commonPart.append("\t $task1 isa Task;\n");
 				commonPart.append("\t $task2 isa Task;\n");
-				commonPart.append(
-						"\t $sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $sourceRef, has BPMNattrib_targetRef $targetRef;\n");
-				commonPart.append("\t $bpmntask1 isa BPMN_Entity, has BPMNattrib_id $taskID1;\n");
-				commonPart.append("\t $bpmntask2 isa BPMN_Entity, has BPMNattrib_id $taskID2;\n");
+				commonPart.append("\t $sequenceFlow isa " + getBPMNEntityNamePrefix() + "sequenceFlow, has "
+						+ getBPMNAttributeNamePrefix() + "sourceRef $sourceRef, has " + getBPMNAttributeNamePrefix()
+						+ "targetRef $targetRef;\n");
+				commonPart.append("\t $bpmntask1 isa " + getBPMNEntityName() + ", has " + getBPMNAttributeNamePrefix()
+						+ "id $taskID1;\n");
+				commonPart.append("\t $bpmntask2 isa " + getBPMNEntityName() + ", has " + getBPMNAttributeNamePrefix()
+						+ "id $taskID2;\n");
 				commonPart.append("\t $taskID1 = $sourceRef;\n");
 				commonPart.append("\t $taskID2 = $targetRef;\n");
-				commonPart.append(
-						"\t (bpmnEntity: $sequenceFlow, conceptualModel: $precedenceTask) isa BPMN_hasConceptualModelElement;\n");
-				commonPart.append(
-						"\t (bpmnEntity: $bpmntask1, conceptualModel: $task1) isa BPMN_hasConceptualModelElement;\n");
-				commonPart.append(
-						"\t (bpmnEntity: $bpmntask2, conceptualModel: $task2) isa BPMN_hasConceptualModelElement;\n");
+				commonPart.append("\t (bpmnEntity: $sequenceFlow, conceptualModel: $precedenceTask) isa "
+						+ getBPMNConceptualModelMappingName() + ";\n");
+				commonPart.append("\t (bpmnEntity: $bpmntask1, conceptualModel: $task1) isa "
+						+ getBPMNConceptualModelMappingName() + ";\n");
+				commonPart.append("\t (bpmnEntity: $bpmntask2, conceptualModel: $task2) isa "
+						+ getBPMNConceptualModelMappingName() + ";\n");
 				commonPart.append("} then {");
 				writer.println(commonPart.toString());
 				// content of "then" is different
@@ -1068,7 +1078,8 @@ public class EncoderImpl implements Encoder {
 			} // end of rules of PrecedenceTask related to sequenceFlow
 
 			// rules for transitive closure of gateway precedence
-			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")
+			if (declaredRelations.contains(getBPMNGatewayTransitiveChainRelationName())
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")
 					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "Gateway")
 					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "sourceRef")
 					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "targetRef")
@@ -1116,9 +1127,83 @@ public class EncoderImpl implements Encoder {
 				writer.println();
 			}
 
-			// TODO rules of ANDPrecedenceTaskList (parallel)
+			// rules of ORPrecedenceTaskList (non-parallel)
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "Gateway")
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "sourceRef")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "targetRef")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "id")) {
 
-			// TODO rules of ORPrecedenceTaskList (non-parallel)
+				// direct connection
+				writer.println("## Task isPrecededBySetOfTask ORPrecedenceTaskList, direct");
+				writer.println("rule rule_task_isPrecededBySetOfTask_ORPrecedenceTaskList_direct:");
+				writer.println("when {");
+				writer.println(" $bpmngate isa " + getBPMNEntityNamePrefix() + "Gateway, has "
+						+ getBPMNAttributeNamePrefix() + "id $gateId;");
+				writer.println(" $bpmntaskFrom isa " + getBPMNEntityNamePrefix() + "Activity, has "
+						+ getBPMNAttributeNamePrefix() + "id $taskFromId;");
+				writer.println(" $flowFrom isa " + getBPMNEntityNamePrefix() + "sequenceFlow, has "
+						+ getBPMNAttributeNamePrefix() + "sourceRef $fromSource, has " + getBPMNAttributeNamePrefix()
+						+ "targetRef $fromTarget;");
+				writer.println(" $fromTarget = $gateId;");
+				writer.println(" $fromSource = $taskFromId;");
+				writer.println(" $bpmntaskTo isa " + getBPMNEntityNamePrefix() + "Activity, has "
+						+ getBPMNAttributeNamePrefix() + "id $taskToId;");
+				writer.println(" $flowTo isa " + getBPMNEntityNamePrefix() + "sequenceFlow, has "
+						+ getBPMNAttributeNamePrefix() + "sourceRef $toSource, has " + getBPMNAttributeNamePrefix()
+						+ "targetRef $toTarget;");
+				writer.println(" $toTarget = $taskToId;");
+				writer.println(" $toSource = $gateId;");
+				writer.println(" $taskTo isa Task;");
+				writer.println(" $prec isa ORPrecedenceTaskList;");
+				writer.println(" (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println(" (bpmnEntity: $bpmngate, conceptualModel: $prec) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("} then {");
+				writer.println("     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;");
+				writer.println("};");
+				writer.println();
+
+				// indirect (transitive) connection
+				if (declaredRelations.contains(getBPMNGatewayTransitiveChainRelationName())) {
+					writer.println("## Task isPrecededBySetOfTask ORPrecedenceTaskList, transitive");
+					writer.println("rule rule_task_isPrecededBySetOfTask_ORPrecedenceTaskList_transitive:");
+					writer.println("when {");
+					writer.println(" $bpmngateFrom isa " + getBPMNEntityNamePrefix() + "Gateway, has "
+							+ getBPMNAttributeNamePrefix() + "id $gateFromId;");
+					writer.println(" $bpmngateTo isa " + getBPMNEntityNamePrefix() + "Gateway, has "
+							+ getBPMNAttributeNamePrefix() + "id $gateToId;");
+					writer.println(" (previous: $bpmngateFrom, next: $bpmngateTo) isa "
+							+ getBPMNGatewayTransitiveChainRelationName() + ";");
+					writer.println(" $bpmntaskFrom isa " + getBPMNEntityNamePrefix() + "Activity, has "
+							+ getBPMNAttributeNamePrefix() + "id $taskFromId;");
+					writer.println(" $flowFrom isa " + getBPMNEntityNamePrefix() + "sequenceFlow, has "
+							+ getBPMNAttributeNamePrefix() + "sourceRef $fromSource, has "
+							+ getBPMNAttributeNamePrefix() + "targetRef $fromTarget;");
+					writer.println(" $fromTarget = $gateFromId;");
+					writer.println(" $fromSource = $taskFromId;");
+					writer.println(" $bpmntaskTo isa " + getBPMNEntityNamePrefix() + "Activity, has "
+							+ getBPMNAttributeNamePrefix() + "id $taskToId;");
+					writer.println(" $flowTo isa " + getBPMNEntityNamePrefix() + "sequenceFlow, has "
+							+ getBPMNAttributeNamePrefix() + "sourceRef $toSource, has " + getBPMNAttributeNamePrefix()
+							+ "targetRef $toTarget;");
+					writer.println(" $toTarget = $taskToId;");
+					writer.println(" $toSource = $gateToId;");
+					writer.println(" $taskTo isa Task;");
+					writer.println(" $precOR isa ORPrecedenceTaskList;");
+					writer.println(" (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa "
+							+ getBPMNConceptualModelMappingName() + ";");
+					writer.println(" (bpmnEntity: $bpmngateTo, conceptualModel: $precOR) isa "
+							+ getBPMNConceptualModelMappingName() + ";");
+					writer.println("} then {");
+					writer.println("     (task: $taskTo, precedence_task: $precOR) isa isPrecededBySetOfTask;");
+					writer.println("};");
+					writer.println();
+				}
+			}
+
+			// TODO rules of ANDPrecedenceTaskList (parallel)
 
 			// Show sample queries
 			writer.println("## Sample queries for the above rules");
@@ -1168,16 +1253,29 @@ public class EncoderImpl implements Encoder {
 			writer.println("# $t2 isa Task;");
 			writer.println("# $r1  (precedence_task: $p, task: $t2) isa isPrecededBySetOfTask; ");
 			writer.println("# $r2  (precedence_task: $p, task: $t1) isa isCompoundBySetOfTask; ");
-			writer.println("# $bpmntask1 isa BPMN_Entity;");
-			writer.println("# $bpmntask2 isa BPMN_Entity;");
-			writer.println("# $seq isa BPMN_Entity;");
-			writer.println(
-					"# $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa BPMN_hasConceptualModelElement;");
-			writer.println(
-					"# $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa BPMN_hasConceptualModelElement;");
-			writer.println("# $rel3  (bpmnEntity: $seq, conceptualModel: $p) isa BPMN_hasConceptualModelElement;");
+			writer.println("# $bpmntask1 isa " + getBPMNEntityName() + ";");
+			writer.println("# $bpmntask2 isa " + getBPMNEntityName() + ";");
+			writer.println("# $seq isa " + getBPMNEntityName() + ";");
+			writer.println("# $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("# $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("# $rel3  (bpmnEntity: $seq, conceptualModel: $p) isa " + getBPMNConceptualModelMappingName()
+					+ ";");
 			writer.println();
 
+			writer.println("## Query AND/ORPrecedenceTaskList");
+			writer.println("# match");
+			writer.println("# $prec isa PrecedenceTask;");
+			writer.println("# $task isa Task;");
+			writer.println("# $bpmntask isa " + getBPMNEntityName() + ";");
+			writer.println("# $gate isa " + getBPMNEntityName() + ";");
+			writer.println("# $rel (task: $task, precedence_task: $prec) isa isPrecededBySetOfTask;");
+			writer.println("# $rel1 (bpmnEntity: $gate, conceptualModel: $prec) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println("# $rel2 (bpmnEntity: $bpmntask, conceptualModel: $task) isa "
+					+ getBPMNConceptualModelMappingName() + ";");
+			writer.println();
 		} // else ignore mappings to conceptual model
 
 	}
