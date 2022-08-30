@@ -1375,7 +1375,7 @@ public class EncoderImpl implements Encoder {
 			writer.println("# $r2  (precedence_task: $p, task: $t1) isa isCompoundBySetOfTask; ");
 			writer.println("# $bpmntask1 isa " + getBPMNEntityName() + ";");
 			writer.println("# $bpmntask2 isa " + getBPMNEntityName() + ";");
-			writer.println("# $seq isa " + getBPMNEntityName() + ";");
+			writer.println("# $seq isa " + getBPMNEntityNamePrefix()+ "sequenceFlow;");
 			writer.println("# $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa "
 					+ getBPMNConceptualModelMappingName() + ";");
 			writer.println("# $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa "
@@ -1388,7 +1388,7 @@ public class EncoderImpl implements Encoder {
 			writer.println("# match");
 			writer.println("# $taskFrom isa Task;");
 			writer.println("# $taskTo isa Task;");
-			writer.println("# $prec isa PrecedenceTask;");
+			writer.println("# {$prec isa ANDPrecedenceTaskList;} or {$prec isa ORPrecedenceTaskList;};");
 			writer.println("# $relFrom (task: $taskFrom, precedence_task: $prec) isa isCompoundBySetOfTask;");
 			writer.println("# $relTo (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;");
 			writer.println("# $bpmntaskFrom isa " + getBPMNEntityNamePrefix() + "Activity, has "
