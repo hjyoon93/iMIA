@@ -24,6 +24,9 @@ define
 # isCompoundBySetOfTask sub relation, relates precedence_task, relates task;
 # PrecedenceTask plays isCompoundBySetOfTask:precedence_task;
 # Task plays isCompoundBySetOfTask:task;
+# isPrecededBySetOfTask sub relation, relates precedence_task, relates task;
+# PrecedenceTask plays isPrecededBySetOfTask:precedence_task;
+# Task plays isPrecededBySetOfTask:task;
 
 ## BPMN entities in general
 BPMNattrib_id sub attribute, value string;
@@ -520,6 +523,153 @@ when {
      (precedence_task: $precedenceTask, task: $task1) isa isCompoundBySetOfTask;
 };
 
+## chain of gateways, direct
+rule rule_gateway_chain_direct:
+when {
+     $sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $source, has BPMNattrib_targetRef $target;
+     $gateway1 isa BPMN_Gateway, has BPMNattrib_id $id1;
+     $gateway2 isa BPMN_Gateway, has BPMNattrib_id $id2;
+     $id1 = $source;
+     $id2 = $target;
+} then {
+     (previous: $gateway1, next: $gateway2) isa BPMN_gatewayTransitiveChain;
+};
+## chain of gateways, transitive
+rule rule_gateway_chain_transitive:
+when {
+     $sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $source, has BPMNattrib_targetRef $target;
+     $gateway1 isa BPMN_Gateway, has BPMNattrib_id $id1;
+     $gateway2 isa BPMN_Gateway, has BPMNattrib_id $id2;
+     $gateway3 isa BPMN_Gateway;
+     $id1 = $source;
+     $id2 = $target;
+     (previous: $gateway2, next: $gateway3) isa BPMN_gatewayTransitiveChain;
+} then {
+     (previous: $gateway1, next: $gateway3) isa BPMN_gatewayTransitiveChain;
+};
+
+## Task isPrecededBySetOfTask ORPrecedenceTaskList, direct
+rule rule_task_isPrecededBySetOfTask_ORPrecedenceTaskList_direct:
+when {
+ $bpmngate isa BPMN_Gateway, has BPMNattrib_id $gateId;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateId;
+ $fromSource = $taskFromId;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_id $taskToId;
+ $flowTo isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $toSource, has BPMNattrib_targetRef $toTarget;
+ $toTarget = $taskToId;
+ $toSource = $gateId;
+ $taskTo isa Task;
+ (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+ (bpmnEntity: $bpmngate, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $prec isa ORPrecedenceTaskList;
+} then {
+     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+};
+
+## Task isPrecededBySetOfTask ANDPrecedenceTaskList, direct
+rule rule_task_isPrecededBySetOfTask_ANDPrecedenceTaskList_direct:
+when {
+ $bpmngate isa BPMN_Gateway, has BPMNattrib_id $gateId;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateId;
+ $fromSource = $taskFromId;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_id $taskToId;
+ $flowTo isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $toSource, has BPMNattrib_targetRef $toTarget;
+ $toTarget = $taskToId;
+ $toSource = $gateId;
+ $taskTo isa Task;
+ (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+ (bpmnEntity: $bpmngate, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $prec isa ANDPrecedenceTaskList;
+} then {
+     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+};
+
+## Task isPrecededBySetOfTask ORPrecedenceTaskList, transitive
+rule rule_task_isPrecededBySetOfTask_ORPrecedenceTaskList_transitive:
+when {
+ $bpmngateFrom isa BPMN_Gateway, has BPMNattrib_id $gateFromId;
+ $bpmngateTo isa BPMN_Gateway, has BPMNattrib_id $gateToId;
+ (previous: $bpmngateFrom, next: $bpmngateTo) isa BPMN_gatewayTransitiveChain;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateFromId;
+ $fromSource = $taskFromId;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_id $taskToId;
+ $flowTo isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $toSource, has BPMNattrib_targetRef $toTarget;
+ $toTarget = $taskToId;
+ $toSource = $gateToId;
+ $taskTo isa Task;
+ (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+ (bpmnEntity: $bpmngateTo, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $prec isa ORPrecedenceTaskList;
+} then {
+     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+};
+
+## Task isPrecededBySetOfTask ANDPrecedenceTaskList, transitive
+rule rule_task_isPrecededBySetOfTask_ANDPrecedenceTaskList_transitive:
+when {
+ $bpmngateFrom isa BPMN_Gateway, has BPMNattrib_id $gateFromId;
+ $bpmngateTo isa BPMN_Gateway, has BPMNattrib_id $gateToId;
+ (previous: $bpmngateFrom, next: $bpmngateTo) isa BPMN_gatewayTransitiveChain;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateFromId;
+ $fromSource = $taskFromId;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_id $taskToId;
+ $flowTo isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $toSource, has BPMNattrib_targetRef $toTarget;
+ $toTarget = $taskToId;
+ $toSource = $gateToId;
+ $taskTo isa Task;
+ (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+ (bpmnEntity: $bpmngateTo, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $prec isa ANDPrecedenceTaskList;
+} then {
+     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+};
+
+## AND/ORPrecedenceTaskList isCompoundBySetOfTask Task, direct
+rule rule_ANDORPrecedenceTaskList_isCompoundBySetOfTask_task_direct:
+when {
+ $prec isa PrecedenceTask;
+ $taskTo isa Task;
+ $taskFrom isa Task;
+ (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+ (bpmnEntity: $bpmngate, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $bpmngate isa BPMN_Gateway, has BPMNattrib_id $gateId;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateId;
+ $fromSource = $taskFromId;
+ (bpmnEntity: $bpmntaskFrom, conceptualModel: $taskFrom) isa BPMN_hasConceptualModelElement;
+} then {
+     (task: $taskFrom, precedence_task: $prec) isa isCompoundBySetOfTask;
+};
+
+## AND/ORPrecedenceTaskList isCompoundBySetOfTask Task, transitive
+rule rule_ANDORPrecedenceTaskList_isCompoundBySetOfTask_task_transitive:
+when {
+ $prec isa PrecedenceTask;
+ $taskTo isa Task;
+ $taskFrom isa Task;
+ (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+ (bpmnEntity: $bpmngateTo, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $bpmngateTo isa BPMN_Gateway;
+ (previous: $bpmngateFrom, next: $bpmngateTo) isa BPMN_gatewayTransitiveChain;
+ $bpmngateFrom isa BPMN_Gateway, has BPMNattrib_id $gateId;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateId;
+ $fromSource = $taskFromId;
+ (bpmnEntity: $bpmntaskFrom, conceptualModel: $taskFrom) isa BPMN_hasConceptualModelElement;
+} then {
+     (task: $taskFrom, precedence_task: $prec) isa isCompoundBySetOfTask;
+};
+
 ## Sample queries for the above rules
 
 ## query isCompoundBy
@@ -560,9 +710,21 @@ when {
 # $r2  (precedence_task: $p, task: $t1) isa isCompoundBySetOfTask; 
 # $bpmntask1 isa BPMN_Entity;
 # $bpmntask2 isa BPMN_Entity;
-# $seq isa BPMN_Entity;
+# $seq isa BPMN_sequenceFlow;
 # $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa BPMN_hasConceptualModelElement;
 # $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa BPMN_hasConceptualModelElement;
 # $rel3  (bpmnEntity: $seq, conceptualModel: $p) isa BPMN_hasConceptualModelElement;
+
+## Query AND/ORPrecedenceTaskList
+# match
+# $taskFrom isa Task;
+# $taskTo isa Task;
+# {$prec isa ANDPrecedenceTaskList;} or {$prec isa ORPrecedenceTaskList;};
+# $relFrom (task: $taskFrom, precedence_task: $prec) isa isCompoundBySetOfTask;
+# $relTo (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+# $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_name $attribFrom;
+# $bpmntaskTo isa BPMN_Activity, has BPMNattrib_name $attribTo;
+# $mapFrom (bpmnEntity: $bpmntaskFrom, conceptualModel: $taskFrom) isa BPMN_hasConceptualModelElement;
+# $mapTo (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
 
 ## =============== End ===============

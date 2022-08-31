@@ -745,5 +745,74 @@ public class EncoderImplTest {
 		}
 		assertTrue(foundConcept);
 	}
+	
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
+	 * and
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeD(java.io.OutputStream)}
+	 * for messageFlow.bpmn.
+	 * 
+	 * @see #testEncodeSchema(String)
+	 */
+	@Test
+	public final void testEncodeBPMNMessageFlow() throws Exception {
+		
+		// make sure the schema can be generated
+		testEncodeSchema("/messageFlow.bpmn");
+		
+		// generate the data
+		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+		
+		encoder.loadInput(getClass().getResourceAsStream("/messageFlow.bpmn"));
+		String dataTypeQL;
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			encoder.encodeData(out);
+			dataTypeQL = out.toString();
+		}
+		
+		logger.debug("Generated typeql data: \n{}", dataTypeQL);
+		assertFalse(dataTypeQL.trim().isEmpty());
+		
+		// make sure the typeql data can be parsed
+		List<TypeQLQuery> parsedList = TypeQL.parseQueries(dataTypeQL).collect(Collectors.toList());
+		// there should be many commands
+		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
+		// the 1st command should be an insert
+		assertNotNull(parsedList.get(0).asInsert());
+		
+		/**
+		 * We should also find declarations like the following:
+		 * 
+		 * <pre>
+		 * insert $x isa BPMN_messageFlow,
+		 * 	has BPMNattrib_targetRef "Activity_1m6lr6g",
+		 * 	has BPMNattrib_name "Request",
+		 * 	has BPMNattrib_id "Flow_0915wqb",
+		 * 	has BPMNattrib_sourceRef "Participant_0thms36",
+		 * 	has UID "http://bpmn.io/schema/bpmn/#Flow_0915wqb";
+		 * match
+		 * 	$parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Collaboration_0njkluv";
+		 * 	$child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0915wqb";
+		 * 	insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+		 * </pre>
+		 */
+		boolean foundConcept = false;
+		for (int i = 0; i < parsedList.size(); i++) {
+			TypeQLQuery insertQuery = parsedList.get(i);
+			if (insertQuery.toString().startsWith("insert $x isa BPMN_messageFlow")) {
+				// the next element should be the "match" command
+				TypeQLQuery matchQuery = parsedList.get(i + 1);
+				// should be an insert command with a "match" block
+				if (matchQuery.asInsert().match().get()
+						// it should contain reference to the collaboration ID
+						.toString().contains("Collaboration_1")) {
+					foundConcept = true;
+					break;
+				}
+			}
+		}
+		assertTrue(foundConcept);
+	}
 
 }

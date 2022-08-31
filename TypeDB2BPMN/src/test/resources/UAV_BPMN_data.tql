@@ -3,8 +3,8 @@
 
 ## definitions
 insert $x isa BPMN_definitions,
-     has BPMNattrib_exporter "Camunda Modeler",
-     has BPMNattrib_exporterVersion "5.1.0",
+     has BPMNattrib_exporter "org.eclipse.bpmn2.modeler.core",
+     has BPMNattrib_exporterVersion "1.5.3.Final-v20210519-2007-B1",
      has BPMNattrib_targetNamespace "http://bpmn.io/schema/bpmn",
      has BPMNattrib_typeLanguage "http://www.w3.org/2001/XMLSchema",
      has BPMNattrib_expressionLanguage "http://www.w3.org/1999/XPath",
@@ -21,6 +21,7 @@ insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasCon
 ## process
 insert $x isa BPMN_process,
      has BPMNattrib_isClosed "false",
+     has BPMNattrib_name "GMU UAV transport of critical items",
      has BPMNattrib_id "Process_176ykgu",
      has BPMNattrib_isExecutable "true",
      has BPMNattrib_processType "None",
@@ -193,7 +194,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## flowNodeRef
 insert $x isa BPMN_flowNodeRef,
-     has BPMN_textContent "Activity_1wb9z8r",
+     has BPMN_textContent "Activity_1ml8e4s",
      has UID "http://bpmn.io/schema/bpmn/#flowNodeRef13";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x";
@@ -202,7 +203,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## flowNodeRef
 insert $x isa BPMN_flowNodeRef,
-     has BPMN_textContent "Activity_1ml8e4s",
+     has BPMN_textContent "Activity_04oyr68",
      has UID "http://bpmn.io/schema/bpmn/#flowNodeRef14";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x";
@@ -211,7 +212,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## flowNodeRef
 insert $x isa BPMN_flowNodeRef,
-     has BPMN_textContent "Activity_04oyr68",
+     has BPMN_textContent "Activity_151a8w0",
      has UID "http://bpmn.io/schema/bpmn/#flowNodeRef15";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x";
@@ -220,7 +221,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## flowNodeRef
 insert $x isa BPMN_flowNodeRef,
-     has BPMN_textContent "Activity_151a8w0",
+     has BPMN_textContent "Event_0qgsj26",
      has UID "http://bpmn.io/schema/bpmn/#flowNodeRef16";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x";
@@ -229,7 +230,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## flowNodeRef
 insert $x isa BPMN_flowNodeRef,
-     has BPMN_textContent "Event_0qgsj26",
+     has BPMN_textContent "SendTask_1",
      has UID "http://bpmn.io/schema/bpmn/#flowNodeRef17";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x";
@@ -499,22 +500,24 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 ## sendTask
 insert $x isa BPMN_sendTask,
      has BPMNattrib_startQuantity "1",
+     has BPMNattrib_messageRef "Message_2",
+     has BPMNattrib_operationRef "Operation_1",
      has BPMNattrib_implementation "##WebService",
      has BPMNattrib_isForCompensation "false",
      has BPMNattrib_name "Release material",
      has BPMNattrib_completionQuantity "1",
-     has BPMNattrib_id "Activity_1wb9z8r",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_1wb9z8r";
+     has BPMNattrib_id "SendTask_1",
+     has UID "http://bpmn.io/schema/bpmn/#SendTask_1";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1wb9z8r";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#SendTask_1";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Mapping to the conceptual model
-insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_1wb9z8r";
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_SendTask_1";
 match
-     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_1wb9z8r';
-     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_1wb9z8r';
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#SendTask_1';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#Task_SendTask_1';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -522,7 +525,7 @@ insert $x isa BPMN_incoming,
      has BPMN_textContent "Flow_1xe8ag1",
      has UID "http://bpmn.io/schema/bpmn/#incoming6";
 match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1wb9z8r";
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#SendTask_1";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming6";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
@@ -531,8 +534,65 @@ insert $x isa BPMN_outgoing,
      has BPMN_textContent "Flow_1p5oird",
      has UID "http://bpmn.io/schema/bpmn/#outgoing6";
 match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1wb9z8r";
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#SendTask_1";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## ioSpecification
+insert $x isa BPMN_ioSpecification,
+     has BPMNattrib_id "InputOutputSpecification_3",
+     has UID "http://bpmn.io/schema/bpmn/#InputOutputSpecification_3";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#SendTask_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#InputOutputSpecification_3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataInput
+insert $x isa BPMN_dataInput,
+     has BPMNattrib_itemSubjectRef "ItemDefinition_379",
+     has BPMNattrib_isCollection "false",
+     has BPMNattrib_name "input1",
+     has BPMNattrib_id "DataInput_1",
+     has UID "http://bpmn.io/schema/bpmn/#DataInput_1";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#InputOutputSpecification_3";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#DataInput_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://bpmn.io/schema/bpmn/#Asset_DataInput_1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#DataInput_1';
+     $concept isa entity, has UID 'http://bpmn.io/schema/bpmn/#Asset_DataInput_1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## inputSet
+insert $x isa BPMN_inputSet,
+     has BPMNattrib_name "Input Set 3",
+     has BPMNattrib_id "InputSet_3",
+     has UID "http://bpmn.io/schema/bpmn/#InputSet_3";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#InputOutputSpecification_3";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#InputSet_3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataInputRefs
+insert $x isa BPMN_dataInputRefs,
+     has BPMN_textContent "DataInput_1",
+     has UID "http://bpmn.io/schema/bpmn/#dataInputRefs";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#InputSet_3";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#dataInputRefs";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outputSet
+insert $x isa BPMN_outputSet,
+     has BPMNattrib_name "Output Set 3",
+     has BPMNattrib_id "OutputSet_3",
+     has UID "http://bpmn.io/schema/bpmn/#OutputSet_3";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#InputOutputSpecification_3";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#OutputSet_3";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## serviceTask
@@ -809,7 +869,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## parallelGateway
 insert $x isa BPMN_parallelGateway,
-     has BPMNattrib_gatewayDirection "Unspecified",
+     has BPMNattrib_gatewayDirection "Diverging",
      has BPMNattrib_id "Gateway_0m7fyk1",
      has UID "http://bpmn.io/schema/bpmn/#Gateway_0m7fyk1";
 match
@@ -862,7 +922,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## parallelGateway
 insert $x isa BPMN_parallelGateway,
-     has BPMNattrib_gatewayDirection "Unspecified",
+     has BPMNattrib_gatewayDirection "Converging",
      has BPMNattrib_id "Gateway_1ilh1pw",
      has UID "http://bpmn.io/schema/bpmn/#Gateway_1ilh1pw";
 match
@@ -915,7 +975,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## parallelGateway
 insert $x isa BPMN_parallelGateway,
-     has BPMNattrib_gatewayDirection "Unspecified",
+     has BPMNattrib_gatewayDirection "Diverging",
      has BPMNattrib_id "Gateway_0qaps1c",
      has UID "http://bpmn.io/schema/bpmn/#Gateway_0qaps1c";
 match
@@ -959,7 +1019,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## parallelGateway
 insert $x isa BPMN_parallelGateway,
-     has BPMNattrib_gatewayDirection "Unspecified",
+     has BPMNattrib_gatewayDirection "Converging",
      has BPMNattrib_id "Gateway_1r3kg4s",
      has UID "http://bpmn.io/schema/bpmn/#Gateway_1r3kg4s";
 match
@@ -1345,7 +1405,7 @@ insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasCon
 
 ## sequenceFlow
 insert $x isa BPMN_sequenceFlow,
-     has BPMNattrib_targetRef "Activity_1wb9z8r",
+     has BPMNattrib_targetRef "SendTask_1",
      has BPMNattrib_id "Flow_1xe8ag1",
      has BPMNattrib_sourceRef "Activity_151a8w0",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1xe8ag1";
@@ -1365,7 +1425,7 @@ insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasCon
 insert $x isa BPMN_sequenceFlow,
      has BPMNattrib_targetRef "Event_0qgsj26",
      has BPMNattrib_id "Flow_1p5oird",
-     has BPMNattrib_sourceRef "Activity_1wb9z8r",
+     has BPMNattrib_sourceRef "SendTask_1",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1p5oird";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_176ykgu";
@@ -1524,6 +1584,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 ## messageFlow
 insert $x isa BPMN_messageFlow,
      has BPMNattrib_targetRef "Activity_0k58tkj",
+     has BPMNattrib_name "Authorization",
      has BPMNattrib_id "Flow_056k0vt",
      has BPMNattrib_sourceRef "Participant_1ne28uc",
      has UID "http://bpmn.io/schema/bpmn/#Flow_056k0vt";
@@ -1535,13 +1596,75 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 ## messageFlow
 insert $x isa BPMN_messageFlow,
      has BPMNattrib_targetRef "Participant_09a5jox",
+     has BPMNattrib_messageRef "Message_2",
      has BPMNattrib_name "Material",
      has BPMNattrib_id "Flow_0bz64f0",
-     has BPMNattrib_sourceRef "Activity_1wb9z8r",
+     has BPMNattrib_sourceRef "SendTask_1",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0bz64f0";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Collaboration_0njkluv";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0bz64f0";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## interface
+insert $x isa BPMN_interface,
+     has BPMNattrib_name "Interface 1",
+     has BPMNattrib_id "Interface_1",
+     has UID "http://bpmn.io/schema/bpmn/#Interface_1";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Interface_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## operation
+insert $x isa BPMN_operation,
+     has BPMNattrib_name "Release material",
+     has BPMNattrib_id "Operation_1",
+     has UID "http://bpmn.io/schema/bpmn/#Operation_1";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Interface_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Operation_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## inMessageRef
+insert $x isa BPMN_inMessageRef,
+     has BPMN_textContent "Message_2",
+     has UID "http://bpmn.io/schema/bpmn/#inMessageRef";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Operation_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#inMessageRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outMessageRef
+insert $x isa BPMN_outMessageRef,
+     has BPMN_textContent "Message_2",
+     has UID "http://bpmn.io/schema/bpmn/#outMessageRef";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Operation_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outMessageRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## itemDefinition
+insert $x isa BPMN_itemDefinition,
+     has BPMNattrib_isCollection "false",
+     has BPMNattrib_id "ItemDefinition_379",
+     has BPMNattrib_itemKind "Physical",
+     has BPMNattrib_structureRef "critical_object",
+     has UID "http://bpmn.io/schema/bpmn/#ItemDefinition_379";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#ItemDefinition_379";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## message
+insert $x isa BPMN_message,
+     has BPMNattrib_itemRef "ItemDefinition_379",
+     has BPMNattrib_name "Material",
+     has BPMNattrib_id "Message_2",
+     has UID "http://bpmn.io/schema/bpmn/#Message_2";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Message_2";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNDiagram
@@ -1566,7 +1689,9 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0dke4wa",
+     has BPMNattrib_sourceElement "_BPMNShape_StartEvent_2",
      has BPMNattrib_id "Flow_0dke4wa_di",
+     has BPMNattrib_targetElement "Activity_0gi0pv8_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0dke4wa_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1575,8 +1700,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "368",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "368.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint";
 match
@@ -1586,8 +1711,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "455",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "455.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint1";
 match
@@ -1595,10 +1720,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint1";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_13",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_13";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0dke4wa_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0zvo261",
+     has BPMNattrib_sourceElement "Gateway_17nwhfi_di",
      has BPMNattrib_id "Flow_0zvo261_di",
+     has BPMNattrib_targetElement "Activity_12jtmtf_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0zvo261_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1607,8 +1743,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "650",
-     has BPMNattrib_y "405",
+     has BPMNattrib_x "650.0",
+     has BPMNattrib_y "405.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint2";
 match
@@ -1618,8 +1754,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "650",
-     has BPMNattrib_y "501",
+     has BPMNattrib_x "650.0",
+     has BPMNattrib_y "501.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint3";
 match
@@ -1629,8 +1765,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "750",
-     has BPMNattrib_y "501",
+     has BPMNattrib_x "750.0",
+     has BPMNattrib_y "501.0",
      has BPMNattrib_sort "2",
      has UID "http://bpmn.io/schema/bpmn/#waypoint4";
 match
@@ -1638,10 +1774,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint4";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_14",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_14";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0zvo261_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_095emxy",
+     has BPMNattrib_sourceElement "Activity_12jtmtf_di",
      has BPMNattrib_id "Flow_095emxy_di",
+     has BPMNattrib_targetElement "Gateway_01jxgpw_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_095emxy_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1650,8 +1797,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "850",
-     has BPMNattrib_y "501",
+     has BPMNattrib_x "850.0",
+     has BPMNattrib_y "501.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint5";
 match
@@ -1661,8 +1808,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "960",
-     has BPMNattrib_y "501",
+     has BPMNattrib_x "960.0",
+     has BPMNattrib_y "501.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint6";
 match
@@ -1672,8 +1819,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "960",
-     has BPMNattrib_y "405",
+     has BPMNattrib_x "960.0",
+     has BPMNattrib_y "405.0",
      has BPMNattrib_sort "2",
      has UID "http://bpmn.io/schema/bpmn/#waypoint7";
 match
@@ -1681,10 +1828,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint7";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_15",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_15";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_095emxy_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1kjiq0a",
+     has BPMNattrib_sourceElement "Gateway_17nwhfi_di",
      has BPMNattrib_id "Flow_1kjiq0a_di",
+     has BPMNattrib_targetElement "Activity_101kfur_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1kjiq0a_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1693,8 +1851,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "650",
-     has BPMNattrib_y "405",
+     has BPMNattrib_x "650.0",
+     has BPMNattrib_y "405.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint8";
 match
@@ -1704,8 +1862,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "650",
-     has BPMNattrib_y "611",
+     has BPMNattrib_x "650.0",
+     has BPMNattrib_y "611.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint9";
 match
@@ -1715,8 +1873,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "750",
-     has BPMNattrib_y "611",
+     has BPMNattrib_x "750.0",
+     has BPMNattrib_y "611.0",
      has BPMNattrib_sort "2",
      has UID "http://bpmn.io/schema/bpmn/#waypoint10";
 match
@@ -1724,10 +1882,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint10";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_16",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_16";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1kjiq0a_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0d21g9n",
+     has BPMNattrib_sourceElement "Activity_101kfur_di",
      has BPMNattrib_id "Flow_0d21g9n_di",
+     has BPMNattrib_targetElement "Gateway_01jxgpw_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0d21g9n_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1736,8 +1905,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "850",
-     has BPMNattrib_y "611",
+     has BPMNattrib_x "850.0",
+     has BPMNattrib_y "611.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint11";
 match
@@ -1747,8 +1916,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "960",
-     has BPMNattrib_y "611",
+     has BPMNattrib_x "960.0",
+     has BPMNattrib_y "611.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint12";
 match
@@ -1758,8 +1927,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "960",
-     has BPMNattrib_y "405",
+     has BPMNattrib_x "960.0",
+     has BPMNattrib_y "405.0",
      has BPMNattrib_sort "2",
      has UID "http://bpmn.io/schema/bpmn/#waypoint13";
 match
@@ -1767,10 +1936,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint13";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_17",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_17";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0d21g9n_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1yj8ik5",
+     has BPMNattrib_sourceElement "Activity_0gi0pv8_di",
      has BPMNattrib_id "Flow_1yj8ik5_di",
+     has BPMNattrib_targetElement "Gateway_17nwhfi_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1yj8ik5_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1779,8 +1959,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "555",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "555.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint14";
 match
@@ -1790,8 +1970,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "625",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "625.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint15";
 match
@@ -1799,10 +1979,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint15";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_18",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_18";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1yj8ik5_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_18";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1fue4z2",
+     has BPMNattrib_sourceElement "Gateway_17nwhfi_di",
      has BPMNattrib_id "Flow_1fue4z2_di",
+     has BPMNattrib_targetElement "Activity_0dpuwdy_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1fue4z2_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1811,8 +2002,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "675",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "675.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint16";
 match
@@ -1822,8 +2013,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "750",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "750.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint17";
 match
@@ -1831,10 +2022,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint17";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_19",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_19";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1fue4z2_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_19";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0e918yq",
+     has BPMNattrib_sourceElement "Activity_0dpuwdy_di",
      has BPMNattrib_id "Flow_0e918yq_di",
+     has BPMNattrib_targetElement "Gateway_01jxgpw_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0e918yq_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1843,8 +2045,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "850",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "850.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint18";
 match
@@ -1854,8 +2056,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "935",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "935.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint19";
 match
@@ -1863,10 +2065,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint19";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_20",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_20";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0e918yq_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_20";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1crh0vx",
+     has BPMNattrib_sourceElement "Gateway_01jxgpw_di",
      has BPMNattrib_id "Flow_1crh0vx_di",
+     has BPMNattrib_targetElement "Activity_13nrgnx_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1crh0vx_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1875,8 +2088,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "985",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "985.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint20";
 match
@@ -1886,8 +2099,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1070",
-     has BPMNattrib_y "380",
+     has BPMNattrib_x "1070.0",
+     has BPMNattrib_y "380.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint21";
 match
@@ -1895,10 +2108,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint21";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_21",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_21";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1crh0vx_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_21";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1qsy4z7",
+     has BPMNattrib_sourceElement "Activity_13nrgnx_di",
      has BPMNattrib_id "Flow_1qsy4z7_di",
+     has BPMNattrib_targetElement "Activity_0qqd6ba_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1qsy4z7_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1907,8 +2131,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1120",
-     has BPMNattrib_y "420",
+     has BPMNattrib_x "1120.0",
+     has BPMNattrib_y "420.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint22";
 match
@@ -1918,8 +2142,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1120",
-     has BPMNattrib_y "730",
+     has BPMNattrib_x "1120.0",
+     has BPMNattrib_y "730.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint23";
 match
@@ -1927,10 +2151,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint23";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_22",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_22";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1qsy4z7_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_22";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1b3ibsr",
+     has BPMNattrib_sourceElement "Activity_0qqd6ba_di",
      has BPMNattrib_id "Flow_1b3ibsr_di",
+     has BPMNattrib_targetElement "Activity_0w3p3ik_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1b3ibsr_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1939,8 +2174,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1170",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1170.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint24";
 match
@@ -1950,8 +2185,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1220",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1220.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint25";
 match
@@ -1959,10 +2194,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint25";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_23",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_23";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1b3ibsr_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_23";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0qesozf",
+     has BPMNattrib_sourceElement "Activity_0w3p3ik_di",
      has BPMNattrib_id "Flow_0qesozf_di",
+     has BPMNattrib_targetElement "Gateway_0tu7ys5_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0qesozf_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -1971,8 +2217,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1320",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1320.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint26";
 match
@@ -1982,8 +2228,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1375",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1375.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint27";
 match
@@ -1991,10 +2237,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint27";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_24",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_24";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0qesozf_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_24";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0ygose6",
+     has BPMNattrib_sourceElement "Gateway_0tu7ys5_di",
      has BPMNattrib_id "Flow_0ygose6_di",
+     has BPMNattrib_targetElement "Activity_13o9o8c_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0ygose6_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2003,8 +2260,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1425",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1425.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint28";
 match
@@ -2014,8 +2271,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1480",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1480.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint29";
 match
@@ -2023,10 +2280,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint29";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_25",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_25";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0ygose6_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_25";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0raulo1",
+     has BPMNattrib_sourceElement "Gateway_0tu7ys5_di",
      has BPMNattrib_id "Flow_0raulo1_di",
+     has BPMNattrib_targetElement "Activity_1fxis00_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0raulo1_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2035,8 +2303,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1400",
-     has BPMNattrib_y "795",
+     has BPMNattrib_x "1400.0",
+     has BPMNattrib_y "795.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint30";
 match
@@ -2046,8 +2314,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1400",
-     has BPMNattrib_y "900",
+     has BPMNattrib_x "1400.0",
+     has BPMNattrib_y "900.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint31";
 match
@@ -2057,8 +2325,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1480",
-     has BPMNattrib_y "900",
+     has BPMNattrib_x "1480.0",
+     has BPMNattrib_y "900.0",
      has BPMNattrib_sort "2",
      has UID "http://bpmn.io/schema/bpmn/#waypoint32";
 match
@@ -2066,10 +2334,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint32";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_26",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_26";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0raulo1_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_26";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0x2kctu",
+     has BPMNattrib_sourceElement "Activity_13o9o8c_di",
      has BPMNattrib_id "Flow_0x2kctu_di",
+     has BPMNattrib_targetElement "Gateway_19jzjr4_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0x2kctu_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2078,8 +2357,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1580",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1580.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint33";
 match
@@ -2089,8 +2368,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1635",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1635.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint34";
 match
@@ -2098,10 +2377,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint34";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_27",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_27";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0x2kctu_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_27";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_10u452g",
+     has BPMNattrib_sourceElement "Activity_1fxis00_di",
      has BPMNattrib_id "Flow_10u452g_di",
+     has BPMNattrib_targetElement "Gateway_19jzjr4_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_10u452g_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2110,8 +2400,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1580",
-     has BPMNattrib_y "900",
+     has BPMNattrib_x "1580.0",
+     has BPMNattrib_y "900.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint35";
 match
@@ -2121,8 +2411,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1660",
-     has BPMNattrib_y "900",
+     has BPMNattrib_x "1660.0",
+     has BPMNattrib_y "900.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint36";
 match
@@ -2132,8 +2422,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1660",
-     has BPMNattrib_y "795",
+     has BPMNattrib_x "1660.0",
+     has BPMNattrib_y "795.0",
      has BPMNattrib_sort "2",
      has UID "http://bpmn.io/schema/bpmn/#waypoint37";
 match
@@ -2141,10 +2431,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint37";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_28",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_28";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_10u452g_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_28";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1jnp1p3",
+     has BPMNattrib_sourceElement "Gateway_19jzjr4_di",
      has BPMNattrib_id "Flow_1jnp1p3_di",
+     has BPMNattrib_targetElement "Activity_0oijvqz_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1jnp1p3_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2153,8 +2454,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1685",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1685.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint38";
 match
@@ -2164,8 +2465,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1740",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1740.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint39";
 match
@@ -2173,10 +2474,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint39";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_29",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_29";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1jnp1p3_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_29";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_104d3xb",
+     has BPMNattrib_sourceElement "Activity_0oijvqz_di",
      has BPMNattrib_id "Flow_104d3xb_di",
+     has BPMNattrib_targetElement "Activity_098vzko_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_104d3xb_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2185,8 +2497,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1840",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1840.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint40";
 match
@@ -2196,8 +2508,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1900",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "1900.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint41";
 match
@@ -2205,10 +2517,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint41";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_30",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_30";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_104d3xb_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_30";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1siteaf",
+     has BPMNattrib_sourceElement "Activity_098vzko_di",
      has BPMNattrib_id "Flow_1siteaf_di",
+     has BPMNattrib_targetElement "Activity_05kgngz_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1siteaf_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2217,8 +2540,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "2000",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "2000.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint42";
 match
@@ -2228,8 +2551,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "2060",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "2060.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint43";
 match
@@ -2237,10 +2560,21 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint43";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_31",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_31";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1siteaf_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_31";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1xe8ag1",
+     has BPMNattrib_sourceElement "Activity_05kgngz_di",
      has BPMNattrib_id "Flow_1xe8ag1_di",
+     has BPMNattrib_targetElement "BPMNShape_SendTask_1",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1xe8ag1_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2249,8 +2583,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "2160",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "2160.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
      has UID "http://bpmn.io/schema/bpmn/#waypoint44";
 match
@@ -2260,8 +2594,8 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "2240",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "2197.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint45";
 match
@@ -2269,10 +2603,32 @@ match
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint45";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "2235.0",
+     has BPMNattrib_y "770.0",
+     has BPMNattrib_sort "2",
+     has UID "http://bpmn.io/schema/bpmn/#waypoint46";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1xe8ag1_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint46";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_32",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_32";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1xe8ag1_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_32";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_1p5oird",
+     has BPMNattrib_sourceElement "BPMNShape_SendTask_1",
      has BPMNattrib_id "Flow_1p5oird_di",
+     has BPMNattrib_targetElement "Event_0qgsj26_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_1p5oird_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2281,30 +2637,52 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "2340",
-     has BPMNattrib_y "770",
+     has BPMNattrib_x "2345.0",
+     has BPMNattrib_y "770.0",
      has BPMNattrib_sort "0",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint46";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1p5oird_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint46";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## waypoint
-insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "2422",
-     has BPMNattrib_y "770",
-     has BPMNattrib_sort "1",
      has UID "http://bpmn.io/schema/bpmn/#waypoint47";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1p5oird_di";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint47";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "2383.0",
+     has BPMNattrib_y "770.0",
+     has BPMNattrib_sort "1",
+     has UID "http://bpmn.io/schema/bpmn/#waypoint48";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1p5oird_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint48";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "2422.0",
+     has BPMNattrib_y "770.0",
+     has BPMNattrib_sort "2",
+     has UID "http://bpmn.io/schema/bpmn/#waypoint49";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1p5oird_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint49";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_33",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_33";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1p5oird_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_33";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0915wqb",
+     has BPMNattrib_sourceElement "Participant_0thms36_di",
      has BPMNattrib_id "Flow_0915wqb_di",
+     has BPMNattrib_targetElement "Activity_0gi0pv8_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0915wqb_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2313,50 +2691,53 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "505",
-     has BPMNattrib_y "210",
+     has BPMNattrib_x "505.0",
+     has BPMNattrib_y "210.0",
      has BPMNattrib_sort "0",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint48";
+     has UID "http://bpmn.io/schema/bpmn/#waypoint50";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0915wqb_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint48";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint50";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "505",
-     has BPMNattrib_y "340",
+     has BPMNattrib_x "505.0",
+     has BPMNattrib_y "340.0",
      has BPMNattrib_sort "1",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint49";
+     has UID "http://bpmn.io/schema/bpmn/#waypoint51";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0915wqb_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint49";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint51";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNLabel
 insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel";
+     has BPMNattrib_id "BPMNLabel_10",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_10";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0915wqb_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_10";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Bounds
 insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "42",
-     has BPMNattrib_x "499",
-     has BPMNattrib_y "272",
-     has BPMNattrib_height "14",
+     has BPMNattrib_width "46.0",
+     has BPMNattrib_x "483.0",
+     has BPMNattrib_y "276.0",
+     has BPMNattrib_height "14.0",
      has UID "http://bpmn.io/schema/bpmn/#Bounds";
 match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel";
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_10";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0zip3xc",
+     has BPMNattrib_sourceElement "Participant_0thms36_di",
      has BPMNattrib_id "Flow_0zip3xc_di",
+     has BPMNattrib_targetElement "Activity_0dpuwdy_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0zip3xc_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2365,50 +2746,53 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "795",
-     has BPMNattrib_y "210",
+     has BPMNattrib_x "795.0",
+     has BPMNattrib_y "210.0",
      has BPMNattrib_sort "0",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint50";
+     has UID "http://bpmn.io/schema/bpmn/#waypoint52";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0zip3xc_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint50";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint52";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "795",
-     has BPMNattrib_y "340",
+     has BPMNattrib_x "795.0",
+     has BPMNattrib_y "340.0",
      has BPMNattrib_sort "1",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint51";
+     has UID "http://bpmn.io/schema/bpmn/#waypoint53";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0zip3xc_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint51";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint53";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNLabel
 insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel1";
+     has BPMNattrib_id "BPMNLabel_11",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_11";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0zip3xc_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_11";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Bounds
 insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "40",
-     has BPMNattrib_x "790",
-     has BPMNattrib_y "272",
-     has BPMNattrib_height "14",
+     has BPMNattrib_width "44.0",
+     has BPMNattrib_x "774.0",
+     has BPMNattrib_y "276.0",
+     has BPMNattrib_height "14.0",
      has UID "http://bpmn.io/schema/bpmn/#Bounds1";
 match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel1";
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_11";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds1";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_056k0vt",
+     has BPMNattrib_sourceElement "Participant_1ne28uc_di",
      has BPMNattrib_id "Flow_056k0vt_di",
+     has BPMNattrib_targetElement "Activity_13nrgnx_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_056k0vt_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2417,30 +2801,53 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1130",
-     has BPMNattrib_y "200",
+     has BPMNattrib_x "1120.0",
+     has BPMNattrib_y "205.0",
      has BPMNattrib_sort "0",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint52";
+     has UID "http://bpmn.io/schema/bpmn/#waypoint54";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_056k0vt_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint52";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint54";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "1130",
-     has BPMNattrib_y "340",
+     has BPMNattrib_x "1120.0",
+     has BPMNattrib_y "340.0",
      has BPMNattrib_sort "1",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint53";
+     has UID "http://bpmn.io/schema/bpmn/#waypoint55";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_056k0vt_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint53";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint55";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_50",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_50";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_056k0vt_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_50";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "72.0",
+     has BPMNattrib_x "1085.0",
+     has BPMNattrib_y "274.0",
+     has BPMNattrib_height "14.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds2";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_50";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds2";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNEdge
 insert $x isa BPMN_BPMNEdge,
      has BPMNattrib_bpmnElement "Flow_0bz64f0",
+     has BPMNattrib_sourceElement "BPMNShape_SendTask_1",
      has BPMNattrib_id "Flow_0bz64f0_di",
+     has BPMNattrib_targetElement "Participant_09a5jox_di",
      has UID "http://bpmn.io/schema/bpmn/#Flow_0bz64f0_di";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
@@ -2449,44 +2856,56 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "2290",
-     has BPMNattrib_y "810",
+     has BPMNattrib_x "2290.0",
+     has BPMNattrib_y "795.0",
      has BPMNattrib_sort "0",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint54";
+     has UID "http://bpmn.io/schema/bpmn/#waypoint56";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0bz64f0_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint54";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint56";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## waypoint
 insert $x isa BPMN_waypoint,
-     has BPMNattrib_x "2290",
-     has BPMNattrib_y "1030",
+     has BPMNattrib_x "2290.0",
+     has BPMNattrib_y "892.0",
      has BPMNattrib_sort "1",
-     has UID "http://bpmn.io/schema/bpmn/#waypoint55";
+     has UID "http://bpmn.io/schema/bpmn/#waypoint57";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0bz64f0_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint55";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint57";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "2290.0",
+     has BPMNattrib_y "990.0",
+     has BPMNattrib_sort "2",
+     has UID "http://bpmn.io/schema/bpmn/#waypoint58";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0bz64f0_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint58";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNLabel
 insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel2";
+     has BPMNattrib_id "BPMNLabel_12",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_12";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0bz64f0_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel2";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_12";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Bounds
 insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "40",
-     has BPMNattrib_x "2285",
-     has BPMNattrib_y "917",
-     has BPMNattrib_height "14",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds2";
+     has BPMNattrib_width "44.0",
+     has BPMNattrib_x "2269.0",
+     has BPMNattrib_y "894.0",
+     has BPMNattrib_height "14.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds3";
 match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel2";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds2";
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_12";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds3";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNShape
@@ -2502,22 +2921,36 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Bounds
 insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "865",
-     has BPMNattrib_x "165",
-     has BPMNattrib_y "80",
-     has BPMNattrib_height "130",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds3";
+     has BPMNattrib_width "865.0",
+     has BPMNattrib_x "165.0",
+     has BPMNattrib_y "80.0",
+     has BPMNattrib_height "130.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds4";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0thms36_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds3";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds4";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNLabel
 insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel3";
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_1",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_1";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0thms36_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel3";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "14.0",
+     has BPMNattrib_x "171.0",
+     has BPMNattrib_y "102.0",
+     has BPMNattrib_height "86.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds5";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds5";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNShape
@@ -2533,561 +2966,36 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Bounds
 insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "2405",
-     has BPMNattrib_x "155",
-     has BPMNattrib_y "325",
-     has BPMNattrib_height "645",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds4";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_18x4mj6_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds4";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNLabel
-insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel4";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_18x4mj6_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel4";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Lane_0xqcv3v",
-     has BPMNattrib_id "Lane_0xqcv3v_di",
-     has BPMNattrib_isHorizontal "true",
-     has UID "http://bpmn.io/schema/bpmn/#Lane_0xqcv3v_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0xqcv3v_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "2345",
-     has BPMNattrib_x "215",
-     has BPMNattrib_y "325",
-     has BPMNattrib_height "385",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds5";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0xqcv3v_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds5";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNLabel
-insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel5";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0xqcv3v_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel5";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Lane_0rkdn2x",
-     has BPMNattrib_id "Lane_0rkdn2x_di",
-     has BPMNattrib_isHorizontal "true",
-     has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "2345",
-     has BPMNattrib_x "215",
-     has BPMNattrib_y "710",
-     has BPMNattrib_height "120",
+     has BPMNattrib_width "2405.0",
+     has BPMNattrib_x "155.0",
+     has BPMNattrib_y "325.0",
+     has BPMNattrib_height "645.0",
      has UID "http://bpmn.io/schema/bpmn/#Bounds6";
 match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x_di";
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_18x4mj6_di";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds6";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNLabel
 insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel6";
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_2",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_2";
 match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel6";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Lane_0dymm7w",
-     has BPMNattrib_id "Lane_0dymm7w_di",
-     has BPMNattrib_isHorizontal "true",
-     has UID "http://bpmn.io/schema/bpmn/#Lane_0dymm7w_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0dymm7w_di";
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_18x4mj6_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_2";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Bounds
 insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "2345",
-     has BPMNattrib_x "215",
-     has BPMNattrib_y "830",
-     has BPMNattrib_height "140",
+     has BPMNattrib_width "14.0",
+     has BPMNattrib_x "161.0",
+     has BPMNattrib_y "611.0",
+     has BPMNattrib_height "72.0",
      has UID "http://bpmn.io/schema/bpmn/#Bounds7";
 match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0dymm7w_di";
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_2";
      $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds7";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNLabel
-insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel7";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0dymm7w_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel7";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Gateway_0m7fyk1",
-     has BPMNattrib_id "Gateway_17nwhfi_di",
-     has UID "http://bpmn.io/schema/bpmn/#Gateway_17nwhfi_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_17nwhfi_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "50",
-     has BPMNattrib_x "625",
-     has BPMNattrib_y "355",
-     has BPMNattrib_height "50",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds8";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_17nwhfi_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds8";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Gateway_1ilh1pw",
-     has BPMNattrib_id "Gateway_01jxgpw_di",
-     has UID "http://bpmn.io/schema/bpmn/#Gateway_01jxgpw_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_01jxgpw_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "50",
-     has BPMNattrib_x "935",
-     has BPMNattrib_y "355",
-     has BPMNattrib_height "50",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds9";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_01jxgpw_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds9";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "StartEvent_1",
-     has BPMNattrib_id "_BPMNShape_StartEvent_2",
-     has UID "http://bpmn.io/schema/bpmn/#_BPMNShape_StartEvent_2";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#_BPMNShape_StartEvent_2";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "36",
-     has BPMNattrib_x "332",
-     has BPMNattrib_y "362",
-     has BPMNattrib_height "36",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds10";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#_BPMNShape_StartEvent_2";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds10";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNLabel
-insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel8";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#_BPMNShape_StartEvent_2";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel8";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "80",
-     has BPMNattrib_x "-35",
-     has BPMNattrib_y "475",
-     has BPMNattrib_height "14",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds11";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel8";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds11";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_0i7x6hw",
-     has BPMNattrib_id "Activity_0qqd6ba_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_0qqd6ba_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0qqd6ba_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "1070",
-     has BPMNattrib_y "730",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds12";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0qqd6ba_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds12";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_0eh1hzq",
-     has BPMNattrib_id "Activity_0dpuwdy_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_0dpuwdy_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0dpuwdy_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "750",
-     has BPMNattrib_y "340",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds13";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0dpuwdy_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds13";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_1m6lr6g",
-     has BPMNattrib_id "Activity_0gi0pv8_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_0gi0pv8_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0gi0pv8_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "455",
-     has BPMNattrib_y "340",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds14";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0gi0pv8_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds14";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_1xfvehm",
-     has BPMNattrib_id "Activity_12jtmtf_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_12jtmtf_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_12jtmtf_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "750",
-     has BPMNattrib_y "461",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds15";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_12jtmtf_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds15";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_0k58tkj",
-     has BPMNattrib_id "Activity_13nrgnx_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_13nrgnx_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13nrgnx_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "1070",
-     has BPMNattrib_y "340",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds16";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13nrgnx_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds16";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_1uhybch",
-     has BPMNattrib_id "Activity_101kfur_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_101kfur_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_101kfur_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "750",
-     has BPMNattrib_y "571",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds17";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_101kfur_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds17";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_0zfm81n",
-     has BPMNattrib_id "Activity_0w3p3ik_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_0w3p3ik_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0w3p3ik_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "1220",
-     has BPMNattrib_y "730",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds18";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0w3p3ik_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds18";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNLabel
-insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel9";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0w3p3ik_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel9";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Gateway_0qaps1c",
-     has BPMNattrib_id "Gateway_0tu7ys5_di",
-     has UID "http://bpmn.io/schema/bpmn/#Gateway_0tu7ys5_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0tu7ys5_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "50",
-     has BPMNattrib_x "1375",
-     has BPMNattrib_y "745",
-     has BPMNattrib_height "50",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds19";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0tu7ys5_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds19";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_08f1bwc",
-     has BPMNattrib_id "Activity_13o9o8c_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_13o9o8c_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13o9o8c_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "1480",
-     has BPMNattrib_y "730",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds20";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13o9o8c_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds20";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_0ke1h6y",
-     has BPMNattrib_id "Activity_1fxis00_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_1fxis00_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1fxis00_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "1480",
-     has BPMNattrib_y "860",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds21";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1fxis00_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds21";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Gateway_1r3kg4s",
-     has BPMNattrib_id "Gateway_19jzjr4_di",
-     has UID "http://bpmn.io/schema/bpmn/#Gateway_19jzjr4_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_19jzjr4_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "50",
-     has BPMNattrib_x "1635",
-     has BPMNattrib_y "745",
-     has BPMNattrib_height "50",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds22";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_19jzjr4_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds22";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_1wb9z8r",
-     has BPMNattrib_id "Activity_1x9vn40_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_1x9vn40_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1x9vn40_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "2240",
-     has BPMNattrib_y "730",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds23";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1x9vn40_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds23";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_1ml8e4s",
-     has BPMNattrib_id "Activity_0oijvqz_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_0oijvqz_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0oijvqz_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "1740",
-     has BPMNattrib_y "730",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds24";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0oijvqz_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds24";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_04oyr68",
-     has BPMNattrib_id "Activity_098vzko_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_098vzko_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_098vzko_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "1900",
-     has BPMNattrib_y "730",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds25";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_098vzko_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds25";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Activity_151a8w0",
-     has BPMNattrib_id "Activity_05kgngz_di",
-     has UID "http://bpmn.io/schema/bpmn/#Activity_05kgngz_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_05kgngz_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "100",
-     has BPMNattrib_x "2060",
-     has BPMNattrib_y "730",
-     has BPMNattrib_height "80",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds26";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_05kgngz_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds26";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## BPMNShape
-insert $x isa BPMN_BPMNShape,
-     has BPMNattrib_bpmnElement "Event_0qgsj26",
-     has BPMNattrib_id "Event_0qgsj26_di",
-     has UID "http://bpmn.io/schema/bpmn/#Event_0qgsj26_di";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0qgsj26_di";
-insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
-
-## Bounds
-insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "36",
-     has BPMNattrib_x "2422",
-     has BPMNattrib_y "752",
-     has BPMNattrib_height "36",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds27";
-match
-     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0qgsj26_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds27";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNShape
@@ -3103,22 +3011,36 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Bounds
 insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "375",
-     has BPMNattrib_x "1081",
-     has BPMNattrib_y "80",
-     has BPMNattrib_height "120",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds28";
+     has BPMNattrib_width "375.0",
+     has BPMNattrib_x "1110.0",
+     has BPMNattrib_y "85.0",
+     has BPMNattrib_height "120.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds8";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_1ne28uc_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds28";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds8";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNLabel
 insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel10";
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_8",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_8";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_1ne28uc_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel10";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "14.0",
+     has BPMNattrib_x "1116.0",
+     has BPMNattrib_y "132.0",
+     has BPMNattrib_height "26.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds9";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_8";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds9";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNShape
@@ -3134,22 +3056,970 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## Bounds
 insert $x isa BPMN_Bounds,
-     has BPMNattrib_width "300",
-     has BPMNattrib_x "2180",
-     has BPMNattrib_y "1030",
-     has BPMNattrib_height "150",
-     has UID "http://bpmn.io/schema/bpmn/#Bounds29";
+     has BPMNattrib_width "300.0",
+     has BPMNattrib_x "2180.0",
+     has BPMNattrib_y "990.0",
+     has BPMNattrib_height "150.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds10";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_09a5jox_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds29";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds10";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## BPMNLabel
 insert $x isa BPMN_BPMNLabel,
-     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel11";
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_9",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_9";
 match
      $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_09a5jox_di";
-     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel11";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "14.0",
+     has BPMNattrib_x "2186.0",
+     has BPMNattrib_y "1017.0",
+     has BPMNattrib_height "95.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds11";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_9";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Lane_0xqcv3v",
+     has BPMNattrib_id "Lane_0xqcv3v_di",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://bpmn.io/schema/bpmn/#Lane_0xqcv3v_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0xqcv3v_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "2345.0",
+     has BPMNattrib_x "215.0",
+     has BPMNattrib_y "325.0",
+     has BPMNattrib_height "385.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds12";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0xqcv3v_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_3",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_3";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0xqcv3v_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "14.0",
+     has BPMNattrib_x "221.0",
+     has BPMNattrib_y "488.0",
+     has BPMNattrib_height "58.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds13";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_3";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Lane_0rkdn2x",
+     has BPMNattrib_id "Lane_0rkdn2x_di",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "2345.0",
+     has BPMNattrib_x "215.0",
+     has BPMNattrib_y "710.0",
+     has BPMNattrib_height "120.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds14";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_4",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_4";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0rkdn2x_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "14.0",
+     has BPMNattrib_x "221.0",
+     has BPMNattrib_y "758.0",
+     has BPMNattrib_height "24.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds15";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_4";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Lane_0dymm7w",
+     has BPMNattrib_id "Lane_0dymm7w_di",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://bpmn.io/schema/bpmn/#Lane_0dymm7w_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0dymm7w_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "2345.0",
+     has BPMNattrib_x "215.0",
+     has BPMNattrib_y "830.0",
+     has BPMNattrib_height "140.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds16";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0dymm7w_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_5",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_5";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0dymm7w_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "14.0",
+     has BPMNattrib_x "221.0",
+     has BPMNattrib_y "873.0",
+     has BPMNattrib_height "54.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds17";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_5";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Gateway_0m7fyk1",
+     has BPMNattrib_id "Gateway_17nwhfi_di",
+     has BPMNattrib_isMarkerVisible "true",
+     has UID "http://bpmn.io/schema/bpmn/#Gateway_17nwhfi_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_17nwhfi_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "50.0",
+     has BPMNattrib_x "625.0",
+     has BPMNattrib_y "355.0",
+     has BPMNattrib_height "50.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds18";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_17nwhfi_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds18";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_34",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_34";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_17nwhfi_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_34";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Gateway_1ilh1pw",
+     has BPMNattrib_id "Gateway_01jxgpw_di",
+     has BPMNattrib_isMarkerVisible "true",
+     has UID "http://bpmn.io/schema/bpmn/#Gateway_01jxgpw_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_01jxgpw_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "50.0",
+     has BPMNattrib_x "935.0",
+     has BPMNattrib_y "355.0",
+     has BPMNattrib_height "50.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds19";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_01jxgpw_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds19";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_35",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_35";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_01jxgpw_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_35";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "StartEvent_1",
+     has BPMNattrib_id "_BPMNShape_StartEvent_2",
+     has UID "http://bpmn.io/schema/bpmn/#_BPMNShape_StartEvent_2";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#_BPMNShape_StartEvent_2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36.0",
+     has BPMNattrib_x "332.0",
+     has BPMNattrib_y "362.0",
+     has BPMNattrib_height "36.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds20";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#_BPMNShape_StartEvent_2";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds20";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_6",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_6";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#_BPMNShape_StartEvent_2";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "80.0",
+     has BPMNattrib_x "-35.0",
+     has BPMNattrib_y "475.0",
+     has BPMNattrib_height "14.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds21";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_6";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds21";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_0i7x6hw",
+     has BPMNattrib_id "Activity_0qqd6ba_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_0qqd6ba_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0qqd6ba_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "1070.0",
+     has BPMNattrib_y "730.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds22";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0qqd6ba_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds22";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_36",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_36";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0qqd6ba_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_36";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "87.0",
+     has BPMNattrib_x "1076.0",
+     has BPMNattrib_y "756.0",
+     has BPMNattrib_height "28.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds23";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_36";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds23";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_0eh1hzq",
+     has BPMNattrib_id "Activity_0dpuwdy_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_0dpuwdy_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0dpuwdy_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "750.0",
+     has BPMNattrib_y "340.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds24";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0dpuwdy_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds24";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_37",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_37";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0dpuwdy_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_37";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "92.0",
+     has BPMNattrib_x "754.0",
+     has BPMNattrib_y "373.0",
+     has BPMNattrib_height "14.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds25";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_37";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds25";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_1m6lr6g",
+     has BPMNattrib_id "Activity_0gi0pv8_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_0gi0pv8_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0gi0pv8_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "455.0",
+     has BPMNattrib_y "340.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds26";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0gi0pv8_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds26";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_38",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_38";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0gi0pv8_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_38";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "95.0",
+     has BPMNattrib_x "457.0",
+     has BPMNattrib_y "359.0",
+     has BPMNattrib_height "42.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds27";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_38";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds27";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_1xfvehm",
+     has BPMNattrib_id "Activity_12jtmtf_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_12jtmtf_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_12jtmtf_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "750.0",
+     has BPMNattrib_y "461.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds28";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_12jtmtf_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds28";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_39",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_39";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_12jtmtf_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_39";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "71.0",
+     has BPMNattrib_x "764.0",
+     has BPMNattrib_y "494.0",
+     has BPMNattrib_height "14.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds29";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_39";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds29";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_0k58tkj",
+     has BPMNattrib_id "Activity_13nrgnx_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_13nrgnx_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13nrgnx_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "1070.0",
+     has BPMNattrib_y "340.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds30";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13nrgnx_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds30";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_40",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_40";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13nrgnx_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_40";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "58.0",
+     has BPMNattrib_x "1091.0",
+     has BPMNattrib_y "359.0",
+     has BPMNattrib_height "42.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds31";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_40";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds31";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_1uhybch",
+     has BPMNattrib_id "Activity_101kfur_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_101kfur_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_101kfur_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "750.0",
+     has BPMNattrib_y "571.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds32";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_101kfur_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds32";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_41",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_41";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_101kfur_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_41";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "86.0",
+     has BPMNattrib_x "757.0",
+     has BPMNattrib_y "597.0",
+     has BPMNattrib_height "28.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds33";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_41";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds33";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_0zfm81n",
+     has BPMNattrib_id "Activity_0w3p3ik_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_0w3p3ik_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0w3p3ik_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "1220.0",
+     has BPMNattrib_y "730.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds34";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0w3p3ik_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds34";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_7",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_7";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0w3p3ik_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "84.0",
+     has BPMNattrib_x "1228.0",
+     has BPMNattrib_y "756.0",
+     has BPMNattrib_height "28.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds35";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_7";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds35";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Gateway_0qaps1c",
+     has BPMNattrib_id "Gateway_0tu7ys5_di",
+     has BPMNattrib_isMarkerVisible "true",
+     has UID "http://bpmn.io/schema/bpmn/#Gateway_0tu7ys5_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0tu7ys5_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "50.0",
+     has BPMNattrib_x "1375.0",
+     has BPMNattrib_y "745.0",
+     has BPMNattrib_height "50.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds36";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0tu7ys5_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds36";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_42",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_42";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0tu7ys5_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_42";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_08f1bwc",
+     has BPMNattrib_id "Activity_13o9o8c_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_13o9o8c_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13o9o8c_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "1480.0",
+     has BPMNattrib_y "730.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds37";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13o9o8c_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds37";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_43",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_43";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_13o9o8c_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_43";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "76.0",
+     has BPMNattrib_x "1492.0",
+     has BPMNattrib_y "756.0",
+     has BPMNattrib_height "28.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds38";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_43";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds38";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_0ke1h6y",
+     has BPMNattrib_id "Activity_1fxis00_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_1fxis00_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1fxis00_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "1480.0",
+     has BPMNattrib_y "860.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds39";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1fxis00_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds39";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_44",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_44";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1fxis00_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_44";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "98.0",
+     has BPMNattrib_x "1481.0",
+     has BPMNattrib_y "886.0",
+     has BPMNattrib_height "28.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds40";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_44";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds40";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Gateway_1r3kg4s",
+     has BPMNattrib_id "Gateway_19jzjr4_di",
+     has BPMNattrib_isMarkerVisible "true",
+     has UID "http://bpmn.io/schema/bpmn/#Gateway_19jzjr4_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_19jzjr4_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "50.0",
+     has BPMNattrib_x "1635.0",
+     has BPMNattrib_y "745.0",
+     has BPMNattrib_height "50.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds41";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_19jzjr4_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds41";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_45",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_45";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_19jzjr4_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_45";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_1ml8e4s",
+     has BPMNattrib_id "Activity_0oijvqz_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_0oijvqz_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0oijvqz_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "1740.0",
+     has BPMNattrib_y "730.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds42";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0oijvqz_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds42";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_46",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_46";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0oijvqz_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_46";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "90.0",
+     has BPMNattrib_x "1745.0",
+     has BPMNattrib_y "749.0",
+     has BPMNattrib_height "42.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds43";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_46";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds43";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_04oyr68",
+     has BPMNattrib_id "Activity_098vzko_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_098vzko_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_098vzko_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "1900.0",
+     has BPMNattrib_y "730.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds44";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_098vzko_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds44";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_47",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_47";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_098vzko_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_47";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "75.0",
+     has BPMNattrib_x "1912.0",
+     has BPMNattrib_y "749.0",
+     has BPMNattrib_height "42.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds45";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_47";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds45";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Activity_151a8w0",
+     has BPMNattrib_id "Activity_05kgngz_di",
+     has UID "http://bpmn.io/schema/bpmn/#Activity_05kgngz_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_05kgngz_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "100.0",
+     has BPMNattrib_x "2060.0",
+     has BPMNattrib_y "730.0",
+     has BPMNattrib_height "80.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds46";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_05kgngz_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds46";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_48",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_48";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_05kgngz_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_48";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "66.0",
+     has BPMNattrib_x "2077.0",
+     has BPMNattrib_y "756.0",
+     has BPMNattrib_height "28.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds47";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_48";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds47";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Event_0qgsj26",
+     has BPMNattrib_id "Event_0qgsj26_di",
+     has UID "http://bpmn.io/schema/bpmn/#Event_0qgsj26_di";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0qgsj26_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36.0",
+     has BPMNattrib_x "2422.0",
+     has BPMNattrib_y "752.0",
+     has BPMNattrib_height "36.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds48";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0qgsj26_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds48";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_49",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_49";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0qgsj26_di";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_49";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "SendTask_1",
+     has BPMNattrib_id "BPMNShape_SendTask_1",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNShape_SendTask_1";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNShape_SendTask_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "110.0",
+     has BPMNattrib_x "2235.0",
+     has BPMNattrib_y "745.0",
+     has BPMNattrib_height "50.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds49";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNShape_SendTask_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds49";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_51",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_51";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNShape_SendTask_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_51";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "93.0",
+     has BPMNattrib_x "2243.0",
+     has BPMNattrib_y "763.0",
+     has BPMNattrib_height "14.0",
+     has UID "http://bpmn.io/schema/bpmn/#Bounds50";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel_51";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds50";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabelStyle
+insert $x isa BPMN_BPMNLabelStyle,
+     has BPMNattrib_id "BPMNLabelStyle_1",
+     has UID "http://bpmn.io/schema/bpmn/#BPMNLabelStyle_1";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNDiagram_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabelStyle_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Font
+insert $x isa BPMN_Font,
+     has BPMNattrib_size "9.0",
+     has BPMNattrib_name "arial",
+     has UID "http://bpmn.io/schema/bpmn/#Font";
+match
+     $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabelStyle_1";
+     $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Font";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 
 ## =============== End ===============

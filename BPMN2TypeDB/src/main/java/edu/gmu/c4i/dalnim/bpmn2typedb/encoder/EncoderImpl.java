@@ -116,7 +116,10 @@ public class EncoderImpl implements Encoder {
 			+ "'@org.camunda.bpm.model.bpmn.instance.DataAssociation':'Service',"
 			+ "'parallelGateway':'ANDPrecedenceTaskList'," + "'exclusiveGateway':'ORPrecedenceTaskList',"
 			+ "'complexGateway':'ORPrecedenceTaskList'," + "'inclusiveGateway':'ORPrecedenceTaskList',"
-			+ "'sequenceFlow':'PrecedenceTask'" + "}";
+			+ "'sequenceFlow':'PrecedenceTask'," 
+			+ "'collaboration ':'Service',"
+			+ "'messageFlow ':'Asset'"
+			+ "}";
 
 	private String jsonConceptsNotToAddRole = "['Service']";
 
