@@ -116,10 +116,7 @@ public class EncoderImpl implements Encoder {
 			+ "'@org.camunda.bpm.model.bpmn.instance.DataAssociation':'Service',"
 			+ "'parallelGateway':'ANDPrecedenceTaskList'," + "'exclusiveGateway':'ORPrecedenceTaskList',"
 			+ "'complexGateway':'ORPrecedenceTaskList'," + "'inclusiveGateway':'ORPrecedenceTaskList',"
-			+ "'sequenceFlow':'PrecedenceTask'," 
-			+ "'collaboration ':'Service',"
-			+ "'messageFlow ':'Asset'"
-			+ "}";
+			+ "'sequenceFlow':'PrecedenceTask'," + "'collaboration':'Service'," + "'messageFlow':'Asset'" + "}";
 
 	private String jsonConceptsNotToAddRole = "['Service']";
 
@@ -146,7 +143,7 @@ public class EncoderImpl implements Encoder {
 
 	private String bpmnGatewayTransitiveChainRelationName = bpmnEntityNamePrefix + "gatewayTransitiveChain";
 
-	private String jsonNamesToIgnoreInSanityCheck = "['isCompoundBySetOfTask','isPrecededBySetOfTask']";
+	private String jsonNamesToIgnoreInSanityCheck = "['isCompoundBySetOfTask','isPrecededBySetOfTask','provides']";
 
 	/**
 	 * Default constructor is protected to avoid public access. Use
@@ -897,8 +894,64 @@ public class EncoderImpl implements Encoder {
 				writer.println("};");
 				writer.println();
 			}
+			// Another rule to connect Task-Performer when Performer == Service
+			// when there are messageFlows in collaboration
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "messageFlow")
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "Activity")
+					&& declaredAttributes.contains(getBPMNAttributeNamePrefix() + "id")) {
+				// Task can be source or target of message flow,
+				// but rules should not contain disjunction,
+				// so simply write 2 rules.
 
-			// Rule to connect Asset-Service
+				// Prepare the common suffix:
+				StringWriter commonSuffix = new StringWriter();
+				try (PrintWriter suffixWriter = new PrintWriter(commonSuffix);) {
+					suffixWriter.println("\t $activity isa " + getBPMNEntityNamePrefix() + "Activity, has "
+							+ getBPMNAttributeNamePrefix() + "id $id;");
+					suffixWriter.println("\t $task isa Task;");
+					suffixWriter.println("\t $asset isa Asset;");
+					suffixWriter.println("\t $service isa Service;");
+					suffixWriter.println("\t $ref = $id;");
+					suffixWriter.println("\t (bpmnEntity: $message, conceptualModel: $asset) isa "
+							+ getBPMNConceptualModelMappingName() + ";");
+					suffixWriter.println("\t (bpmnEntity: $activity, conceptualModel: $task) isa "
+							+ getBPMNConceptualModelMappingName() + ";");
+					suffixWriter
+							.println("\t (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
+					suffixWriter.println("} then {");
+					suffixWriter.println(
+							"\t (task: $task, performer: $service) isa " + getIsPerformedByRelationName() + ";");
+					suffixWriter.println("};");
+				}
+
+				// If task is source of message flow
+				if (declaredAttributes.contains(getBPMNAttributeNamePrefix() + "sourceRef")) {
+					// write the specific prefix
+					writer.println(
+							"## If BPMN has messageFlow *from* some Activity: Asset->provides->Service<-isPerformedBy<-Task ");
+					writer.println(
+							"rule rule_asset_provides_service_and_task_isPerformedBy_service_messageFlow_source:");
+					writer.println("when {\n\t $message isa " + getBPMNEntityNamePrefix() + "messageFlow, has "
+							+ getBPMNAttributeNamePrefix() + "sourceRef $ref;");
+					// write the common suffix
+					writer.println(commonSuffix.toString());
+				}
+
+				// If task is target of message flow
+				if (declaredAttributes.contains(getBPMNAttributeNamePrefix() + "targetRef")) {
+					// write the specific prefix
+					writer.println(
+							"## If BPMN has messageFlow *to* some Activity: Asset->provides->Service<-isPerformedBy<-Task ");
+					writer.println(
+							"rule rule_asset_provides_service_and_task_isPerformedBy_service_messageFlow_target:");
+					writer.println("when {\n\t $message isa " + getBPMNEntityNamePrefix() + "messageFlow, has "
+							+ getBPMNAttributeNamePrefix() + "targetRef $ref;");
+					// write the common suffix
+					writer.println(commonSuffix.toString());
+				}
+			}
+
+			// Rule to connect Asset-Service via data input association
 			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataInputAssociation")
 					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObject")
 					&& declaredAttributes.contains(getBPMNTextContentAttributeName())
@@ -963,9 +1016,9 @@ public class EncoderImpl implements Encoder {
 
 				} // end of support for data object reference
 
-			} // end of rule to connect Asset-Service
+			} // end of input rule to connect Asset-Service
 
-			// Another rule to connect Asset-Service
+			// Another rule to connect Asset-Service via data output association
 			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "dataOutputAssociation")
 					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "dataObject")
 					&& declaredAttributes.contains(getBPMNTextContentAttributeName())
@@ -1030,7 +1083,29 @@ public class EncoderImpl implements Encoder {
 
 				} // end of data object reference
 
-			} // end of another rule to connect Asset-Service
+			} // end of output rule to connect Asset-Service
+
+			// Another rule to connect Asset-Service when there are messageFlows in
+			// collaboration
+			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "messageFlow")
+					&& visitedNodes.contains(getBPMNEntityNamePrefix() + "collaboration")) {
+				writer.println("## If BPMN has messageFlow, Asset->provides->Service via collaboration");
+				writer.println("rule rule_asset_provides_service_messageFlow:");
+				writer.println("when {");
+				writer.println("\t $message isa " + getBPMNEntityNamePrefix() + "messageFlow;");
+				writer.println("\t $collab isa " + getBPMNEntityNamePrefix() + "collaboration;");
+				writer.println("\t $asset isa Asset;");
+				writer.println("\t $service isa Service;");
+				writer.println("\t (parent: $collab, child: $message) isa " + getBPMNParentChildRelationName() + ";");
+				writer.println("\t (bpmnEntity: $message, conceptualModel: $asset) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("\t (bpmnEntity: $collab, conceptualModel: $service) isa "
+						+ getBPMNConceptualModelMappingName() + ";");
+				writer.println("} then {");
+				writer.println("\t  (asset: $asset, service: $service) isa " + getProvidesRelationName() + ";");
+				writer.println("};");
+				writer.println();
+			}
 
 			// Rules of PrecedenceTask related to sequenceFlow
 			if (visitedNodes.contains(getBPMNEntityNamePrefix() + "sequenceFlow")
@@ -1378,7 +1453,7 @@ public class EncoderImpl implements Encoder {
 			writer.println("# $r2  (precedence_task: $p, task: $t1) isa isCompoundBySetOfTask; ");
 			writer.println("# $bpmntask1 isa " + getBPMNEntityName() + ";");
 			writer.println("# $bpmntask2 isa " + getBPMNEntityName() + ";");
-			writer.println("# $seq isa " + getBPMNEntityNamePrefix()+ "sequenceFlow;");
+			writer.println("# $seq isa " + getBPMNEntityNamePrefix() + "sequenceFlow;");
 			writer.println("# $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa "
 					+ getBPMNConceptualModelMappingName() + ";");
 			writer.println("# $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa "
