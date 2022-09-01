@@ -300,14 +300,17 @@ public class EncoderImpl implements Encoder {
 			writer.println();
 
 			// transitive chain of gateways
-			// (useful when retrieving previous tasks regardless of gateways)
-			writer.println("## relation about chain of gateways");
-			writer.println(
-					getBPMNGatewayTransitiveChainRelationName() + " sub relation, relates previous, relates next;");
-			writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":previous;");
-			writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":next;");
-
-			writer.println();
+			// (useful when retrieving previous tasks regardless of gateways
+			// when generating rules for PrecedenceTask)
+			if (isMapBPMNToConceptualModel()) {
+				writer.println("## relation about chain of gateways");
+				writer.println(
+						getBPMNGatewayTransitiveChainRelationName() + " sub relation, relates previous, relates next;");
+				writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":previous;");
+				writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":next;");
+				
+				writer.println();
+			}
 
 			// Some attributes are already declared in root "BPMN" entity,
 			// so children do not have to re-declare
@@ -1885,7 +1888,7 @@ public class EncoderImpl implements Encoder {
 				writer.println("match");
 				writer.println("\t $bpmnEntity isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " '"
 						+ currentUID + "';");
-				writer.println("\t $concept isa entity, has " + getUIDAttributeName() + " '" + conceptUID + "';");
+				writer.println("\t $concept isa " + getRootConceptualModelEntityName() + ", has " + getUIDAttributeName() + " '" + conceptUID + "';");
 				writer.println("insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa "
 						+ getBPMNConceptualModelMappingName() + ";");
 				writer.println();
