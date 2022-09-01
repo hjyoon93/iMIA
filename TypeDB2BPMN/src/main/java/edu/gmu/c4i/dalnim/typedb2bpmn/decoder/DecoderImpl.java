@@ -56,7 +56,7 @@ public class DecoderImpl implements Decoder {
 	private String parentUIDAttributeName = "parentUID";
 
 	private String parentUID = rootUID;
-	
+
 	private String uidAttributeName = "UID";
 
 	// TODO substitute entity/relation names with "@{key}" tags
@@ -66,6 +66,12 @@ public class DecoderImpl implements Decoder {
 			+ "$mission isa Mission, has UID $uid_m;\n" + "{ $uid_m = $query; } or {  $uid_b = $query ;};\n"
 			+ "(bpmnEntity: $entity, conceptualModel: $mission) isa BPMN_hasConceptualModelElement;\n"
 			+ "get $entity, $attribute;";
+
+	private boolean mapBPMNToConceptualModel = false;
+
+	private String rootQueryTemplateNoConceptModel = "match \n" + " $query like \"@{rootUID}\"; \n "
+			+ " $entity isa BPMN_definitions, has UID $uid_b, has attribute $attribute; \n " + " $uid_b = $query; \n "
+			+ " get $entity, $attribute;";
 
 	// TODO substitute entity/relation names with "@{key}" tags
 	private String childQueryTemplate = "## query BPMN child and its attributes\n" + "match\n"
@@ -125,7 +131,9 @@ public class DecoderImpl implements Decoder {
 		Properties queryProperties = this.getQueryPropertiesFromFields();
 
 		// query the root node (definitions)
-		String query = getQuery(getRootQueryTemplate(), queryProperties);
+		String query = getQuery(
+				isMapBPMNToConceptualModel() ? getRootQueryTemplate() : getRootQueryTemplateNoConceptModel(),
+				queryProperties);
 
 		// prepare the BPMN model to write
 		BpmnModelInstance bpmnModel = Bpmn.createEmptyModel();
@@ -624,12 +632,14 @@ public class DecoderImpl implements Decoder {
 	}
 
 	/**
-	 * @return template of TypeQL to be used to retrieve the root BPMN object.
-	 *         Annotated keywords between "@{" and "}" will be retrieved from
-	 *         attributes in this class. (see application.properties).
+	 * @return template of TypeQL to be used to retrieve the root BPMN object when
+	 *         {@link #isMapBPMNToConceptualModel()} is true. Annotated keywords
+	 *         between "@{" and "}" will be retrieved from attributes in this class.
+	 *         (see application.properties).
 	 * 
 	 * @see #getRootUID()
 	 * @see #getQuery(String, Properties)
+	 * @see #getRootQueryTemplateNoConceptModel()
 	 */
 	public String getRootQueryTemplate() {
 		return rootQueryTemplate;
@@ -637,12 +647,13 @@ public class DecoderImpl implements Decoder {
 
 	/**
 	 * @param template : template of TypeQL to be used to retrieve the root BPMN
-	 *                 object. Annotated keywords between "@{" and "}" will be
-	 *                 retrieved from attributes in this class. (see
-	 *                 application.properties).
+	 *                 object when {@link #isMapBPMNToConceptualModel()} is true.
+	 *                 Annotated keywords between "@{" and "}" will be retrieved
+	 *                 from attributes in this class. (see application.properties).
 	 * 
 	 * @see #getRootUID()
 	 * @see #getQuery(String, Properties)
+	 * @see #getRootQueryTemplateNoConceptModel()
 	 */
 	public void setRootQueryTemplate(String template) {
 		this.rootQueryTemplate = template;
@@ -801,7 +812,6 @@ public class DecoderImpl implements Decoder {
 	public void setSortAttributeName(String sortAttributeName) {
 		this.sortAttributeName = sortAttributeName;
 	}
-	
 
 	/**
 	 * @return name of the universal identifier attribute.
@@ -815,6 +825,50 @@ public class DecoderImpl implements Decoder {
 	 */
 	public void setUIDAttributeName(String name) {
 		this.uidAttributeName = name;
+	}
+
+	/**
+	 * @return template of TypeQL to be used to retrieve the root BPMN object when
+	 *         {@link #isMapBPMNToConceptualModel()} is false. Annotated keywords
+	 *         between "@{" and "}" will be retrieved from attributes in this class.
+	 *         (see application.properties).
+	 * 
+	 * @see #getRootUID()
+	 * @see #getQuery(String, Properties)
+	 * @see #getRootQueryTemplate()
+	 */
+	public String getRootQueryTemplateNoConceptModel() {
+		return rootQueryTemplateNoConceptModel;
+	}
+
+	/**
+	 * @param template : template of TypeQL to be used to retrieve the root BPMN
+	 *                 object when {@link #isMapBPMNToConceptualModel()} is false.
+	 *                 Annotated keywords between "@{" and "}" will be retrieved
+	 *                 from attributes in this class. (see application.properties).
+	 * 
+	 * @see #getRootUID()
+	 * @see #getQuery(String, Properties)
+	 * @see #getRootQueryTemplate()
+	 */
+	public void setRootQueryTemplateNoConceptModel(String template) {
+		this.rootQueryTemplateNoConceptModel = template;
+	}
+
+	/**
+	 * @return if true, concept model will be considered.
+	 * @see #getRootQueryTemplateNoConceptModel()
+	 */
+	public boolean isMapBPMNToConceptualModel() {
+		return mapBPMNToConceptualModel;
+	}
+
+	/**
+	 * @param mapBPMNToConceptualModel : if true, concept model will be considered.
+	 * @see #getRootQueryTemplateNoConceptModel()
+	 */
+	public void setMapBPMNToConceptualModel(boolean mapBPMNToConceptualModel) {
+		this.mapBPMNToConceptualModel = mapBPMNToConceptualModel;
 	}
 
 }

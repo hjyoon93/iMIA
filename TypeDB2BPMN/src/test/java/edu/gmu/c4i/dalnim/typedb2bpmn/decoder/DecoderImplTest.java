@@ -405,6 +405,8 @@ public class DecoderImplTest {
 		decoder.setRootUID(
 				// use the UID of Mission in concept model instead
 				"http://c4i.gmu.edu/dalnim/examples/#Mission_Definitions_1");
+		// make sure we can query from Mission UID
+		decoder.setMapBPMNToConceptualModel(true);
 
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		decoder.saveBPMN(stream);
@@ -539,6 +541,8 @@ public class DecoderImplTest {
 		decoder.setRootUID(
 				// use the UID of Mission in concept model instead
 				"http://bpmn.io/schema/bpmn/#Mission_Definitions_0buvjxg");
+		// make sure we can query from Mission UID
+		decoder.setMapBPMNToConceptualModel(true);
 
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		decoder.saveBPMN(stream);
