@@ -145,6 +145,8 @@ public class EncoderImpl implements Encoder {
 
 	private String jsonNamesToIgnoreInSanityCheck = "['isCompoundBySetOfTask','isPrecededBySetOfTask','provides']";
 
+	private String bpmnTransitiveAncestorRelationName = bpmnEntityNamePrefix + "hasChildTagTransitive";
+
 	/**
 	 * Default constructor is protected to avoid public access. Use
 	 * {@link #getInstance()} instead.
@@ -308,7 +310,7 @@ public class EncoderImpl implements Encoder {
 						getBPMNGatewayTransitiveChainRelationName() + " sub relation, relates previous, relates next;");
 				writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":previous;");
 				writer.println("BPMN_Gateway plays " + getBPMNGatewayTransitiveChainRelationName() + ":next;");
-				
+
 				writer.println();
 			}
 
@@ -760,6 +762,48 @@ public class EncoderImpl implements Encoder {
 			}
 			writer.println();
 		}
+
+		// Define a new XML tag ancestor-descendant transitive relationship,
+		// regardless of the mapping to conceptual model.
+		// This would be useful to delete all BPMN_Entity below some BPMN_definitions
+		writer.println(
+				"## Transitive parent-child relationship of BPMN/XML tags (useful when deleting everything below "
+						+ getBPMNEntityNamePrefix() + "definitions)");
+		writer.println(
+				getBPMNTransitiveAncestorRelationName() + " sub relation, relates ancestor, relates descendant;");
+		writer.println(getBPMNEntityName() + " plays " + getBPMNTransitiveAncestorRelationName() + ":ancestor;");
+		writer.println(getBPMNEntityName() + " plays " + getBPMNTransitiveAncestorRelationName() + ":descendant;");
+		writer.println();
+
+		// Rules that ensure the above ancestor-descendant relation is transitive
+
+		// A parent tag should be an ancestor of its child
+		writer.println("## Transitive parent-child rule, direct");
+		writer.println("rule rule_BPMN_hasChildTagTransitive_direct:");
+		writer.println("when {");
+		writer.println(" $parent isa " + getBPMNEntityName() + ";");
+		writer.println(" $child isa " + getBPMNEntityName() + ";");
+		writer.println(" (parent: $parent, child: $child) isa " + getBPMNParentChildRelationName() + ";");
+		writer.println("} then {");
+		writer.println(" (ancestor: $parent, descendant: $child) isa " + getBPMNTransitiveAncestorRelationName() + ";");
+		writer.println("};");
+		writer.println();
+
+		// a grandparent tag should be an ancestor of its grand children
+		writer.println("## Transitive parent-child rule, transitive");
+		writer.println("rule rule_BPMN_hasChildTagTransitive_transitive:");
+		writer.println("when {");
+		writer.println(" $grandparent isa " + getBPMNEntityName() + ";");
+		writer.println(" $parent isa " + getBPMNEntityName() + ";");
+		writer.println(" $child isa " + getBPMNEntityName() + ";");
+		writer.println(
+				" (ancestor: $grandparent, descendant: $parent) isa " + getBPMNTransitiveAncestorRelationName() + ";");
+		writer.println(" (ancestor: $parent, descendant: $child) isa " + getBPMNTransitiveAncestorRelationName() + ";");
+		writer.println("} then {");
+		writer.println(
+				" (ancestor: $grandparent, descendant: $child) isa " + getBPMNTransitiveAncestorRelationName() + ";");
+		writer.println("};");
+		writer.println();
 
 		// We should be able to map an entity in the conceptual model to BPMN entity
 		if (isMapBPMNToConceptualModel()) {
@@ -1484,6 +1528,15 @@ public class EncoderImpl implements Encoder {
 
 		} // else ignore mappings to conceptual model
 
+		// a sample query for the ancestor-descendant relationship
+		writer.println("## Query descendants of BPMN definitions tag");
+		writer.println("#match");
+		writer.println("# $definition isa " + getBPMNEntityNamePrefix() + "definitions, has attribute $attrib_root;");
+		writer.println("# $descendant isa " + getBPMNEntityName() + ", has attribute $attrib;");
+		writer.println("# $rel (ancestor: $definition, descendant: $descendant) isa "
+				+ getBPMNTransitiveAncestorRelationName() + ";");
+		writer.println();
+
 	}
 
 	/**
@@ -1888,7 +1941,8 @@ public class EncoderImpl implements Encoder {
 				writer.println("match");
 				writer.println("\t $bpmnEntity isa " + getBPMNEntityName() + ", has " + getUIDAttributeName() + " '"
 						+ currentUID + "';");
-				writer.println("\t $concept isa " + getRootConceptualModelEntityName() + ", has " + getUIDAttributeName() + " '" + conceptUID + "';");
+				writer.println("\t $concept isa " + getRootConceptualModelEntityName() + ", has "
+						+ getUIDAttributeName() + " '" + conceptUID + "';");
 				writer.println("insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa "
 						+ getBPMNConceptualModelMappingName() + ";");
 				writer.println();
@@ -2780,6 +2834,26 @@ public class EncoderImpl implements Encoder {
 	 */
 	public void setJSONNamesToIgnoreInSanityCheck(String jsonList) {
 		this.jsonNamesToIgnoreInSanityCheck = jsonList;
+	}
+
+	/**
+	 * @return name of the transitive relationship that connects an XML tag to its
+	 *         descendants.
+	 * 
+	 * @see #getBPMNParentChildRelationName()
+	 */
+	public String getBPMNTransitiveAncestorRelationName() {
+		return bpmnTransitiveAncestorRelationName;
+	}
+
+	/**
+	 * @param name : name of the transitive relationship that connects an XML tag to
+	 *             its descendants.
+	 * 
+	 * @see #getBPMNParentChildRelationName()
+	 */
+	public void setBPMNTransitiveAncestorRelationName(String name) {
+		bpmnTransitiveAncestorRelationName = name;
 	}
 
 }
