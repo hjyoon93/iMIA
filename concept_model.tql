@@ -37,6 +37,26 @@ UID sub attribute,
 MIAEntity sub entity,
     owns UID @key;
     
+name sub attribute,
+    value string;
+MIAEntity sub entity,
+    owns name;
+
+address sub attribute,
+    value string;
+MIAEntity sub entity,
+    owns address;
+    
+description sub attribute,
+    value string;
+MIAEntity sub entity,
+    owns description;
+    
+value sub attribute,
+    value long;
+MIAEntity sub entity,
+    owns value;
+    
 #name sub attribute,
 #   value string; 
 #MIAEntity sub entity,
