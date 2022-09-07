@@ -344,6 +344,33 @@ BPMN_waypoint owns BPMNattrib_y;
 BPMNattrib_sort sub attribute, value string;
 BPMN_waypoint owns BPMNattrib_sort;
 
+## Transitive parent-child relationship of BPMN/XML tags (useful when deleting everything below BPMN_definitions)
+BPMN_hasChildTagTransitive sub relation, relates ancestor, relates descendant;
+BPMN_Entity plays BPMN_hasChildTagTransitive:ancestor;
+BPMN_Entity plays BPMN_hasChildTagTransitive:descendant;
+
+## Transitive parent-child rule, direct
+rule rule_BPMN_hasChildTagTransitive_direct:
+when {
+ $parent isa BPMN_Entity;
+ $child isa BPMN_Entity;
+ (parent: $parent, child: $child) isa BPMN_hasChildTag;
+} then {
+ (ancestor: $parent, descendant: $child) isa BPMN_hasChildTagTransitive;
+};
+
+## Transitive parent-child rule, transitive
+rule rule_BPMN_hasChildTagTransitive_transitive:
+when {
+ $grandparent isa BPMN_Entity;
+ $parent isa BPMN_Entity;
+ $child isa BPMN_Entity;
+ (ancestor: $grandparent, descendant: $parent) isa BPMN_hasChildTagTransitive;
+ (ancestor: $parent, descendant: $child) isa BPMN_hasChildTagTransitive;
+} then {
+ (ancestor: $grandparent, descendant: $child) isa BPMN_hasChildTagTransitive;
+};
+
 ## =============== Mapping to conceptual model ===============
 BPMN_hasConceptualModelElement sub relation, relates bpmnEntity, relates conceptualModel;
 BPMN_Entity plays BPMN_hasConceptualModelElement:bpmnEntity;
@@ -726,5 +753,11 @@ when {
 # $bpmntaskTo isa BPMN_Activity, has BPMNattrib_name $attribTo;
 # $mapFrom (bpmnEntity: $bpmntaskFrom, conceptualModel: $taskFrom) isa BPMN_hasConceptualModelElement;
 # $mapTo (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+
+## Query descendants of BPMN definitions tag
+#match
+# $definition isa BPMN_definitions, has attribute $attrib_root;
+# $descendant isa BPMN_Entity, has attribute $attrib;
+# $rel (ancestor: $definition, descendant: $descendant) isa BPMN_hasChildTagTransitive;
 
 ## =============== End ===============

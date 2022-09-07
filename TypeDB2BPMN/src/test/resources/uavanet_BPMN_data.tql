@@ -15,7 +15,7 @@ insert $x isa BPMN_definitions,
 insert $concept isa Mission, has UID "http://vt.edu/dalnim/uavanet/#Mission_Definitions_08ah682";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Definitions_08ah682';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Mission_Definitions_08ah682';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Mission_Definitions_08ah682';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## process
@@ -53,7 +53,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Lane_16gwlto";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Lane_16gwlto';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_16gwlto';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_16gwlto';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## flowNodeRef
@@ -115,7 +115,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Lane_00k2irj";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Lane_00k2irj';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_00k2irj';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_00k2irj';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## flowNodeRef
@@ -159,7 +159,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Lane_02v45pe";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Lane_02v45pe';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_02v45pe';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_02v45pe';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## flowNodeRef
@@ -221,7 +221,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Lane_0xlb3mx";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Lane_0xlb3mx';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_0xlb3mx';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Lane_0xlb3mx';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## flowNodeRef
@@ -275,7 +275,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataObject_19s7gfv";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataObject_19s7gfv';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObject_19s7gfv';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObject_19s7gfv';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## dataObject
@@ -293,7 +293,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataObject_1ywt8iq";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataObject_1ywt8iq';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObject_1ywt8iq';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObject_1ywt8iq';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## dataObjectReference
@@ -311,7 +311,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_0948ez5";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataObjectReference_0948ez5';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_0948ez5';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_0948ez5';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## dataObjectReference
@@ -329,7 +329,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_11q6bj2";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataObjectReference_11q6bj2';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_11q6bj2';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataObjectReference_11q6bj2';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sendTask
@@ -350,7 +350,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_05i9zs1";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_05i9zs1';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_05i9zs1';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_05i9zs1';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -389,7 +389,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_193cz43";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_193cz43';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_193cz43';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_193cz43';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -428,7 +428,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_0sg28yy";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_0sg28yy';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_0sg28yy';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_0sg28yy';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -467,7 +467,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_1gnpzc2";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_1gnpzc2';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1gnpzc2';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1gnpzc2';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -506,7 +506,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_131ik1x";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_131ik1x';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_131ik1x';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_131ik1x';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -554,7 +554,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_10ldz3v";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_10ldz3v';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_10ldz3v';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_10ldz3v';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -593,7 +593,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_1lf1xjy";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_1lf1xjy';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1lf1xjy';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1lf1xjy';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -638,7 +638,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_DataOutput_1";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataOutput_1';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataOutput_1';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_DataOutput_1';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## inputSet
@@ -683,7 +683,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Service, has UID "http://vt.edu/dalnim/uavanet/#Service_DataOutputAssociation_00me2z6";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataOutputAssociation_00me2z6';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Service_DataOutputAssociation_00me2z6';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Service_DataOutputAssociation_00me2z6';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sourceRef
@@ -722,7 +722,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_1mol8v2";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_1mol8v2';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1mol8v2';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1mol8v2';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -761,7 +761,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_1yex75t";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_1yex75t';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1yex75t';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_1yex75t';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -809,7 +809,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Task, has UID "http://vt.edu/dalnim/uavanet/#Task_Activity_0yum48s";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Activity_0yum48s';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_0yum48s';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Task_Activity_0yum48s';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -844,7 +844,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Asset, has UID "http://vt.edu/dalnim/uavanet/#Asset_Property_1gls6oa";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Property_1gls6oa';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_Property_1gls6oa';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Asset_Property_1gls6oa';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## dataInputAssociation
@@ -860,7 +860,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Service, has UID "http://vt.edu/dalnim/uavanet/#Service_DataInputAssociation_1pq3z0g";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#DataInputAssociation_1pq3z0g';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Service_DataInputAssociation_1pq3z0g';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Service_DataInputAssociation_1pq3z0g';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sourceRef
@@ -933,7 +933,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa ORPrecedenceTaskList, has UID "http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1jl82ud";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Gateway_1jl82ud';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1jl82ud';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1jl82ud';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -978,7 +978,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa ORPrecedenceTaskList, has UID "http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1je0dr4";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Gateway_1je0dr4';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1je0dr4';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1je0dr4';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -1023,7 +1023,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa ORPrecedenceTaskList, has UID "http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_051rz7e";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Gateway_051rz7e';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_051rz7e';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_051rz7e';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -1068,7 +1068,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa ORPrecedenceTaskList, has UID "http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1u3r909";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Gateway_1u3r909';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1u3r909';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#ORPrecedenceTaskList_Gateway_1u3r909';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## incoming
@@ -1113,7 +1113,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0usat9c";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0usat9c';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0usat9c';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0usat9c';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1131,7 +1131,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_12wo90h";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_12wo90h';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_12wo90h';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_12wo90h';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1150,7 +1150,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0t14dtt";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0t14dtt';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0t14dtt';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0t14dtt';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1169,7 +1169,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1h8jgty";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1h8jgty';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1h8jgty';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1h8jgty';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1187,7 +1187,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1d1fiun";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1d1fiun';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1d1fiun';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1d1fiun';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1205,7 +1205,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_01n98ku";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_01n98ku';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_01n98ku';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_01n98ku';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1223,7 +1223,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0i9qgxx";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0i9qgxx';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0i9qgxx';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0i9qgxx';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1241,7 +1241,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0y296cm";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0y296cm';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0y296cm';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0y296cm';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1259,7 +1259,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0wyl8nr";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0wyl8nr';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0wyl8nr';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0wyl8nr';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1277,7 +1277,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0aoiwtj";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0aoiwtj';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0aoiwtj';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0aoiwtj';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1296,7 +1296,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_04sq9wc";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_04sq9wc';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_04sq9wc';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_04sq9wc';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1315,7 +1315,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1t5nclh";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1t5nclh';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1t5nclh';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1t5nclh';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1333,7 +1333,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0e8n7qx";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0e8n7qx';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0e8n7qx';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0e8n7qx';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1351,7 +1351,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1ts4ldn";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1ts4ldn';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1ts4ldn';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1ts4ldn';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1369,7 +1369,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1pjjgj3";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1pjjgj3';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1pjjgj3';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1pjjgj3';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1388,7 +1388,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_16z3tko";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_16z3tko';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_16z3tko';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_16z3tko';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1407,7 +1407,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1geumml";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_1geumml';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1geumml';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_1geumml';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## sequenceFlow
@@ -1425,7 +1425,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa PrecedenceTask, has UID "http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0txva87";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Flow_0txva87';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0txva87';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#PrecedenceTask_Flow_0txva87';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## collaboration
@@ -1437,6 +1437,13 @@ match
      $parent isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Definitions_08ah682";
      $child isa BPMN_Entity, has UID "http://vt.edu/dalnim/uavanet/#Collaboration_0bhbb91";
 insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Service, has UID "http://vt.edu/dalnim/uavanet/#Service_Collaboration_0bhbb91";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Collaboration_0bhbb91';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Service_Collaboration_0bhbb91';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## participant
 insert $x isa BPMN_participant,
@@ -1453,7 +1460,7 @@ insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
 insert $concept isa Performer, has UID "http://vt.edu/dalnim/uavanet/#Performer_Participant_0j3neqm";
 match
      $bpmnEntity isa BPMN_Entity, has UID 'http://vt.edu/dalnim/uavanet/#Participant_0j3neqm';
-     $concept isa entity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Participant_0j3neqm';
+     $concept isa MIAEntity, has UID 'http://vt.edu/dalnim/uavanet/#Performer_Participant_0j3neqm';
 insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
 
 ## BPMNDiagram

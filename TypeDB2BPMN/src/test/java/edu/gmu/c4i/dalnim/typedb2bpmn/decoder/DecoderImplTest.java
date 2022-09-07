@@ -94,7 +94,7 @@ public class DecoderImplTest {
 		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
 			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
 				Stream<TypeQLQuery> queries = TypeQL.parseQueries(
-						Files.readString(Path.of(DecoderImplTest.class.getResource("/concept model.tql").toURI())));
+						Files.readString(Path.of(DecoderImplTest.class.getResource("/concept_model.tql").toURI())));
 				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
 					QueryFuture<Void> response = transaction.query().define(query.asDefine());
 					// wait for the transaction to finish
