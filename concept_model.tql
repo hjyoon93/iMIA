@@ -244,7 +244,7 @@ isCompoundBySetOfTask sub relation,
 
 Task sub MIAEntity,
     plays isCompoundBySetOfTask:task;
-PrecedenceTask sub entity,
+PrecedenceTask
     plays isCompoundBySetOfTask:precedence_task;
     
     
@@ -256,7 +256,7 @@ isPrecededBySetOfTask sub relation,
 
 Task sub MIAEntity,
     plays isPrecededBySetOfTask:task;
-PrecedenceTask sub entity,
+PrecedenceTask
     plays isPrecededBySetOfTask:precedence_task;
 
 
