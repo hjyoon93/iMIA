@@ -1,0 +1,13 @@
+IP Address,FQDN,Port,Protocol,Service,Name,Version
+192.168.100.5,"","22",tcp,ssh,"Cyberoam firewall sshd",""
+192.168.100.5,"","80",tcp,http-proxy,"Cyberoam captive portal",""
+192.168.100.5,"","443",tcp,http-proxy,"Cyberoam captive portal",""
+192.168.100.5,"","3128",tcp,squid-http,"",""
+192.168.100.5,"","8090",tcp,http-proxy,"Cyberoam captive portal",""
+192.168.100.5,"","8443",tcp,https-alt,"",""
+192.168.100.45,"","80",tcp,http,"MicroLogix 1763-L16BWA A/2.00 logic controller http config",""
+192.168.100.40,"","21",tcp,ftp,"vsftpd (before 2.0.8) or WU-FTPD",""
+192.168.100.40,"","80",tcp,http,"Schneider-WEB","2.2.0"
+192.168.100.10,"","21",tcp,ftp,"vsftpd (before 2.0.8) or WU-FTPD",""
+192.168.100.10,"","80",tcp,http,"Schneider-WEB","2.1.0"
+192.168.100.115,"","6001",tcp,X11:1,"",""

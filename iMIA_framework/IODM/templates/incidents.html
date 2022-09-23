@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <link href="{{ url_for('static', filename='css/fontlato.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/awesomemin.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <style>
+         body {
+            background: #000000;
+        /* background: -moz-linear-gradient(top, #000000 0%, #000 100%);
+        background: -webkit-linear-gradient(top, #000000 0%, #000 100%);
+        background: linear-gradient(to bottom, #000 0%, #000 100%); */
+        margin: 0;
+        padding: 0;
+        font-family: 'Open Sans', sans-serif;
+		font-size: 20px;
+		font-weight: 300;
+				/* fill: #242424; */
+		text-align: center;
+		cursor: default;
+    }
+        .link {
+            stroke: #ccc;
+        }
+    
+        .text {
+            pointer-events: none;
+            color: white;
+            font: 10px sans-serif;
+        }
+        .svg-div{
+            margin-top: 20%
+            display: block;
+            z-index:100;
+            /* margin: 0 auto; */
+            }
+        #canvas-wrap { position:relative } /* Make this a positioned parent */
+        #overlay { position:absolute; top:20px; left:30px; }
+        /* body {
+        background: #0e0e0e;
+        color: #fff;
+        font-family: sans-serif;
+        } */
+
+        /*Responsive table*/
+        table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #f3f3f3;
+        }
+        thead, tbody { display: block; }
+
+        tbody {
+            height: 580px;       /* Just for the demo          */
+            overflow-y: auto;    /* Trigger vertical scroll    */
+            overflow-x: hidden;  /* Hide the horizontal scroll */
+        }
+        tbody td, thead th {
+            width: 446px;
+        }
+        td,
+        th {
+        padding: 8px;
+        text-align: left;
+        }
+
+        th {
+        font-weight: bold;
+        }
+
+        h1 a {
+        text-decoration: none;
+        color: #fff;
+        }
+        #myInput {
+            background-image: url('{{ url_for('static', filename='searchicon.png') }}'); /* Add a search icon to input */
+            background-position: 10px 12px; /* Position the search icon */
+            background-repeat: no-repeat; /* Do not repeat the icon image */
+            width: 90%; /* Full-width */
+            font-size: 16px; /* Increase font-size */
+            padding: 12px 20px 12px 40px; /* Add some padding */
+            border: 1px solid #ddd; /* Add a grey border */
+            margin-bottom: 12px; /* Add some space below the input */
+            }
+    </style>
+</head>
+<body>
+    <div class="navbar" id= "nav">
+        <a href="{{ url_for('index') }}">NetVis</a>
+        <div class="dropdown">
+            <a class="drop" href="#Home">Metrics 
+                <i class="fa fa-angle-double-down"></i>
+                <i class="fa fa-angle-double-up"></i>
+            </a>
+            <div class="drop-content">
+                    <a href="#Prod1">Metrics</a>
+                    <a href="{{ url_for('pie') }}">Distribution</a>
+                    <a href="{{ url_for('lineCharts') }}">Flow</a>
+                </div>
+        </div>
+        <a href="{{ url_for('events') }}">Events</a>
+        <a href="{{ url_for('incidents') }}">Incidents</a>
+        <a href="#Content">About</a>
+        <a href="javascript:void(0);" class="icon" onclick="displayMenu()"><i class="fa fa-bars"></i></a>
+    </div>
+            
+    <script src="{{ url_for('static', filename='js/jquery311.js') }}" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src={{ url_for('static', filename='js/main.js') }}></script>
+    <div id="canvas-wrap">
+        <canvas id="sky">
+            
+        </canvas>
+        <div id="overlay" style="align-content: center;width: 95%; height: 100%, margin-top:15%">
+                <center>
+                        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search Incidents">
+                        <table border="1" id="myTable">
+                            <tbody>
+                                <tr>
+                                    <td><b>Time Stamp</b></td>
+                                    <td><b>Attacker IP</b></td>
+                                    <td><b>Source IP</b></td>
+                                    <td><b>Attack Type</b></td>
+                                    <td><b>Protocol type</b></td>
+                                </tr>
+                                {% for line in data %}
+                                <tr>
+                                    {% for i in line %}
+                                    <td>{{ i }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table> 
+                </center>
+        </div>
+    </div>
+    <script>
+            function myFunction() {
+              // Declare variables 
+              var input, filter, table, tr, td, i, txtValue;
+              input = document.getElementById("myInput");
+              filter = input.value.toUpperCase();
+              table = document.getElementById("myTable");
+              tr = table.getElementsByTagName("tr");
+            
+              // Loop through all table rows, and hide those who don't match the search query
+              for (i = 0; i < tr.length; i++) {
+                td1 = tr[i].getElementsByTagName("td")[0];
+                td2 = tr[i].getElementsByTagName("td")[1];
+                td3 = tr[i].getElementsByTagName("td")[2];
+                td4 = tr[i].getElementsByTagName("td")[3];
+                if (td1||td2||td3||td4) {
+                  txtValue1 = td1.textContent || td1.innerText;
+                  txtValue2 = td2.textContent || td2.innerText;
+                  txtValue3 = td3.textContent || td3.innerText;
+                  txtValue4 = td4.textContent || td4.innerText;
+                  if (txtValue1.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1|| txtValue3.toUpperCase().indexOf(filter) > -1 ||txtValue4.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                  } else {
+                    tr[i].style.display = "none";
+                  }
+                } 
+              }
+            }
+        </script>
+    
+    <script>
+        
+    window.onload = function() {
+        var canvas = document.getElementById("sky");
+        var ctx = canvas.getContext("2d");
+
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+
+        var count = 100;
+        var stars = [];
+        var opacity = 0.5;
+        var r = 0;
+
+        function draw(j) {
+            ctx.fillStyle = "rgba(255,255,255," + opacity + ")";
+            ctx.beginPath();
+            if (opacity === 1) {
+                size = 2;
+            } else {
+                size = stars[j].size;
+            }
+            ctx.rect(stars[j].xpos, stars[j].ypos, size, size);
+            ctx.fill();
+        }
+
+        function newStar() {
+            r = Math.floor(Math.random() * (count - 0));
+            opacity = 1;
+        }
+
+        function starLight() {
+            var star = stars[r];
+            ctx.clearRect(star.xpos, star.ypos, 2, 2);
+            draw(r);
+            opacity -= 0.01;
+
+            if (opacity <= star.op) {
+                newStar();
+            }
+        }
+
+        for (var i = 0; i < count; i++) {
+            opacity += 0.5 / count;
+            stars.push({
+                xpos: Math.floor(Math.random() * W),
+                ypos: Math.floor(Math.random() * H),
+                size: 1,
+                op: opacity
+            });
+            draw(i);
+        }
+
+        newStar();
+        setInterval(starLight, 20);
+        setInterval(starLight, 30);
+    };
+</script>
+

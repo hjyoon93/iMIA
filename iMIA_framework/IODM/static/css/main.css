@@ -1,0 +1,141 @@
+body {
+	font-family: 'Lato', sans-serif;
+}
+.navbar {
+	overflow: hidden;
+	background: #404040;
+}
+.navbar a {
+	float: left;
+	display: block;
+    color: #fff;
+    text-align: center;
+    font-size: 17px;
+    padding: 20px 20px;
+    text-decoration: none;
+}
+.navbar a:hover {
+	font-weight: bolder;
+}
+.navbar .icon {
+	display: none;
+}
+.dropdown {
+	float: left;
+	overflow: hidden;
+}
+.dropdown .drop {
+	font-size: 17px; 
+    border: none;
+    outline: none;
+    color: #fff;
+    padding: 20px 20px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+.drop .fa-angle-double-up,
+.drop:hover .fa-angle-double-down {
+	display: none;
+}
+.drop:hover .fa-angle-double-up {
+	display: inline;
+}
+.drop-content {
+	display: none;
+	position: absolute;
+	background-color: #404040;
+	min-width: 150px;
+	z-index: 1;
+}
+.drop-content a {
+	float: none;
+	color: #fff;
+	padding: 12px, 16px;
+	text-decoration: none;
+	display: block;
+	text-align: left;
+}
+.dropdown:hover .drop-content {
+	display: block;
+}
+.drop-content a:hover {
+	background-color: rgba(179, 167, 167, 0.5);
+}
+@media screen and (max-width: 768px) {
+	.navbar a {
+		display: none;
+	}
+	.navbar a.icon {
+		float: right;
+		display: block;
+	}
+}
+@media screen and (max-width: 768px) {
+	.navbar.responsive {
+		position: relative;
+	}
+	.navbar.responsive a.icon {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	.navbar.responsive a {
+		float: none;
+		display: block;
+		text-align: left;
+		padding-left: 20px;
+		border-top: 1px solid #fff;
+
+	}
+	.navbar.responsive .dropdown {
+		float: none;
+	}
+	.navbar.responsive .drop-content {
+		position: relative;
+		padding-left: 30px;
+		padding-right: 30px;
+		background-color: rgba(179, 167, 167, 0.5);
+	}
+	.navbar.responsive .drop-content a {
+		border-top: 1px solid #fff;
+	}
+	.navbar.responsive .dropdown .drop {
+		display: block;
+		width: 100%;
+		text-align: left;
+		border-top: 1px solid #fff;
+	}
+	.navbar.responsive .dropdown .drop:hover {
+		background-color: rgba(179, 167, 167, 0.5);
+	}
+}
+body {
+	background: #0e0e0e;
+	color: #fff;
+	font-family: sans-serif;
+  }
+  
+  /*Responsive table*/
+  table {
+	width: 100%;
+	border-collapse: collapse;
+	color: #f3f3f3;
+  }
+  
+  td,
+  th {
+	padding: 8px;
+	text-align: left;
+  }
+  
+  
+  th {
+	font-weight: bold;
+  }
+  
+  h1 a {
+	text-decoration: none;
+	color: #fff;
+  }
+  

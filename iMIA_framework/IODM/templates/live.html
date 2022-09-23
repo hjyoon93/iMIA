@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <link href="{{ url_for('static', filename='css/fontlato.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='css/main.css') }}>
+  
+    <style>
+        body {
+          background: #000000;
+        /* background: -moz-linear-gradient(top, #000000 0%, #000 100%);
+        background: -webkit-linear-gradient(top, #000000 0%, #000 100%);
+        background: linear-gradient(to bottom, #000 0%, #000 100%); */
+        margin: 0;
+        padding: 0;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 20px;
+        font-weight: 300;
+            /* fill: #242424; */
+        text-align: center;
+        cursor: default;
+        }
+        .link {
+            stroke: #ccc;
+        }
+    
+        .text {
+            pointer-events: none;
+            color: white;
+            font: 10px sans-serif;
+        }
+        .svg-div{
+            margin-top: 20%
+            display: block;
+            z-index:100;
+            /* margin: 0 auto; */
+            }
+        #canvas-wrap { position:relative } /* Make this a positioned parent */
+        #overlay { position:absolute; top:20px; left:30px; }
+      
+        .column {
+        float: left;
+        width: 33%;
+        height: 50%;
+        margin-bottom: 5%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+        content: "";
+        display: table;
+        clear: both;
+        }
+        .legend rect {
+        fill:white;
+        stroke:black;
+        opacity:0.8;}
+
+  .axis {
+    font-family: sans-serif;
+    fill:  #ff0000;
+    font-size: 12px;
+  }
+  .line {
+    fill: none;
+    stroke: #f1c40f;
+    stroke-width: 3px;
+  }
+  .smoothline {
+    fill: none;
+    stroke:  #f1c40f;
+    stroke-width: 3px;
+  }
+  .area {
+    fill:  #f1c40f;
+    opacity: 0.5;
+  }
+  .circle {
+    stroke:  #f1c40f;
+    stroke-width: 3px;
+    fill: #FFF;
+  }
+  .grid {
+    stroke: #DDD;
+    stroke-width: 1px;
+    fill: none;
+  }
+  </style>
+
+</head>
+
+<body>
+  <div class="navbar" id= "nav">
+    <a href="{{ url_for('index') }}">NetVis</a>
+    <div class="dropdown">
+        <a class="drop" href="#Home">Metrics 
+            <i class="fa fa-angle-double-down"></i>
+            <i class="fa fa-angle-double-up"></i>
+        </a>
+        <div class="drop-content">
+          <a href="#Prod1">Metrics</a>
+          <a href="{{ url_for('pie') }}">Distribution</a>
+          <a href="{{ url_for('lineCharts') }}">Flow</a>
+      </div>
+    </div>
+    <a href="{{ url_for('events') }}">Events</a>
+    <a href="{{ url_for('incidents') }}">Incidents</a>
+    <a href="#Content">About</a>
+    <a href="javascript:void(0);" class="icon" onclick="displayMenu()"><i class="fa fa-bars"></i></a>
+</div>
+        
+<script src="{{ url_for('static', filename='js/jquery311.js') }}" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script type="text/javascript" src={{ url_for('static', filename='js/main.js') }}></script>
+<script>
+    window.onload = function() {
+        var canvas = document.getElementById("sky");
+        var ctx = canvas.getContext("2d");
+
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+
+        var count = 100;
+        var stars = [];
+        var opacity = 0.5;
+        var r = 0;
+
+        function draw(j) {
+            ctx.fillStyle = "rgba(255,255,255," + opacity + ")";
+            ctx.beginPath();
+            if (opacity === 1) {
+                size = 2;
+            } else {
+                size = stars[j].size;
+            }
+            ctx.rect(stars[j].xpos, stars[j].ypos, size, size);
+            ctx.fill();
+        }
+
+        function newStar() {
+            r = Math.floor(Math.random() * (count - 0));
+            opacity = 1;
+        }
+
+        function starLight() {
+            var star = stars[r];
+            ctx.clearRect(star.xpos, star.ypos, 2, 2);
+            draw(r);
+            opacity -= 0.01;
+
+            if (opacity <= star.op) {
+                newStar();
+            }
+        }
+
+        for (var i = 0; i < count; i++) {
+            opacity += 0.5 / count;
+            stars.push({
+                xpos: Math.floor(Math.random() * W),
+                ypos: Math.floor(Math.random() * H),
+                size: 1,
+                op: opacity
+            });
+            draw(i);
+        }
+
+        newStar();
+        setInterval(starLight, 20);
+        setInterval(starLight, 30);
+    };
+</script>
+
+<div id="canvas-wrap">
+    <canvas id="sky">
+        
+    </canvas>
+
+</div>
+<div  id="overlay" > 
+  <svg id="chart1"></svg>
+  <svg id="chart2"></svg>
+  <svg id="chart3"></svg>
+  <svg id="chart4"></svg>
+</div>
+<script src="{{ url_for('static', filename='js/d3v4.js') }}"></script>
+<script>
+// var margin = {top: 20, right: 20, bottom: 50, left: 70},
+//     width = 350 - margin.left - margin.right,
+//     height = 250 - margin.top - margin.bottom ;
+var data = [];
+var data_tcp = [];
+var data_modbus = [];
+var data_cip = [];
+var data_iec = [];
+var dataplot_tcp = [];
+var dataplot_modbus = [];
+var dataplot_iec = [];
+var dataplot_cip = [];
+var width = 300;
+var height = 250;
+var globalX = 0;
+var duration = 15;
+// var max = 500;
+// var step = 10;
+var chart = d3.select('#chart1')
+.attr('width', width + 50)
+.attr('height', height + 50);
+// var x = d3.scaleLinear().domain([0, 500]).range([0, 500]);
+// var y = d3.scaleLinear().domain([0, 500]).range([500, 0]);
+var x = d3.scaleTime().rangeRound([0, width]);
+var y = d3.scaleLinear().rangeRound([height, 0]);
+// -----------------------------------
+var line = d3.line()
+.x(function(d){ return x(d.x); })
+.y(function(d){ return y(d.y); });
+var smoothLine = d3.line().curve(d3.curveCardinal)
+.x(function(d){ return x(d.x); })
+.y(function(d){ return y(d.y); });
+// -----------------------------------
+// Draw the axis
+var xAxis = d3.axisBottom().scale(x);
+var axisX = chart.append('g').attr('class', 'x axis')
+.attr('transform', 'translate(0, 250)')
+.call(xAxis);
+// Draw the grid
+// Append the holder for line chart and fill area
+var path = chart.append('path');
+var areaPath = chart.append('path');
+
+
+var chart2 = d3.select('#chart2')
+.attr('width', width + 50)
+.attr('height', height + 50);
+
+var xAxis2 = d3.axisBottom().scale(x);
+var axisX2 = chart2.append('g').attr('class', 'x axis')
+.attr('transform', 'translate(0, 250)')
+.call(xAxis2);
+// Draw the grid
+// Append the holder for line chart and fill area
+var path2 = chart2.append('path');
+var areaPath2 = chart2.append('path');
+
+
+var chart3 = d3.select('#chart3')
+.attr('width', width + 50)
+.attr('height', height + 50);
+
+var xAxis3 = d3.axisBottom().scale(x);
+var axisX3 = chart3.append('g').attr('class', 'x axis')
+.attr('transform', 'translate(0, 250)')
+.call(xAxis3);
+// Draw the grid
+// Append the holder for line chart and fill area
+var path3 = chart3.append('path');
+var areaPath3 = chart3.append('path');
+
+var chart4 = d3.select('#chart4')
+.attr('width', width + 50)
+.attr('height', height + 50);
+
+var xAxis4 = d3.axisBottom().scale(x);
+var axisX4 = chart4.append('g').attr('class', 'x axis')
+.attr('transform', 'translate(0, 250)')
+.call(xAxis4);
+// Draw the grid
+// Append the holder for line chart and fill area
+var path4 = chart4.append('path');
+var areaPath4 = chart4.append('path');
+
+
+
+
+
+// Main loop
+var parseMilliseconds = d3.utcParse("%Y-%m-%d %H:%M:%S.%L"),
+    stripNanoseconds = function(s) { return s.slice(0, -4); },
+    parseDate = function(s) { return parseMilliseconds(stripNanoseconds(s)); };
+
+var prev = null;
+var curr = null;
+function update(){
+  var fname = "{{ url_for('static', filename='data.log') }}/?t="+ new Date
+  d3.csv(fname, function(error, da) {
+  if (error) throw error;
+  curr = JSON.stringify(da);
+  // 
+  // console.log(prev===curr);
+  // // format the data
+  // var curr = $.data.toObjects(data);
+
+  if (prev && curr && prev !== curr) {
+    da=da.map(function(d1) {
+        return[
+            parseDate(d1["timestamp"]),
+            d1["len"],
+            d1["protoc"]
+        ];
+      });
+    for(i=0; i<da.length; i++){
+      var point = {
+          x: da[i][0],
+          y: da[i][1]
+        };
+      if(da[i][2]=="TCP"){
+        data_tcp.push(point);
+      }
+      else if(da[i][2]=="MOdbusTCP"){
+        data_modbus.push(point);
+      }
+      else if(da[i][2]=="IEC104"){
+        data_iec.push(point);
+      }
+      if(da[i][2]=="CIP"){
+        data_cip.push(point);
+      }
+    }
+  // console.log(data_tcp.length);
+  // console.log(data_iec.length);
+  // console.log(data_modbus.length);
+  // 
+  }
+  prev = curr;
+  
+});
+  }
+  
+  
+
+
+// console.log(data.length);
+// }
+
+// update();
+
+// console.log(data);
+setInterval(update, 500);
+var globalX=0;
+function tick() {
+  // Generate new data
+  // console.log(data);
+  // console.log(globalX);
+    // console.log(data_tcp[globalX].y+" ", data_iec[globalX].y);
+  var now = new Date();
+  var is_tcp = data_tcp.length!==0? data_tcp[globalX].y: 0;
+  var is_iec = data_iec.length!==0? data_iec[globalX].y: 0;
+  var is_modbus = data_modbus.length!==0? data_modbus[globalX].y: 0;
+  var is_cip = data_cip.length!==0? data_cip[globalX].y: 0;
+  var point = {
+    x: now,
+    y: is_tcp
+    };
+  data_tcp.shift();
+  dataplot_tcp.push(point);
+  var point = {
+    x: now,
+    y: is_iec
+    };
+  data_iec.shift();
+  dataplot_iec.push(point);
+  var point = {
+    x: now,
+    y: is_modbus
+    };
+  data_modbus.shift();
+  dataplot_modbus.push(point);
+  var point = {
+    x: now,
+    y: is_cip
+    };
+  data_cip.shift();
+  dataplot_cip.push(point);
+  // data.push(point);
+  // globalX += step;
+  // Draw new line
+  path.datum(dataplot_tcp)
+  .attr('class', 'smoothline')
+  .attr('d', line);
+  // Shift the chart left
+  x.domain(d3.extent(dataplot_tcp, function(d) { return d.x; }));
+  y.domain([0, 2000]);
+  axisX.transition()
+    .duration(duration)
+    .ease(d3.easeLinear,.1)
+    .call(xAxis);
+  path.attr('transform', null)
+    .transition()
+    .duration(duration)
+    .ease(d3.easeLinear,.1)
+  
+  path2.datum(dataplot_iec)
+  .attr('class', 'smoothline')
+  .attr('d', line);
+  // // Shift the chart left
+  // x.domain(d3.extent(dataplot_iec, function(d) { return d.x; }));
+  // y.domain([0, 2000]);
+  axisX2.transition()
+    .duration(duration)
+    .ease(d3.easeLinear,.1)
+    .call(xAxis2);
+  path2.attr('transform', null)
+    .transition()
+    .duration(duration)
+    .ease(d3.easeLinear,.1)
+
+  path3.datum(dataplot_modbus)
+  .attr('class', 'smoothline')
+  .attr('d', line);
+  // // Shift the chart left
+  // x.domain(d3.extent(dataplot_iec, function(d) { return d.x; }));
+  // y.domain([0, 2000]);
+  axisX3.transition()
+    .duration(duration)
+    .ease(d3.easeLinear,.1)
+    .call(xAxis3);
+  path3.attr('transform', null)
+    .transition()
+    .duration(duration)
+    .ease(d3.easeLinear,.1)
+
+  path4.datum(dataplot_cip)
+  .attr('class', 'smoothline')
+  .attr('d', line);
+  // // Shift the chart left
+  // x.domain(d3.extent(dataplot_iec, function(d) { return d.x; }));
+  // y.domain([0, 2000]);
+  axisX4.transition()
+    .duration(duration)
+    .ease(d3.easeLinear,.1)
+    .call(xAxis4);
+  path4.attr('transform', null)
+    .transition()
+    .duration(duration)
+    .ease(d3.easeLinear,.1)
+    .on('end', tick)
+    // .attr('transform', 'translate(' + x(globalX - max) + ')')
+    // 
+  // Remote old data (max 50 points)
+  if (dataplot_tcp.length > 100) 
+    dataplot_tcp.shift();
+
+  if (dataplot_iec.length > 100) 
+    dataplot_iec.shift();
+
+  if (dataplot_modbus.length > 100) 
+    dataplot_modbus.shift();
+
+  if (dataplot_cip.length > 100) 
+    dataplot_cip.shift();
+  
+  // }
+  
+}
+tick();
+</script>
+
+</body>
+

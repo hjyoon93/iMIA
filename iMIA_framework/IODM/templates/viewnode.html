@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+        
+    
+        <style type="text/css">
+            .slice text {
+                font-size: 16pt;
+                font-family: Arial;
+            }   
+        </style>
+        <link href="{{ url_for('static', filename='css/fontlato.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/awesomemin.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+<style>
+     body {
+        background: #000000;
+        /* background: -moz-linear-gradient(top, #000000 0%, #000 100%);
+        background: -webkit-linear-gradient(top, #000000 0%, #000 100%);
+        background: linear-gradient(to bottom, #000 0%, #000 100%); */
+        margin: 0;
+        padding: 0;
+        font-family: 'Open Sans', sans-serif;
+		font-size: 15px;
+		font-weight: 300;
+				/* fill: #242424; */
+		text-align: center;
+		cursor: default;
+    }
+    .link {
+        stroke: #ccc;
+    }
+    .link {
+    opacity: 0.65;
+    stroke-dasharray: 10, 4;
+    }
+
+    .text {
+        pointer-events: none;
+        color: white;
+        font: 10px sans-serif;
+    }
+    .svg-div{
+     margin-top: 20%
+     display: block;
+     z-index:100;
+     /* margin: 0 auto; */
+     }
+     #canvas-wrap { position:relative } /* Make this a positioned parent */
+    #overlay { position:absolute; top:20px; right:30px; left:30px;}
+</style>
+</head>
+<body>
+
+    
+
+    <div class="navbar" id= "nav">
+        <a href="{{ url_for('index') }}">NetVis</a>
+        <div class="dropdown">
+            <a class="drop" href="#Home">Metrics 
+                <i class="fa fa-angle-double-down"></i>
+                <i class="fa fa-angle-double-up"></i>
+            </a>
+            <div class="drop-content">
+                <a href="#Prod1">Metrics</a>
+                <a href="{{ url_for('pie') }}">Distribution</a>
+                <a href="{{ url_for('lineCharts') }}">Flow</a>
+            </div>
+        </div>
+        <a href="{{ url_for('events') }}">Events</a>
+        <a href="{{ url_for('incidents') }}">Incidents</a>
+        <a href="#Content">About</a>
+        <a href="javascript:void(0);" class="icon" onclick="displayMenu()"><i class="fa fa-bars"></i></a>
+    </div>
+    <script src="{{ url_for('static', filename='js/d3v4.js') }}" charset="utf-8"></script>
+    <script src="{{ url_for('static', filename='js/jquery311.js') }}" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/d3.layout.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/d3v4.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/d3chromatic.js') }}"></script>
+    <div id="canvas-wrap">
+        <canvas id="sky" style="width:50%, height:100%">
+            
+        </canvas>
+
+
+        <div id="overlay" style="margin-left: 50%">
+            <div class="svg-div" style="width:700px">
+                <center>
+                </center>
+            </div>
+        </div>
+
+        <div id="overlay" style = "margin-right: 50%">
+            <centerl>
+	            <table id="myTable" border = 1 style = "font: bold">
+				</table>
+            </centerl>
+        </div>
+        <div id="overlay" style = "margin-right: 60%; margin-top: 20%; border-width: 5px ;border: #ccc">
+            <center>
+                <center2>
+    
+                </center2>
+            </center>
+            
+        </div>
+
+    </div>
+       
+    
+    <script>
+    window.onload = function() {
+        var canvas = document.getElementById("sky");
+        var ctx = canvas.getContext("2d");
+
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+
+        var count = 100;
+        var stars = [];
+        var opacity = 0.5;
+        var r = 0;
+
+        function draw(j) {
+            ctx.fillStyle = "rgba(255,255,255," + opacity + ")";
+            ctx.beginPath();
+            if (opacity === 1) {
+                size = 2;
+            } else {
+                size = stars[j].size;
+            }
+            ctx.rect(stars[j].xpos, stars[j].ypos, size, size);
+            ctx.fill();
+        }
+
+        function newStar() {
+            r = Math.floor(Math.random() * (count - 0));
+            opacity = 1;
+        }
+
+        function starLight() {
+            var star = stars[r];
+            ctx.clearRect(star.xpos, star.ypos, 2, 2);
+            draw(r);
+            opacity -= 0.01;
+
+            if (opacity <= star.op) {
+                newStar();
+            }
+        }
+
+        for (var i = 0; i < count; i++) {
+            opacity += 0.5 / count;
+            stars.push({
+                xpos: Math.floor(Math.random() * W),
+                ypos: Math.floor(Math.random() * H),
+                size: 1,
+                op: opacity
+            });
+            draw(i);
+        }
+
+        newStar();
+        setInterval(starLight, 20);
+        setInterval(starLight, 30);
+    };
+
+    </script>
+    <script src="{{ url_for('static', filename='js/jquery12.js') }}"></script>
+    <script>
+            $.ajaxSetup({beforeSend: function(xhr){
+            if (xhr.overrideMimeType)
+            {
+                xhr.overrideMimeType("application/json");
+            }
+            }
+            });
+            var previous = null;
+            var current = null;
+            setInterval(function() {
+                $.getJSON("{{ url_for('static', filename='graph.json') }}", function(json) {
+                    current = JSON.stringify(json);            
+                    if (previous && current && previous !== current) {
+                        location.reload();
+                    }
+                    previous = current;
+                });                       
+            }, 5000);   
+    </script>
+    
+        <script>
+			d3.csv("{{ url_for('static', filename='nmap.csv') }}", function(data) {
+
+				var head = ['IP Address','FQDN','Port','Protocol','Service','Name','Version'];
+				var table = document.getElementById("myTable");
+				var header = table.createTHead();
+		    	var row = header.insertRow(0); 
+				for(var i=0;i<8;i++){
+					var cell = row.insertCell();
+					cell.innerHTML = head[i];
+				}
+			
+			    for (var i = 0; i < data.length; i++) {
+			    	if(data[i]["IP Address"] == "{{ node }}"){
+			    		var row = table.insertRow();
+			    		for(var j=0;j<8;j++){
+							var cell = row.insertCell();
+							cell.innerHTML = data[i][head[j]];
+						}
+			    	}
+			    }
+			});
+		</script>
+
+    <script>
+        var width = 600,
+            height = 625
+
+        var svg = d3.select("center").append("svg")
+            .attr("width", width)
+            .attr("height", height); 
+
+        var force = d3.forceSimulation() 
+            .force("charge", d3.forceManyBody().strength(-500).distanceMin(50).distanceMax(200)) 
+            .force("link", d3.forceLink().id(function(d) { return d.index }).distance(250).strength(0.5)) 
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("y", d3.forceY(0.001))
+            .force("x", d3.forceX(0.001))
+
+        var g = svg.append("g")
+        var color = function (group) {
+            if (group == 1) {
+                return "#aaa"
+            } else if (group == 2) {
+                return "#fbc280"
+            } else {
+                return "#405275"
+            }
+        }
+        function dragstarted(d) {
+            if (!d3.event.active) force.alphaTarget(0.6).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+        
+        function dragended(d) {
+            if (!d3.event.active) force.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        } 
+        var fname = "{{ url_for('static', filename='graph.json') }}/?t="+ new Date
+        d3.json(fname, function (error, json) {
+            if (error) throw error; 
+            force
+                .nodes(json.nodes) 
+                .force("link").links(json.links)
+                
+
+            var link = g.selectAll(".link")
+                .data(json.links)
+                .enter().append("path")
+                .attr("class", "link")
+                .attr("fill", "none")
+                .attr("stroke-width", function(d){ if(d.size * 10<1){return 1;}return (d.size * 10)%30})
+                .attr("opacity", 0.7)
+                .style("stroke", function(d) { if(d.value==0){return "green"} else{return "red"} });
+            
+                var lines = d3.selectAll('path');
+
+                // Updates the offset of dashes every 50ms:
+                var offset = 1;
+                setInterval( function() {
+                lines.style('stroke-dashoffset', offset);
+                offset += 1; 
+                }, 50); 
+            var node = g.selectAll(".node")
+                .data(json.nodes)
+                .enter().append("g")
+                .attr("class", "node")
+                .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended))
+                .on("click", function(d) {window.location = "http://127.0.0.1:8000/viewnode?node=" + d.name});  
+                var dd = "{{ node }}";
+                var linkedByIndex = {};
+                json.links.forEach(function(d) {
+                    linkedByIndex[d.source.name + "," + d.target.name] = 1;
+                });
+
+                // check the dictionary to see if nodes are linked
+            function isConnected(a, b) {
+                return linkedByIndex[a + "," + b.name] || linkedByIndex[b.name + "," + a] || a == b.name;
+            }
+            node.style("stroke-opacity", function(o) {
+                thisOpacity = isConnected(dd, o) ? 1 : 0;
+                return thisOpacity;
+            });
+            node.style("fill-opacity", function(o) {
+                thisOpacity = isConnected(dd, o) ? 1 : 0;
+                return thisOpacity;
+            });
+            link.style("stroke-opacity", function(o) {
+                return o.source.name === dd || o.target.name === dd ? 1 : 0;
+            });
+
+            json.links.forEach(function(link){
+
+                // initialize a new property on the node
+                if (!link.source["linkCount"]) link.source["linkCount"] = 0; 
+                if (!link.target["linkCount"]) link.target["linkCount"] = 0;
+
+                // count it up
+                link.source["linkCount"]++;
+                link.target["linkCount"]++;    
+            });
+            node.append('circle')
+                .attr('r', function(d){
+                    return d.linkCount ? 10+(d.linkCount * 1.5) : 10;
+                })
+                .attr('fill', function (d) {
+                    return color(d.group);
+                })
+                .style("fill", function(d) { if(d.group==0){return "red"} else{return "light-blue"} })
+
+            node.append("text")
+                .attr("dx", -18)
+                .attr("dy", 8)
+                .style("font-family", "overwatch")
+                .style("font-size", "15px")
+                .style("fill", "white")
+
+                .text(function (d) {
+                    return d.name
+                });
+
+            force.on("tick", function () {
+                link.attr("d", function(d) {
+                var dx = d.target.x - d.source.x,
+                    dy = d.target.y - d.source.y,
+                    dr = Math.sqrt(dx * dx + dy * dy);
+                return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+                });
+                node.attr("transform", function (d) {
+                    return "translate(" + d.x + "," + d.y + ")";
+                });
+            });
+            var zoom_handler = d3.zoom()
+                .on("zoom", zoom_actions);
+
+            zoom_handler(svg);    
+            function zoom_actions(){
+                g.attr("transform", d3.event.transform)
+            } 
+                // build a dictionary of nodes that are linked
+            });
+            $.ajax({
+                cache: false,
+            });
+            $.ajaxSetup({beforeSend: function(xhr){
+            if (xhr.overrideMimeType)
+            {
+                xhr.overrideMimeType("application/json");
+            }
+            },  cache: false
+            });
+            var previous = null;
+            var current = null;
+            setInterval(function() {
+                $.getJSON("{{ url_for('static', filename='graph.json') }}", function(json) {
+                    current = JSON.stringify(json);
+                    console.log(previous==current);
+                    if (previous && current && previous !== current) {
+                        
+                        location.reload();
+                    }
+                    previous = current;
+                });                       
+            }, 5000);  
+    </script>
+    
+        <!-- <script type="text/javascript">
+            var w = 300,                        //width
+            h = 300,                            //height
+            r = 100,                            //radius
+            protocs = {{ protocs|tojson|safe }};
+            color = d3.scaleOrdinal(["#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#98abc5", "#8a89a6", "#7b6888", "#7b1233",  "#d1249c"]);
+            console.log(color);    //builtin range of colors
+            data = [{"label":"TCP", "value":protocs['TCP']}, 
+                    {"label":"UDP", "value":protocs['UDP']},
+                    {"label":"ModbusTCP", "value":protocs['ModbusTCP']}, 
+                    {"label":"CIP", "value":protocs['CIP']},
+                    {"label":"IEC104", "value":protocs['IEC104']},
+                    {"label":"DNS", "value":protocs['DNS']},
+                    {"label":"DHCP", "value":protocs['DHCP']},
+                    {"label":"Others", "value":protocs['Others']},
+                    {"label":"ICMP", "value":protocs['ICMP']}];
+            
+                    console.log(data);
+            var vis = d3.select("center2")
+                .append("svg:svg")              //create the SVG element inside the <body>
+                .data([data])                   //associate our data with the document
+                    .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
+                    .attr("height", h)
+                .append("svg:g")                //make a group to hold our pie chart
+                    .attr("transform", "translate(" + r + "," + r + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+            var arc = d3.arc()              //this will create <path> elements for us using arc data
+                .outerRadius(r)
+                .innerRadius(r*0.25);
+            var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+                .value(function(d) { return d.value; });    //we must tell it out to access the value of each element in our data array
+            var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
+                .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
+                .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+                    .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+                        .attr("class", "slice");    //allow us to style things in the slices (like text)
+                arcs.append("svg:path")
+                        .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
+                        .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+                arcs.append("svg:text")                                     //add a label to each slice
+                        .attr("transform", function(d) {                    //set the label's origin to the center of the arc
+                        //we have to make sure to set these before calling arc.centroid
+                        d.innerRadius = 0;
+                        d.outerRadius = r;
+                        return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
+                    })
+                    .attr("text-anchor", "middle")                          //center the text on it's origin
+                    .text(function(d, i) { return data[i].value == 0 ? "" : data[i].label; });     //get the label from our original data array
+                
+            </script> -->
+            <script>
+
+                // set the dimensions and margins of the graph
+                var width = 300
+                    height = 300
+                    margin = 50
+                
+                // The radius of the pieplot is half the width or half the height (smallest one). I substract a bit of margin.
+                var radius = Math.min(width, height) / 2 - margin
+                
+                // append the svg object to the div called 'my_dataviz'
+                var svg1 = d3.select("center2")
+                  .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                  .append("g")
+                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+                
+                // Create dummy data
+                // var data = {a: 9, b: 20, c:30, d:8, e:12, f:3, g:7, h:14}
+                protocs = {{ protocs|tojson|safe }};
+                var data = {"TCP":protocs['TCP'], "UDP":protocs['UDP'], "ModbusTCP":protocs['ModbusTCP'], "CIP":protocs['CIP'], "IEC104":protocs['IEC104'], "DNS":protocs['DNS'], "Others":protocs['Others'] ,"ICMP":protocs['ICMP']}
+                console.log(data);
+                // set the color scale
+                colors = d3.scaleOrdinal(["#366abc", "#d87e0f", "#9b9792", "#7ae2c5", "#dbc943", "#01117a", "#af3f66", "#f9e907",  "#277005"]);
+                
+                // Compute the position of each group on the pie:
+                var pie = d3.pie()
+                  .sort(null) // Do not sort group by size
+                  .value(function(d) {return d.value; })
+                var data_ready = pie(d3.entries(data))
+                
+                // The arc generator
+                var arc = d3.arc()
+                  .innerRadius(radius * 0.4)         // This is the size of the donut hole
+                  .outerRadius(radius * 0.8)
+                
+                // Another arc that won't be drawn. Just for labels positionning
+                var outerArc = d3.arc()
+                  .innerRadius(radius * 0.9)
+                  .outerRadius(radius * 0.9)
+                
+                // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+                svg1
+                  .selectAll('allSlices')
+                  .data(data_ready)
+                  .enter()
+                  .append('path')
+                  .attr('d', arc)
+                  .attr('fill', function(d){ return(colors(d.data.key)) })
+                  .attr("stroke", "white")
+                  .style("stroke-width", "1px")
+                  .style("opacity", function(d){ return d.data.value == 0 ? 0 : 0.7})
+                
+                // Add the polylines between chart and labels:
+                svg1
+                  .selectAll('allPolylines')
+                  .data(data_ready)
+                  .enter()
+                  .append('polyline')
+                    .attr("stroke", "white")
+                    .style("fill", "none")
+                    .attr("stroke-width", 1)
+                    .attr('points', function(d) { 
+                      var posA = arc.centroid(d) // line insertion in the slice
+                      var posB = outerArc.centroid(d) ;  // line break: we use the other arc generator that has been built only for that
+                      var posC = outerArc.centroid(d); // Label position = almost the same as posB
+                      var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
+                      posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
+                      return d.data.value == 0 ? [0, 0, 0]: [posA, posB, posC];
+                    })
+                
+                // Add the polylines between chart and labels:
+                svg1
+                  .selectAll('allLabels')
+                  .data(data_ready)
+                  .enter()
+                  .append('text')
+                    .text( function(d) { return d.data.value == 0 ? "" : d.data.key; } )
+                    .attr('transform', function(d) {
+                        var pos = outerArc.centroid(d);
+                        var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+                        pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
+                        return 'translate(' + pos + ')';
+                    })
+                    .style('text-anchor', function(d) {
+                        var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+                        return (midangle < Math.PI ? 'start' : 'end')
+                    })
+                    .attr("stroke", "white")
+                
+                </script>
+</body>
