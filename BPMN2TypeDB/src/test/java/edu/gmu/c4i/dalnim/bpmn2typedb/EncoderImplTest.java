@@ -322,15 +322,14 @@ public class EncoderImplTest {
 
 		testEncodeSchema("/eMail Voting/Email Voting 2.bpmn");
 
-		// Hardware retailer and incident management models have incomplete BPMN
-//		testEncodeSchema("/Hardware Retailer/triso - Hardware Retailer v2.bpmn");
+		testEncodeSchema("/Hardware Retailer/triso - Hardware Retailer v2.bpmn");
 
-//		testEncodeSchema("/Incident Management/Incident Management(Account Manager Only).bpmn");
-//		testEncodeSchema("/Incident Management/Incident Management(Process Engine Executable).bpmn");
-//		testEncodeSchema("/Incident Management/Incident Management(Process Engine Only).bpmn");
-//		testEncodeSchema("/Incident Management/Incident Management(Whole Collab).bpmn");
-//		testEncodeSchema("/Incident Management/Incident Management - coll chor.bpmn");
-//		testEncodeSchema("/Incident Management/Incident Management level 1.bpmn");
+		testEncodeSchema("/Incident Management/Incident Management(Account Manager Only).bpmn");
+		testEncodeSchema("/Incident Management/Incident Management(Process Engine Executable).bpmn");
+		testEncodeSchema("/Incident Management/Incident Management(Process Engine Only).bpmn");
+		testEncodeSchema("/Incident Management/Incident Management(Whole Collab).bpmn");
+		testEncodeSchema("/Incident Management/Incident Management - coll chor.bpmn");
+		testEncodeSchema("/Incident Management/Incident Management level 1.bpmn");
 
 		testEncodeSchema("/Nobel Prize/Nobel Prize Process.bpmn");
 
