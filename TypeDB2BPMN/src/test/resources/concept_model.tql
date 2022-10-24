@@ -9,6 +9,7 @@ CyberAttacks sub MIAEntity;
 Attacker sub Performer;
 Defender sub Performer;
 Service sub Performer;
+Asset sub Performer;    #asset is subtype of performer that is associated with task 
 #defense is same as defense mechanism in the model
 DefenseMechanisms sub MIAEntity;
 #ips and ids are subtpyes of defense mechanism
