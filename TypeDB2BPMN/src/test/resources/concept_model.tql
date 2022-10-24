@@ -16,7 +16,6 @@ DefenseMechanisms sub MIAEntity;
 IPS sub DefenseMechanisms;
 IDS sub DefenseMechanisms; 
 
-Asset sub MIAEntity;
 Vulnerabilities sub MIAEntity;
 Capacity sub MIAEntity;
 Task sub MIAEntity;
@@ -71,8 +70,7 @@ hasVulnerabilities sub relation,
     relates asset, 
     relates vulnerabilities;
 
-Asset sub MIAEntity,
-    plays hasVulnerabilities:asset;
+Asset plays hasVulnerabilities:asset;
 Vulnerabilities sub MIAEntity,
     plays hasVulnerabilities:vulnerabilities;
     
@@ -83,8 +81,7 @@ hasCapacity sub relation,
     relates asset, 
     relates capacity;
 
-Asset sub MIAEntity,
-    plays hasCapacity:asset;
+Asset plays hasCapacity:asset;
 Capacity sub MIAEntity,
     plays hasCapacity:capacity;
     
@@ -208,8 +205,7 @@ provides sub relation,
     relates asset, 
     relates service;
 
-Asset sub MIAEntity,
-    plays provides:asset;
+Asset plays provides:asset;
 Service sub Performer,
     plays provides:service;
 
