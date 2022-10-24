@@ -54,7 +54,7 @@ MIAEntity sub entity,
     owns description;
     
 value sub attribute,
-    value long;
+    value double;
 MIAEntity sub entity,
     owns value;
     
