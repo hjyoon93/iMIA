@@ -75,7 +75,7 @@ hasVulnerabilities sub relation,
     relates vulnerabilities;
 
 #Asset sub MIAEntity, #avoid redeclaration 
-Assest plays hasVulnerabilities:asset;
+Asset plays hasVulnerabilities:asset;
 #Vulnerabilities sub MIAEntity, #avoid redeclaration
 Vulnerabilities plays hasVulnerabilities:vulnerabilities;
     
