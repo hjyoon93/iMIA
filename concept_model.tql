@@ -1,5 +1,5 @@
+#redeclaration is completed
 #shared concept model schema for VT AND GMU 
-
 #define entity
 define 
 MIAEntity sub entity;
@@ -9,14 +9,17 @@ CyberAttacks sub MIAEntity;
 Attacker sub Performer;
 Defender sub Performer;
 Service sub Performer;
-Asset sub Performer;    #asset is subtype of performer that is associated with task 
+Asset sub Performer;    
+#asset is subtype of performer that is associated with task 
 #defense is same as defense mechanism in the model
+Attack sub MIAEntity;
 DefenseMechanisms sub MIAEntity;
 #ips and ids are subtpyes of defense mechanism
 IPS sub DefenseMechanisms;
 IDS sub DefenseMechanisms; 
+#IRS sub DefenseMechanisms; #new line 
 
-Asset sub MIAEntity;
+#Asset sub MIAEntity;   #avoid redeclaration 
 Vulnerabilities sub MIAEntity;
 Capacity sub MIAEntity;
 Task sub MIAEntity;
@@ -35,28 +38,28 @@ Outcome sub MIAEntity;
 define 
 UID sub attribute,
     value string; 
-MIAEntity sub entity,
-    owns UID @key;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns UID @key;
     
 name sub attribute,
     value string;
-MIAEntity sub entity,
-    owns name;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns name;
 
 address sub attribute,
     value string;
-MIAEntity sub entity,
-    owns address;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns address;
     
 description sub attribute,
     value string;
-MIAEntity sub entity,
-    owns description;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns description;
     
 value sub attribute,
     value double;
-MIAEntity sub entity,
-    owns value;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns value;
     
 #name sub attribute,
 #   value string; 
@@ -71,10 +74,10 @@ hasVulnerabilities sub relation,
     relates asset, 
     relates vulnerabilities;
 
-Asset sub MIAEntity,
-    plays hasVulnerabilities:asset;
-Vulnerabilities sub MIAEntity,
-    plays hasVulnerabilities:vulnerabilities;
+#Asset sub MIAEntity, #avoid redeclaration 
+Assest plays hasVulnerabilities:asset;
+#Vulnerabilities sub MIAEntity, #avoid redeclaration
+Vulnerabilities plays hasVulnerabilities:vulnerabilities;
     
 
 #####################
@@ -83,10 +86,10 @@ hasCapacity sub relation,
     relates asset, 
     relates capacity;
 
-Asset sub MIAEntity,
-    plays hasCapacity:asset;
-Capacity sub MIAEntity,
-    plays hasCapacity:capacity;
+#Asset sub MIAEntity, #avoid redeclaration
+Asset plays hasCapacity:asset;
+#Capacity sub MIAEntity, #avoid redeclaration
+Capacity plays hasCapacity:capacity;
     
 ###############
 define
@@ -94,10 +97,10 @@ hasGoal sub relation,
     relates mission, 
     relates goal;
 
-Mission sub MIAEntity,
-    plays hasGoal:mission;
-Goal sub MIAEntity,
-    plays hasGoal:goal;
+#Mission sub MIAEntity,  #avoid redeclaration
+Mission plays hasGoal:mission;
+#Goal sub MIAEntity, #avoid redeclaration
+Goal plays hasGoal:goal;
     
 ####
 define
@@ -105,10 +108,10 @@ hasOutcome sub relation,
     relates mission, 
     relates outcome;
 
-Mission sub MIAEntity,
-    plays hasOutcome:mission;
-Outcome sub MIAEntity,
-    plays hasOutcome:outcome;    
+#Mission sub MIAEntity, #avoid redeclaration
+Mission plays hasOutcome:mission;
+#Outcome sub MIAEntity, #avoid redeclaration
+Outcome plays hasOutcome:outcome;    
     
     
 ####
@@ -117,10 +120,10 @@ isMeasuredBySTRAM sub relation,
     relates outcome, 
     relates stram;
 
-Outcome sub MIAEntity,
-    plays isMeasuredBySTRAM:outcome;
-STRAM sub MIAEntity,
-    plays isMeasuredBySTRAM:stram;   
+#Outcome sub MIAEntity,  #avoid redeclaration
+Outcome plays isMeasuredBySTRAM:outcome;
+#STRAM sub MIAEntity, #avoid redeclaration
+STRAM plays isMeasuredBySTRAM:stram;   
     
     
 ####
@@ -129,10 +132,10 @@ isMeasuredByVulnerabilityMetrics sub relation,
     relates vulnerabilities, 
     relates vulnerability_metrics;
 
-Vulnerabilities sub MIAEntity,
-    plays isMeasuredByVulnerabilityMetrics:vulnerabilities;
-VulnerabilityMetrics sub MIAEntity,
-    plays isMeasuredByVulnerabilityMetrics:vulnerability_metrics;   
+#Vulnerabilities sub MIAEntity  #avoid redeclaration
+Vulnerabilities plays isMeasuredByVulnerabilityMetrics:vulnerabilities;
+#VulnerabilityMetrics sub MIAEntity, #avoid redeclaration
+VulnerabilityMetrics plays isMeasuredByVulnerabilityMetrics:vulnerability_metrics;   
 
 
 ####
@@ -141,10 +144,10 @@ performAttack sub relation,
     relates attacker, 
     relates attack;
 
-Attacker sub Performer,
-    plays performAttack:attacker;
-Attack sub MIAEntity,
-    plays performAttack:attack;  
+#Attacker sub Performer, #avoid redeclaration
+Attacker plays performAttack:attacker;
+#Attack sub MIAEntity,  #avoid redeclaration
+Attack plays performAttack:attack;  
     
 ####
 define
@@ -152,10 +155,10 @@ performDefense sub relation,
     relates defender, 
     relates defense_mechanisms;
 
-Defender sub Performer,
-    plays performDefense:defender;
-DefenseMechanisms sub MIAEntity,
-    plays performDefense:defense_mechanisms;  
+#Defender sub Performer, #avoid reclaration
+Defender plays performDefense:defender;
+#DefenseMechanisms sub MIAEntity,# avoid redeclaration
+DefenseMechanisms plays performDefense:defense_mechanisms;  
 
 
 ####
@@ -164,10 +167,11 @@ detects sub relation,
     relates ids, 
     relates attack;
 
-IDS sub DefenseMechanisms,
-    plays detects:ids;
-Attack sub MIAEntity,
-    plays detects:attack;
+#IDS sub DefenseMechanisms, #avoid redeclaration
+IDS plays detects:ids;
+#Attack sub MIAEntity, #avoid redeclaration
+Attack plays detects:attack;
+    
     
 ####
 define
@@ -175,10 +179,22 @@ deters sub relation,
     relates ips, 
     relates attack;
 
-IPS sub DefenseMechanisms,
-    plays deters:ips;
-Attack sub MIAEntity,
-    plays deters:attack;
+#IPS sub DefenseMechanisms, #avoid redeclaration
+IPS plays deters:ips;
+#Attack sub MIAEntity, #avoid redeclaration
+Attack plays deters:attack;
+    
+    
+#### #new line
+#define
+#mitigates sub relation,
+#    relates irs, 
+#    relates attack;
+
+#IRS sub DefenseMechanisms,
+#    plays mitigates:irs;
+#Attack sub MIAEntity,
+#    plays mitigates:attack;
     
 ####
 define
@@ -186,10 +202,10 @@ exploits sub relation,
     relates attack, 
     relates vulnerabilities;
 
-Attack sub MIAEntity,
-    plays exploits:attack;
-Vulnerabilities sub MIAEntity,
-    plays exploits:vulnerabilities;
+#Attack sub MIAEntity, #avoid redeclaration
+Attack plays exploits:attack;
+#Vulnerabilities sub MIAEntity,  #avoid redeclaration
+Vulnerabilities plays exploits:vulnerabilities;
   
 ####
 define
@@ -197,10 +213,10 @@ mitigates sub relation,
     relates defense_mechanisms, 
     relates vulnerabilities;
 
-DefenseMechanisms sub MIAEntity,
-    plays mitigates:defense_mechanisms;
-Vulnerabilities sub MIAEntity,
-    plays mitigates:vulnerabilities;
+#DefenseMechanisms sub MIAEntity, #avoid redeclaration
+DefenseMechanisms plays mitigates:defense_mechanisms;
+#Vulnerabilities sub MIAEntity,  #avoid redeclaration
+Vulnerabilities plays mitigates:vulnerabilities;
     
 ####
 define
@@ -208,10 +224,10 @@ provides sub relation,
     relates asset, 
     relates service;
 
-Asset sub MIAEntity,
-    plays provides:asset;
-Service sub Performer,
-    plays provides:service;
+#Asset sub MIAEntity, #avoid redeclaration
+Asset plays provides:asset;
+#Service sub Performer, #avoid redeclaration
+Service plays provides:service;
 
 
 ####
@@ -232,10 +248,10 @@ isCompoundBy sub relation,
     relates task, 
     relates mission;
 
-Task sub MIAEntity,
-    plays isCompoundBy:task;
-Mission sub MIAEntity,
-    plays isCompoundBy:mission;
+#Task sub MIAEntity, #avoid redeclaration
+Task plays isCompoundBy:task;
+#Mission sub MIAEntity, #avoid redeclaration
+Mission plays isCompoundBy:mission;
     
 ####
 define
@@ -243,10 +259,9 @@ isCompoundBySetOfTask sub relation,
     relates task, 
     relates precedence_task;
 
-Task sub MIAEntity,
-    plays isCompoundBySetOfTask:task;
-PrecedenceTask
-    plays isCompoundBySetOfTask:precedence_task;
+#Task sub MIAEntity, #avoid redeclaration
+Task plays isCompoundBySetOfTask:task;
+PrecedenceTask plays isCompoundBySetOfTask:precedence_task;
     
     
 #######
@@ -255,10 +270,9 @@ isPrecededBySetOfTask sub relation,
     relates task, 
     relates precedence_task;
 
-Task sub MIAEntity,
-    plays isPrecededBySetOfTask:task;
-PrecedenceTask
-    plays isPrecededBySetOfTask:precedence_task;
+#Task sub MIAEntity, #avoid redeclaration
+Task plays isPrecededBySetOfTask:task;
+PrecedenceTask plays isPrecededBySetOfTask:precedence_task;
 
 
 ##################
@@ -266,10 +280,10 @@ define
 isPerformedBy sub relation,
     relates performer,
     relates task;
-Performer sub MIAEntity,
-    plays isPerformedBy:performer;
-Task sub MIAEntity,
-    plays isPerformedBy:task;
+#Performer sub MIAEntity, #avoid redeclaration
+Performer plays isPerformedBy:performer;
+#Task sub MIAEntity,#avoid redeclaration
+Task plays isPerformedBy:task;
     
 
 ########
