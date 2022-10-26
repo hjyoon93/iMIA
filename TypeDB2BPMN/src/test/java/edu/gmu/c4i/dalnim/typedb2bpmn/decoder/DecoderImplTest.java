@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -93,8 +94,11 @@ public class DecoderImplTest {
 		// load the conceptual model schema
 		try (TypeDBSession session = client.session(databaseName, TypeDBSession.Type.SCHEMA)) {
 			try (TypeDBTransaction transaction = session.transaction(TypeDBTransaction.Type.WRITE)) {
-				Stream<TypeQLQuery> queries = TypeQL.parseQueries(
-						Files.readString(Path.of(DecoderImplTest.class.getResource("/concept_model.tql").toURI())));
+				Stream<TypeQLQuery> queries = TypeQL.parseQueries(Files.readString(
+						// Load the concept model script from src/*/resources:
+						// Path.of(DecoderImplTest.class.getResource("/concept_model.tql").toURI())
+						// ... or load the concept model script from parent folder:
+						new File("../concept_model.tql").toPath()));
 				for (TypeQLQuery query : queries.collect(Collectors.toList())) {
 					QueryFuture<Void> response = transaction.query().define(query.asDefine());
 					// wait for the transaction to finish
