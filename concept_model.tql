@@ -15,9 +15,9 @@ Asset sub Performer;
 Attack sub MIAEntity; #Note: Attack refers to the CyberAttack in the concept model
 DefenseMechanism sub MIAEntity;
 #ips and ids are subtpyes of defense mechanism
-IPS sub DefenseMechanisms;
-IDS sub DefenseMechanisms; 
-IRS sub DefenseMechanisms; #new line; including IRS to CM
+IPS sub DefenseMechanism;
+IDS sub DefenseMechanism; 
+IRS sub DefenseMechanism; #new line; including IRS to CM
 
 #Asset sub MIAEntity;   #avoid redeclaration 
 Vulnerability sub MIAEntity;
@@ -191,7 +191,7 @@ mitigatesAttack sub relation,
     relates irs, 
     relates attack;
 
-IRS sub DefenseMechanisms,
+IRS sub DefenseMechanism,
     plays mitigatesAttack:irs;
 Attack sub MIAEntity,
     plays mitigatesAttack:attack;
