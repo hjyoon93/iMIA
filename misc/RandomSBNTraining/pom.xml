@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- Project meta-information -->
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>edu.gmu.c4i.dalnim</groupId>
+	<artifactId>RandomSBNTraining</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>RandomSBNTraining</name>
+	<description>Miscellaneous software to run experiments related to memory load when training a random SBN</description>
+
+	<properties>
+		<!-- Default encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Make sure the project is compatible with Java 11 -->
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+	</properties>
+
+	<!-- Dependencies that are not present in maven central repository are here -->
+	<repositories>
+		<repository>
+			<id>RandomSBNTraining-repo</id>
+			<name>Custom maven repository</name>
+			<url>file://${project.basedir}/lib/repository</url>
+		</repository>
+	</repositories>
+
+	<!-- Load these libraries/dependencies -->
+	<dependencies>
+	
+		<!-- Dependencies related to UnBBayes -->
+		<dependency>
+			<groupId>edu.gmu.c4i</groupId>
+			<artifactId>unbbayes.prs.sbn.cli</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Logger -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+
+		<!-- Unit test framework -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.1</version>
+			<!-- Will not be included in distribution -->
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<!-- Compile the source code for Java 11. -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<source>11</source>
+					<target>11</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- Generates an executable jar distribution with all dependencies included. -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<!-- The main entrypoint -->
+									<mainClass>edu.gmu.c4i.dalnim.bpmn2typedb.Main</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<!-- All dependencies will be included in the generated jar -->
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!-- Generates a source jar file -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
