@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>br.unb.cic</groupId>
+	<artifactId>unbbayes.simulation.montecarlo.sampling</artifactId>
+	<name>Montecarlo Logic Sampling</name>
+	<!-- If you change the below version, -->
+	<!-- change version and library settings on plugin.xml too, because this is included as library -->
+	<version>1.1.1-SNAPSHOT</version>
+	<url>http://unbbayes.sourceforge.net
+	</url>
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, Version 3, 29 June 2007</name>
+			<url>https://www.gnu.org/licenses/lgpl-3.0.html</url>
+		</license>
+	</licenses>
+	<issueManagement>
+		<system>SourceForge Tracker</system>
+		<url>http://sourceforge.net/tracker/?group_id=47519
+		</url>
+	</issueManagement>
+	<inceptionYear>2010</inceptionYear>
+	<mailingLists>
+		<mailingList>
+			<name> Announcements. All messages on this list are also sent to the
+				users list.</name>
+			<subscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-announce
+			</subscribe>
+			<unsubscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-announce
+			</unsubscribe>
+			<post>unbbayes-announce@lists.sourceforge.net
+			</post>
+			<archive>
+				http://sourceforge.net/mailarchive/forum.php?forum_name=unbbayes-announce
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name> A subscriber-only list for those interested in developing
+				UnBBayes.</name>
+			<subscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-developers
+			</subscribe>
+			<unsubscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-developers
+			</unsubscribe>
+			<post>unbbayes-developers@lists.sourceforge.net
+			</post>
+			<archive>
+				http://sourceforge.net/mailarchive/forum.php?forum_name=unbbayes-developers
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name> A subscriber-only list for those interested in translating
+				UnBBayes.</name>
+			<subscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-translators
+			</subscribe>
+			<unsubscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-translators
+			</unsubscribe>
+			<post>unbbayes-translators@lists.sourceforge.net
+			</post>
+			<archive>
+				http://sourceforge.net/mailarchive/forum.php?forum_name=unbbayes-translators
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name> A subscriber-only list for those interested in discussing
+				about UnBBayes.</name>
+			<subscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-users
+			</subscribe>
+			<unsubscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-users
+			</unsubscribe>
+			<post>unbbayes-users@lists.sourceforge.net
+			</post>
+			<archive>
+				http://sourceforge.net/mailarchive/forum.php?forum_name=unbbayes-users
+			</archive>
+		</mailingList>
+	</mailingLists>
+	<developers>
+		<developer>
+			<id>mladeira</id>
+			<name>Dr. Marcelo Ladeira</name>
+			<email>mladeira@unb.br</email>
+			<roles>
+				<role>Project Manager</role>
+			</roles>
+			<organization>University of Brasília - UnB</organization>
+			<organizationUrl>www.unb.br</organizationUrl>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>rommelnc</id>
+			<name>Rommel Novaes Carvalho</name>
+			<email>rommel.carvalho@gmail.com</email>
+			<roles>
+				<role>Project Manager</role>
+				<role>Architect</role>
+				<role>Developer</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>pcosta</id>
+			<name>Dr. Paulo Cesar G. Costa</name>
+			<email>pcosta@gmu.edu</email>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>laecio</id>
+			<name>Laecio Lima</name>
+			<email>laecio@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>University of Brasilia - UnB</organization>
+			<organizationUrl>www.unb.br</organizationUrl>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>cardialfly</id>
+			<name>Shou Matsumoto</name>
+			<email>cardialfly@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>University of Brasilia - UnB</organization>
+			<organizationUrl>www.unb.br</organizationUrl>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>young</id>
+			<name>Young Park</name>
+			<email>cparkf@gmu.edu</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>aditya</id>
+			<name>Aditya Mugali</name>
+			<email>amugali@gmu.edu</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>adebarro</id>
+			<name>Alexandre B Barreto</name>
+			<email>adebarro@gmu.edu</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>Dr. Kathryn Blackmond Laskey</name>
+			<email>klaskey@gmu.edu</email>
+			<url>http://volgenau.gmu.edu/~klaskey
+			</url>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>http://www.gmu.edu
+			</organizationUrl>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<timezone>-5</timezone>
+		</contributor>
+		<contributor>
+			<name>Dr. Kuo-Chu Chang</name>
+			<email>kchang@gmu.edu</email>
+			<url>http://volgenau.gmu.edu/~kchang
+			</url>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>http://www.gmu.edu
+			</organizationUrl>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<timezone>-5</timezone>
+		</contributor>
+	</contributors>
+	<scm>
+		<connection>
+			scm:svn:https://unbbayes.svn.sourceforge.net/svnroot/unbbayes/trunk/unbbayes.datamining
+		</connection>
+		<developerConnection>
+			scm:svn:https://unbbayes.svn.sourceforge.net/svnroot/unbbayes/trunk/unbbayes.datamining
+		</developerConnection>
+		<url>http://unbbayes.svn.sourceforge.net/viewvc/unbbayes/trunk/unbbayes.datamining
+		</url>
+	</scm>
+	<organization>
+		<name>Universidade de Brasilia - UnB</name>
+		<url>http://www.unb.br</url>
+	</organization>
+	<properties>
+   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+ 	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>dist.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<locales>en</locales>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+		<dependencies>
+			<!-- This is a plugin project for UnBBayes. Since it uses classes from the core, 
+			     UnBBayes is indeed a dependency -->
+			<dependency>
+				<groupId>br.unb.cic</groupId>
+				<artifactId>unbbayes</artifactId>
+				<version>4.22.19-SNAPSHOT</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			
+			<!-- https://mvnrepository.com/artifact/com.esotericsoftware.yamlbeans/yamlbeans -->
+			<dependency>
+				<groupId>com.esotericsoftware.yamlbeans</groupId>
+				<artifactId>yamlbeans</artifactId>
+				<version>1.08</version>
+			</dependency>
+			
+		</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId> maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<!-- report>dependencies</report -->
+							<report>project-team</report>
+							<report>mailing-list</report>
+							<report>issue-tracking</report>
+							<report>license</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<inherited>false</inherited>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
+  				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changes-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<links>
+						<link>
+							http://java.sun.com/j2se/1.5.0/docs/api
+						</link>
+					</links>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+	<distributionManagement>
+		<site>
+  		 	<id>sourceforge.net</id>
+   			<url>scp://shell.sourceforge.net/home/groups/u/un/unbbayes/htdocs</url>
+  		</site>
+	</distributionManagement>
+</project>
