@@ -1,16 +1,17 @@
 package edu.gmu.c4i.dalnim.sbn;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import unbbayes.io.CountCompatibleNetIO;
 import unbbayes.prs.Graph;
+import unbbayes.prs.INode;
 import unbbayes.prs.Node;
-import unbbayes.prs.bn.ProbabilisticNetwork;
+import unbbayes.prs.bn.PotentialTable;
+import unbbayes.prs.bn.ProbabilisticNode;
 import unbbayes.prs.builder.INodeBuilder;
-import unbbayes.prs.builder.impl.DefaultProbabilisticNodeBuilder;
+import unbbayes.util.Debug;
+import unbbayes.util.random.RandomNetworkGenerator;
 
 /**
  * Default implementation of {@link RandomSBNBuilder}
@@ -18,24 +19,38 @@ import unbbayes.prs.builder.impl.DefaultProbabilisticNodeBuilder;
  * @author Shou Matsumoto
  *
  */
-public class RandomSBNBuilderImpl implements RandomSBNBuilder {
+public class RandomSBNBuilderImpl extends RandomNetworkGenerator implements RandomSBNBuilder {
+
+	public static final int DEFAULT_TREEWIDTH = 15;
+
+	public static final int DEFAULT_NET_SIZE = 600;
+
+	public static final int DEFAULT_NUM_STATES = 2;
 
 	private static Logger logger = LoggerFactory.getLogger(RandomSBNBuilderImpl.class);
 
-	private int numNodes = 600;
+	private int totalCounts = 100;
 
-	private int numParents = 15;
+	private Graph networkCache = null;
 
-	private INodeBuilder probabilisticNodeBuilder;
-
-	private Map<String, ProbabilisticNetwork> multipletonMap = new HashMap<>();
+	private boolean ignoreWarnings = true;
 
 	/**
 	 * Default constructor is protected to avoid public access, but to allow quick
 	 * inheritance. Use {@link #getInstance()} instead.
 	 */
 	protected RandomSBNBuilderImpl() {
-		// Auto-generated constructor stub
+		try {
+			// force default settings
+			this.setMaxTreeWidth(DEFAULT_TREEWIDTH);
+			this.setNumNodes(DEFAULT_NET_SIZE);
+
+			// set max and min states size to the same value
+			this.setMinNumStates(DEFAULT_NUM_STATES);
+			this.setMaxNumStates(DEFAULT_NUM_STATES);
+		} catch (Exception e) {
+			logger.warn("Failed to bootstrap instance '{}'", this);
+		}
 	}
 
 	/**
@@ -52,146 +67,262 @@ public class RandomSBNBuilderImpl implements RandomSBNBuilder {
 		return new RandomSBNBuilderImpl();
 	}
 
-	@Override
-	public ProbabilisticNetwork buildNetwork(String netName) {
-
-		logger.debug("Building network {}...", netName);
-
-		// extract the parameters
-		int totalNumNodes = getNumNodes();
-		int maxParents = getNumParents();
-		INodeBuilder nodeBuilder = getProbabilisticNodeBuilder();
-		logger.debug("Number of nodes: {}", totalNumNodes);
-		logger.debug("Number of parents: {}", maxParents);
-		logger.debug("Network builder: {}", nodeBuilder);
-
-		// TODO Auto-generated method stub
-
-		throw new UnsupportedOperationException("Not implemented yet");
-	}
-
-	@Override
-	public INodeBuilder getContinuousNodeBuilder() {
-		throw new UnsupportedOperationException("Continuous nodes are not supported.");
-	}
-
-	@Override
-	public INodeBuilder getDecisionNodeBuilder() {
-		throw new UnsupportedOperationException("Decision nodes are not supported.");
-	}
-
-	@Override
-	public synchronized INodeBuilder getProbabilisticNodeBuilder() {
-		if (probabilisticNodeBuilder == null) {
-			logger.debug("Instantiating a boolean node builder...");
-			probabilisticNodeBuilder = new DefaultProbabilisticNodeBuilder() {
-				@Override
-				public Node buildNode() {
-					Node node = super.buildNode();
-					// boolean nodes should have 2 states
-					for (int i = 0; i < Integer.MAX_VALUE; i++) {
-						if (node.getStatesSize() < 2) {
-							node.appendState(Integer.toString(i));
-						}
-					}
-					// at this point, the node must have 2 (or more) states
-					if (node.getStatesSize() != 2) {
-						throw new IllegalStateException("Failed to generate a node with 2 states (boolean)");
-					}
-					// make sure the names of the states are 'false' and 'true'
-					node.setStateAt("false", 0);
-					node.setStateAt("true", 1);
-					return node;
-				}
-			};
-		}
-		return probabilisticNodeBuilder;
-	}
-
-	@Override
-	public INodeBuilder getUtilityNodeBuilder() {
-		throw new UnsupportedOperationException("Utility nodes are not supported.");
-	}
-
-	@Override
-	public void setContinuousNodeBuilder(INodeBuilder arg0) {
-		throw new UnsupportedOperationException("Continuous nodes are not supported.");
-	}
-
-	@Override
-	public void setDecisionNodeBuilder(INodeBuilder arg0) {
-		throw new UnsupportedOperationException("Decision nodes are not supported.");
-	}
-
-	@Override
-	public synchronized void setProbabilisticNodeBuilder(INodeBuilder builder) {
-		this.probabilisticNodeBuilder = builder;
-	}
-
-	@Override
-	public void setUtilityNodeBuilder(INodeBuilder arg0) {
-		throw new UnsupportedOperationException("Utility nodes are not supported.");
-	}
-
-	@Override
-	public void setNumParents(int numParents) {
-		this.numParents = numParents;
-	}
-
-	@Override
-	public void setNumNodes(int numNodes) {
-		this.numNodes = numNodes;
-	}
-
 	/**
-	 * @return the number of nodes to generate in {@link #buildNetwork(String)}
+	 * Obtains a network from cache.
 	 * 
-	 * @see #setNumNodes(int)
+	 * @see #getNetworkCache()
+	 * @see #resetNetworkCache()
+	 * @see #generateRandomNet()e
 	 */
-	public int getNumNodes() {
-		return numNodes;
-	}
-
-	/**
-	 * @return the number of parents to generate for each node in the network of
-	 *         {@link #buildNetwork(String)}
-	 * 
-	 * @see #setNumParents(int)
-	 */
-	public int getNumParents() {
-		return numParents;
-	}
-
-	/**
-	 * @return the multipletonMap
-	 * 
-	 * @see {@link #getNetwork()}
-	 */
-	protected Map<String, ProbabilisticNetwork> getMultipletonMap() {
-		return multipletonMap;
-	}
-
-	/**
-	 * @param multipletonMap the multipletonMap to set
-	 * 
-	 * @see {@link #getNetwork()}
-	 */
-	protected void setMultipletonMap(Map<String, ProbabilisticNetwork> multipletonMap) {
-		this.multipletonMap = multipletonMap;
-	}
-
 	@Override
-	public Graph getNetwork() {
+	public synchronized Graph getNetwork() {
 
-		String netName = this.toString();
-		if (getMultipletonMap().containsKey(netName)) {
-			logger.debug("[MULTIPLETON] reusing network {}", netName);
-			return getMultipletonMap().get(netName);
+		// retrieving from cache
+		Graph net = getNetworkCache();
+
+		// generate network if cache was not present
+		if (net != null) {
+			logger.debug("Returning cached network");
+		} else {
+			// Note: generateRandomNet will update cache
+			net = this.generateRandomNet();
 		}
 
-		ProbabilisticNetwork net = buildNetwork(netName);
-		getMultipletonMap().put(netName, net);
 		return net;
+	}
+
+	/**
+	 * Generates a random network. It will also force the cache to be updated with
+	 * {@link #setNetworkCache(Graph)}
+	 * 
+	 * @see #getNetwork()
+	 * @see #resetNetworkCache()
+	 */
+	@Override
+	public synchronized Graph generateRandomNet() {
+
+		// generate new net and fill its count tables
+		logger.debug("Generating new network");
+		Graph net = this.fillCountTables(super.generateRandomNet());
+
+		logger.debug("Setting network cache: {}", net);
+		setNetworkCache(net);
+
+		return net;
+	}
+
+	/**
+	 * @param graph : the network where the node belongs to. This reference will be
+	 *              used to access network properties with
+	 *              {@link Graph#getProperty(String)}
+	 * @param owner : the node to obtain its count table.
+	 * 
+	 * @return the Beta/Dirichlet count (absolute frequencies, or magnitude) table
+	 *         of the specified node. A new count table will be created if the node
+	 *         was not associated with any count table.
+	 * 
+	 * @see CountCompatibleNetIO#DEFAULT_COUNT_TABLE_PREFIX
+	 * @see #setCountTable(Graph, INode, PotentialTable)
+	 */
+	public PotentialTable getCountTable(Graph graph, INode owner) {
+
+		if (owner == null) {
+			throw new NullPointerException("The owner of the table must be specified");
+		}
+
+		if (graph != null) {
+			PotentialTable countTable = (PotentialTable) graph
+					.getProperty(CountCompatibleNetIO.DEFAULT_COUNT_TABLE_PREFIX + owner.getName());
+			if (owner instanceof ProbabilisticNode) {
+				// this boolean var will become true
+				// if we need to create a new count table
+				boolean createCountTable = false;
+				if (countTable == null) {
+					Debug.println(getClass(),
+							"No count table found for " + owner + ". Creating a new one from its CPT...");
+					createCountTable = true;
+				} else if (countTable.tableSize() != ((ProbabilisticNode) owner).getProbabilityFunction().tableSize()) {
+					Debug.println(getClass(),
+							"Size of count table is not matching. CPT size = "
+									+ ((ProbabilisticNode) owner).getProbabilityFunction().tableSize()
+									+ ",  count table size = " + countTable.tableSize());
+					Debug.println(getClass(), "Count table of " + owner + " will be reallocated");
+					createCountTable = true;
+				} // else reuse the obtained count table
+
+				if (createCountTable) {
+					Debug.println(getClass(), "Creating count table of " + owner);
+					try {
+						// copy the potential table and use it as the count table
+						countTable = (PotentialTable) ((ProbabilisticNode) owner).getProbabilityFunction().clone();
+						// store the cloned table
+						this.setCountTable(graph, owner, countTable);
+					} catch (Exception e) {
+						Debug.println(getClass(), "Failed to create a new count table for node " + owner, e);
+					}
+				}
+			}
+			return countTable;
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param graph : the network where the node belongs to. This reference will be
+	 *              used to set the network properties with
+	 *              {@link Graph#addProperty(String, Object)}
+	 * @param owner : the node that will own the count table (the count table will
+	 *              be set for this node).
+	 * 
+	 * @param table : the Beta/Dirichlet count (absolute frequencies, or magnitude)
+	 *              table to set.
+	 * 
+	 * @see CountCompatibleNetIO#DEFAULT_COUNT_TABLE_PREFIX
+	 * @see #getCountTable(Graph, INode)
+	 */
+	public void setCountTable(Graph graph, INode owner, PotentialTable table) {
+
+		if (owner == null || graph == null) {
+			throw new NullPointerException("The owner of the table (and its network) must be specified");
+		}
+
+		logger.debug("Setting the count table of node '{}' in network '{}' to: {}", owner, graph, table);
+		graph.addProperty(CountCompatibleNetIO.DEFAULT_COUNT_TABLE_PREFIX + owner.getName(), table);
+
+	}
+
+	/**
+	 * Makes sure the count tables in the network are populated proportionally to
+	 * the CPTs.
+	 * 
+	 * @param net : the network to modify
+	 * 
+	 * @return the modified network (this implementation simply returns the object
+	 *         passed as argument).
+	 * 
+	 * @see #getCountTable(Graph, INode)
+	 * @see #setCountTable(Graph, INode, PotentialTable)
+	 */
+	protected Graph fillCountTables(Graph net) {
+
+		logger.debug("Generating count tables");
+
+		// generate/update count tables for all nodes
+		for (Node node : net.getNodes()) {
+
+			// we assume all nodes are probabilistic
+			if (node instanceof ProbabilisticNode) {
+
+				ProbabilisticNode probNode = (ProbabilisticNode) node;
+
+				// extract the CPT
+				PotentialTable cpt = probNode.getProbabilityFunction();
+				if (cpt == null) {
+					logger.warn("Failed to extract CPT of node {}", probNode);
+					if (!isIgnoreWarnings()) {
+						throw new IllegalArgumentException(
+								"Node '" + probNode + "' was not associated with any conditional probability table");
+					}
+				}
+
+				// extract the count table
+				PotentialTable countTable = this.getCountTable(net, probNode);
+				// getCountTable supposedly returns a non-null consistent table,
+				// but let's just double-check
+				if (countTable == null || countTable.tableSize() != cpt.tableSize()) {
+					logger.warn("No count table was found for node {}. Creating new instance...", probNode);
+					if (!isIgnoreWarnings()) {
+						throw new IllegalArgumentException(
+								"Failed to obtain a count table for node '" + probNode + "'");
+					}
+					countTable = (PotentialTable) cpt.clone();
+				} else {
+					logger.debug("Updating count table of node {}", probNode);
+				}
+
+				// set the absolute frequency to CPT * total
+				// (i.e. Beta/Dirichlet parameter will become distribution * magnitude)
+				logger.debug("Setting the count table to \"distribution * magnitude\"");
+				countTable.fillTable(getTotalCounts());
+				countTable.opTab(cpt, PotentialTable.PRODUCT_OPERATOR);
+
+				// this is to make sure we overwrite the original count table
+				setCountTable(net, probNode, countTable);
+
+			} else {
+				if (isIgnoreWarnings()) {
+					logger.warn("Ignoring node '{}' with incompatible node type: {}", node,
+							// print node's class if not null.
+							((node != null) ? node.getClass() : null));
+				} else {
+					throw new IllegalArgumentException("Node '" + node + "' was expected to be an instance of '"
+							+ ProbabilisticNode.class + "', but it was: "
+							// print node's class if not null.
+							+ ((node != null) ? node.getClass() : null));
+
+				}
+			}
+		}
+
+		// just return the same instance we got from the argument
+		return net;
+	}
+
+	@Override
+	public void setTotalCounts(int totalCounts) {
+		this.totalCounts = totalCounts;
+	}
+
+	/**
+	 * @return the totalCounts (Beta/Dirichlet virtual counts/magnitude).
+	 * 
+	 * @see #setTotalCounts(int)
+	 * @see #generateRandomNet()e
+	 */
+	public int getTotalCounts() {
+		return totalCounts;
+	}
+
+	/**
+	 * @return a cache to be used in {@link #getNetwork()}.
+	 *         {@link #generateRandomNet()} shall overwrite this cache.
+	 */
+	protected synchronized Graph getNetworkCache() {
+		return networkCache;
+	}
+
+	/**
+	 * @param networkCache : a cache to be used in {@link #getNetwork()}.
+	 *                     {@link #generateRandomNet()} shall overwrite this cache.
+	 */
+	protected synchronized void setNetworkCache(Graph networkCache) {
+		this.networkCache = networkCache;
+	}
+
+	/**
+	 * Resets the cache at {@link #getNetwork()}
+	 */
+	public void resetNetworkCache() {
+		logger.debug("Resetting network cache...");
+		this.setNetworkCache(null);
+	}
+
+	/**
+	 * @return if true, {@link #generateRandomNet()} will ignore warnings. If false,
+	 *         it will throw exceptions on warnings.
+	 */
+	public boolean isIgnoreWarnings() {
+		return ignoreWarnings;
+	}
+
+	/**
+	 * @param ignoreWarnings : if true, {@link #generateRandomNet()} will ignore
+	 *                       warnings. If false, it will throw exceptions on
+	 *                       warnings.
+	 */
+	public void setIgnoreWarnings(boolean ignoreWarnings) {
+		this.ignoreWarnings = ignoreWarnings;
 	}
 
 }
