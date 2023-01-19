@@ -188,7 +188,11 @@ public class RandomSBNBuilderImpl extends RandomNetworkGenerator implements Rand
 		}
 
 		logger.debug("Setting the count table of node '{}' in network '{}' to: {}", owner, graph, table);
-		graph.addProperty(CountCompatibleNetIO.DEFAULT_COUNT_TABLE_PREFIX + owner.getName(), table);
+		if (table == null) {
+			graph.removeProperty(CountCompatibleNetIO.DEFAULT_COUNT_TABLE_PREFIX + owner.getName());
+		} else {
+			graph.addProperty(CountCompatibleNetIO.DEFAULT_COUNT_TABLE_PREFIX + owner.getName(), table);
+		}
 
 	}
 

@@ -29,4 +29,24 @@ public interface RandomSBNBuilder extends IRandomNetworkGenerator, NetworkStruct
 	 */
 	void setTotalCounts(int count);
 
+	/**
+	 * @param minNumStates : the minimum number of states of nodes.
+	 */
+	public void setMinNumStates(int minNumStates);
+
+	/**
+	 * @param maxNumStates : the maximum number of states of nodes.
+	 */
+	public void setMaxNumStates(int maxNumStates);
+
+	/**
+	 * @param treeWidth : the maximum number of parents per node.
+	 */
+	public void setMaxTreeWidth(int treeWidth);
+
+	/**
+	 * @param numNodes : the number of nodes to be created in the network.
+	 */
+	public void setNumNodes(int numNodes);
+
 }
