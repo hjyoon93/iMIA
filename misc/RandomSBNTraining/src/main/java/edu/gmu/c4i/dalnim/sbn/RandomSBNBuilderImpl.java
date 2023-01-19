@@ -221,13 +221,14 @@ public class RandomSBNBuilderImpl extends RandomNetworkGenerator implements Rand
 				ProbabilisticNode probNode = (ProbabilisticNode) node;
 
 				// extract the CPT
-				PotentialTable cpt = probNode.getProbabilityFunction();
+				PotentialTable cpt = probNode.getProbabilityFunction().getTemporaryClone();
 				if (cpt == null) {
 					logger.warn("Failed to extract CPT of node {}", probNode);
 					if (!isIgnoreWarnings()) {
 						throw new IllegalArgumentException(
 								"Node '" + probNode + "' was not associated with any conditional probability table");
 					}
+					continue;
 				}
 
 				// extract the count table
@@ -249,6 +250,7 @@ public class RandomSBNBuilderImpl extends RandomNetworkGenerator implements Rand
 				// (i.e. Beta/Dirichlet parameter will become distribution * magnitude)
 				logger.debug("Setting the count table to \"distribution * magnitude\"");
 				countTable.fillTable(getTotalCounts());
+				cpt.normalize();
 				countTable.opTab(cpt, PotentialTable.PRODUCT_OPERATOR);
 
 				// this is to make sure we overwrite the original count table
