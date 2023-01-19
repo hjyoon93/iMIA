@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.gmu.c4i.dalnim.sbn.data.SBNSampler;
-import edu.gmu.c4i.dalnim.sbn.data.SBNSamplerImpl;
+import edu.gmu.c4i.dalnim.sbn.data.TemporaryFileSBNSampler;
 import unbbayes.prs.sbn.RunnableSBNParameterLearning;
 
 /**
@@ -46,7 +46,7 @@ public class RandomSBNParameterLearningDriverImpl implements RandomSBNParameterL
 		RandomSBNBuilder sbnBuilder = RandomSBNBuilderImpl.getInstance();
 		ret.setSBNBuilder(sbnBuilder);
 
-		SBNSampler sampler = SBNSamplerImpl.getInstance();
+		SBNSampler sampler = TemporaryFileSBNSampler.getInstance(sbnBuilder);
 		ret.setDataGenerator(sampler);
 
 		ret.setParameterLearningRunner(RunnableSBNParameterLearning.getInstance(sbnBuilder, sampler));
