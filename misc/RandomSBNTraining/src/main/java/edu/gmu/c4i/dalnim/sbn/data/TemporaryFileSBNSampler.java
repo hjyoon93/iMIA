@@ -103,6 +103,7 @@ public class TemporaryFileSBNSampler implements SBNSampler {
 			} catch (IOException e) {
 				throw new UncheckedIOException("Failed to create a temporary file to store the samples.", e);
 			}
+			setOutputLocation(file);
 		}
 		logger.debug("Output file set to '{}'", file);
 

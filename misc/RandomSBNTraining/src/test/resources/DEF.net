@@ -1,0 +1,51 @@
+net
+{
+     node_size = (0 0);
+     name = "New BN";
+     tree = "(Parent,Child1,Child2)";
+     UnBBayes_Color_Probabilistic_Description = "-256";
+     UnBBayes_Color_Probabilistic_Explanation = "-16711936";
+     UnBBayes_Count_Tables = "D,E,F";
+}
+
+node D
+{
+     label = "Parent";
+     position = (360 51);
+     UNBBAYES_NODE_COLOR = "-256";
+     states = ("false" "true");
+}
+
+node E
+{
+     label = "Child1";
+     position = (179 234);
+     UNBBAYES_NODE_COLOR = "-256";
+     states = ("false" "true");
+}
+
+node F
+{
+     label = "Child2";
+     position = (550 221);
+     UNBBAYES_NODE_COLOR = "-256";
+     states = ("false" "true");
+}
+
+potential (D)
+{
+ data = ( 2.0 8.0 );
+}
+
+potential (E | D)
+{
+ data = (( 2.0 0.0 )
+( 2.0 6.0 ));
+}
+
+potential (F | D)
+{
+ data = (( 1.0 1.0 )
+( 6.0 2.0 ));
+}
+
