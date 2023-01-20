@@ -81,7 +81,7 @@ public class Main {
 
 		// print help if argument is set
 		if (cmd.hasOption('h')) {
-			new HelpFormatter().printHelp("java -jar edu.gmu.c4i.dalnim.RandomSBNTraining-<VERSION>.jar [OPTIONS]",
+			new HelpFormatter().printHelp("java -jar RandomSBNTraining-<VERSION>-jar-with-dependencies.jar [OPTIONS]",
 					options);
 			return;
 		}
