@@ -103,12 +103,46 @@ public class RandomSBNBuilderImpl extends RandomNetworkGenerator implements Rand
 
 		// generate new net and fill its count tables
 		logger.debug("Generating new network");
-		Graph net = this.fillCountTables(super.generateRandomNet());
+		Graph net = this.fillCountTables(this.renameStates(super.generateRandomNet()));
 
 		logger.debug("Setting network cache: {}", net);
 		setNetworkCache(net);
 
 		return net;
+	}
+
+	/**
+	 * Renames the states of nodes.
+	 * 
+	 * @param graph : the graph with the nodes to rename
+	 * @return the argument
+	 */
+	protected Graph renameStates(Graph graph) {
+
+		logger.debug("Renaming the states of nodes in the network {}", graph);
+
+		if (graph != null) {
+			for (Node node : graph.getNodes()) {
+				if (node.getStatesSize() <= 2) {
+					// This is a boolean node.
+					// Rename to false or true.
+					if (node.getStatesSize() >= 1) {
+						node.setStateAt("false", 0);
+					}
+					if (node.getStatesSize() >= 2) {
+						node.setStateAt("true", 1);
+					}
+				} else {
+					// This is non-boolean node.
+					// Rename to state<N>
+					for (int state = 0; state < node.getStatesSize(); state++) {
+						node.setStateAt("state" + state, state);
+					}
+				}
+			}
+		}
+
+		return graph;
 	}
 
 	/**

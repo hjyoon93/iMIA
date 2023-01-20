@@ -107,6 +107,21 @@ public class TemporaryFileSBNSampler implements SBNSampler {
 		}
 		logger.debug("Output file set to '{}'", file);
 
+		// Monte carlo sampler requires the file to exist already
+		if (!file.exists()) {
+			logger.debug("Creating file '{}'...", file);
+			file.getParentFile().mkdirs();
+			try {
+				if (file.createNewFile()) {
+					logger.debug("File '{}' was created successfully.", file);
+				} else {
+					logger.debug("Failed to create new file '{}'.", file);
+				}
+			} catch (IOException e) {
+				throw new UncheckedIOException("Failed to create the file: " + file, e);
+			}
+		}
+
 		IMonteCarloSampling monteCarlo = getSampler();
 		logger.debug("Extracted the sampler to use: {}", monteCarlo);
 		if (monteCarlo == null) {

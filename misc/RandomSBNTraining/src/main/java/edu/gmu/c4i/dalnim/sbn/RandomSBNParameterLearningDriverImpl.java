@@ -16,6 +16,7 @@ import unbbayes.prs.bn.PotentialTable;
 import unbbayes.prs.bn.ProbabilisticNode;
 import unbbayes.prs.bn.cpt.impl.UniformTableFunction;
 import unbbayes.prs.sbn.RunnableSBNParameterLearning;
+import unbbayes.util.Debug;
 
 /**
  * Default implementation of {@link RandomSBNParameterLearningDriver}
@@ -76,6 +77,11 @@ public class RandomSBNParameterLearningDriverImpl implements RandomSBNParameterL
 		ret.setDataGenerator(sampler);
 
 		ret.setParameterLearningRunner(RunnableSBNParameterLearning.getInstance(sbnBuilder, sampler));
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Enabling debug mode in UnBBayes.");
+			Debug.setDebug(true);
+		}
 
 		return ret;
 	}
