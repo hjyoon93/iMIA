@@ -103,12 +103,34 @@ public class RandomSBNBuilderImpl extends RandomNetworkGenerator implements Rand
 
 		// generate new net and fill its count tables
 		logger.debug("Generating new network");
-		Graph net = this.fillCountTables(this.renameStates(super.generateRandomNet()));
+		Graph net = this.fillCountTables(this.renameStates(this.adjustNodePosition(super.generateRandomNet())));
 
 		logger.debug("Setting network cache: {}", net);
 		setNetworkCache(net);
 
 		return net;
+	}
+
+	/**
+	 * Position of nodes will be adjusted to avoid letting all nodes overlapped.
+	 * @param graph
+	 * @return the argument
+	 */
+	protected Graph adjustNodePosition(Graph graph) {
+		
+		logger.debug("Adjusting position of nodes...");
+		
+		if (graph == null) {
+			return null;
+		}
+		
+		for (int i = 0; i < graph.getNodeCount(); i++) {
+			Node node = graph.getNodes().get(i);
+			node.setPosition((100 * (((i+1) % 20) + 1)), (100 * (((i+1) / 20) + 1)));
+		}
+		
+		return graph;
+		
 	}
 
 	/**
