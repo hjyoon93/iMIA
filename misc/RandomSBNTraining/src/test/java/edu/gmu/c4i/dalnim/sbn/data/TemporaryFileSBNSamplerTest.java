@@ -1,6 +1,8 @@
 package edu.gmu.c4i.dalnim.sbn.data;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -14,7 +16,6 @@ import org.junit.Test;
 import unbbayes.io.CountCompatibleNetIO;
 import unbbayes.prs.Graph;
 import unbbayes.prs.bn.ProbabilisticNetwork;
-import unbbayes.prs.sbn.RunnableSBNParameterLearning.NetworkStructureDataTransferObject;
 
 /**
  * Unit test of {@link TemporaryFileSBNSampler}
