@@ -12,3 +12,6 @@ Some source code and scripts for DALNIM
 *  *concept_model.tql*: TypeQL script that will save the the DALNIM conceptual model schema to TypeDB.
 
 *  *dependencies.drawio.svg*: a diagram describing the maven dependencies of the projects in this folder. This can be edited in [draw.io](https://app.diagrams.net/).
+
+* *misc*: miscellaneous code and resources.
+
