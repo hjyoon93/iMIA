@@ -4,6 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,6 +16,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import unbbayes.io.CountCompatibleNetIO;
 import unbbayes.prs.Graph;
 import unbbayes.prs.Node;
 import unbbayes.prs.bn.PotentialTable;
@@ -62,7 +67,7 @@ public class RandomSBNBuilderImplTest {
 	public final void testGenerateRandomNet() {
 		long seed = System.currentTimeMillis();
 		logger.info("Seed = {}", seed);
-		
+
 		int numStates = 2;
 		int numNodes = 50;
 		int treewidth = 15;
@@ -91,8 +96,56 @@ public class RandomSBNBuilderImplTest {
 			assertTrue(node instanceof ProbabilisticNode);
 			PotentialTable table = builder.getCountTable(net, node);
 			assertNotNull(table);
-			assertEquals((double)totalCounts, table.getSum(), 0.5d);
+			assertEquals((double) totalCounts, table.getSum(), 0.5d);
 		}
+
+	}
+
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.sbn.RandomSBNBuilderImpl#generateRandomNet()}.
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public final void testSaveRandomNet() throws IOException {
+		long seed = System.currentTimeMillis();
+		logger.info("Seed = {}", seed);
+
+		int numStates = 2;
+		int numNodes = 50;
+		int treewidth = 10;
+		int totalCounts = 100;
+
+		RandomSBNBuilderImpl builder = (RandomSBNBuilderImpl) RandomSBNBuilderImpl.getInstance();
+		assertNotNull(builder);
+		builder.setMinNumStates(numStates);
+		builder.setMaxNumStates(numStates);
+		builder.setNumNodes(numNodes);
+		builder.setMaxTreeWidth(treewidth);
+		builder.setTotalCounts(totalCounts);
+
+		Graph net = builder.generateRandomNet();
+		assertTrue(net instanceof ProbabilisticNetwork);
+
+		File output = File.createTempFile(getClass().getName(), ".net");
+		CountCompatibleNetIO io = new CountCompatibleNetIO();
+		io.save(output, net);
+		net = io.load(output);
+
+		assertEquals(numNodes, net.getNodeCount());
+		assertTrue(net.getEdges().size() > 0);
+
+		for (Node node : net.getNodes()) {
+			assertEquals(numStates, node.getStatesSize());
+			assertTrue(node.getParentNodes().size() <= treewidth);
+			assertTrue(node instanceof ProbabilisticNode);
+			PotentialTable table = builder.getCountTable(net, node);
+			assertNotNull(table);
+			assertEquals((double) totalCounts, table.getSum(), 0.5d);
+		}
+
+		Files.delete(output.toPath());
 
 	}
 
