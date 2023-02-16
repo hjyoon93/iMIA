@@ -78,9 +78,6 @@ network hellonetwork extends Scenario
         }
 
 
-        GCGS: <default("WirelessHost")> like INetworkNode {
-            @display("p=347,385;i=misc/chargingstation");
-        }
 
 
 
@@ -94,38 +91,6 @@ network hellonetwork extends Scenario
             parameters:
                 @display("p=43,167");
         }
-
-
-
-        CCS: <default("WirelessHost")> like INetworkNode {
-            @display("p=327,167;i=misc/cloud");
-        }
-
-        node[0]: VeinsInetCar {//<default("WirelessHost")> like INetworkNode {// VeinsInetCar {     // <"WirelessHost"> like INetworkNode { 
-            @display("i=misc/car;p=149.056,375.928");
-
-        }
-
-
-
-	//connections allowunconnected:  
-
-      //  rsu[0].gate++ <--> myChannel <--> CCS.gate++;
-        //rsu[1].gate++ <--> myChannel <--> CCS.gate++;
-        //rsu[2].gate++ <--> myChannel <--> CCS.gate++;
-        //rsu[3].gate++ <--> myChannel <--> CCS.gate++;
-
-
-       // drone[0].gate++ <--> myChannel <--> rsu[0].gate++;
-       // drone[1].gate++ <--> myChannel <--> rsu[1].gate++;
-       // drone[2].gate++ <--> myChannel <--> rsu[2].gate++;
-       // drone[3].gate++ <--> myChannel <--> rsu[3].gate++;
-       // drone[4].gate++ <--> myChannel <--> rsu[0].gate++;
-       // drone[5].gate++ <--> myChannel <--> rsu[1].gate++;
-       // drone[6].gate++ <--> myChannel <--> rsu[2].gate++;
-       // drone[7].gate++ <--> myChannel <--> rsu[3].gate++;
-
-
 
 
 
