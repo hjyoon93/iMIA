@@ -16,7 +16,14 @@
 		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
+	<!-- Dependencies that are not present in maven central repository are here -->
 	<repositories>
+		<!-- Local file repository -->
+		<repository>
+			<id>TypeDB2SBN-local</id>
+			<name>Local files</name>
+			<url>file://${project.basedir}/lib/repository</url>
+		</repository>
 		<!-- Automatically download TypeDB libraries from this repo -->
 		<repository>
 			<id>repo.vaticle.com</id>
@@ -27,19 +34,17 @@
 	<!-- Load these libraries/dependencies -->
 	<dependencies>
 
-		<!-- Dependencies related to BN/SBN structure -->
+		<!-- Dependencies related to SBN -->
 		<dependency>
-			<groupId>br.unb.cic</groupId>
-			<artifactId>unbbayes</artifactId>
-			<version>4.22.19-SNAPSHOT</version>
-			<scope>compile</scope>
+			<groupId>edu.gmu.c4i</groupId>
+			<artifactId>unbbayes.prs.sbn.plugin</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 			<exclusions>
 				<!-- Do not load old log4j -->
 				<exclusion>
 					<groupId>log4j</groupId>
 					<artifactId>log4j</artifactId>
 				</exclusion>
-
 				<!-- Do not load old JUnit -->
 				<exclusion>
 					<groupId>junit</groupId>
@@ -47,6 +52,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 
 		<!-- TypeDB client -->
 		<dependency>
@@ -69,12 +75,6 @@
 			<version>1.5.0</version>
 		</dependency>
 
-		<!-- Some string operations to read applications.properties -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
-		</dependency>
 
 		<!-- Logger -->
 		<dependency>
@@ -131,7 +131,7 @@
 							<archive>
 								<manifest>
 									<!-- The main entrypoint -->
-									<mainClass>edu.gmu.c4i.dalnim.typedb2bpmn.Main</mainClass>
+									<mainClass>edu.gmu.c4i.dalnim.typedb2sbn.Main</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>

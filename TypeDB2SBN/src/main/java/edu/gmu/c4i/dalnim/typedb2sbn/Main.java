@@ -1,9 +1,6 @@
 package edu.gmu.c4i.dalnim.typedb2sbn;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -11,9 +8,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.gmu.c4i.dalnim.typedb2sbn.decoder.Decoder;
-import edu.gmu.c4i.dalnim.typedb2sbn.decoder.DecoderImpl;
 
 /**
  * Main entrypoint of the TypeDB2SBN tool
@@ -36,8 +30,8 @@ public class Main {
 	 * --help,	-h :	Prints this help. See application.properties for more configurable parameters.
 	 * --url,		-u :	Address of TypeDB. Default is "localhost:1729"
 	 * --database,	-d :	Name of database in TypeDB to open a session. Default is "BPMN"
-	 * --uid,		-i :	UID of BPMN project to query (regex supported). E.g., "https://camunda.org/examples/#.*"
-	 * --output,	-o :	The output BPMN file. Default is "output.bpmn"
+	 * --uid,		-i :	UID of concept model element to query (regex supported). E.g., "https://camunda.org/examples/#.*"
+	 * --output,	-o :	The output NET file. Default is "structure.net"
 	 *             </pre>
 	 */
 	public static void main(String[] args) throws Exception {
@@ -49,8 +43,8 @@ public class Main {
 		options.addOption("u", "url", true, "ddress of TypeDB. Default is \"localhost:1729\"");
 		options.addOption("d", "database", true, "Name of database in TypeDB to open a session. Default is \"BPMN\"");
 		options.addOption("i", "uid", true,
-				"UID of BPMN project to query (regex supported). E.g., \"https://camunda.org/examples/#.*\"");
-		options.addOption("o", "output", true, "The output BPMN file. Default is \"output.bpmn\"");
+				"UID of concept model element to query (regex supported). E.g., \"https://camunda.org/examples/#.*\"");
+		options.addOption("o", "output", true, "The output NET file. Default is \"structure.net\"");
 
 		// parse the command line arguments
 		logger.debug("Reading the command line arguments.");
@@ -58,47 +52,38 @@ public class Main {
 
 		// print help if argument is set
 		if (cmd.hasOption('h')) {
-			new HelpFormatter().printHelp("java -jar TypeDB2SBN-<VERSION>-jar-with-dependencies.jar [OPTIONS]",
-					options);
+			new HelpFormatter().printHelp("TypeDB2SBN", options);
 			return;
 		}
-		
+
 		// the decoder to run
-		Decoder decoder = DecoderImpl.getInstance();
-		
+		Decoder writer = Decoder.getDefaultDecoder();
+
 		// read URL
 		if (cmd.hasOption("url")) {
-			decoder.setTypeDBAddress(cmd.getOptionValue("url"));
+			writer.setTypeDBAddress(cmd.getOptionValue("url"));
 		}
-		
+
 		// read database name
 		if (cmd.hasOption("database")) {
-			decoder.setDatabaseName(cmd.getOptionValue("database"));
-		}
-		
-		// read uid of BPMN definitions to query
-		if (cmd.hasOption("uid")) {
-			decoder.setRootUID(cmd.getOptionValue("uid"));
+			writer.setDatabaseName(cmd.getOptionValue("database"));
 		}
 
-		// read some properties from application.properties
-		ApplicationProperties properties = ApplicationProperties.getInstance();
-		// The default name of the BPMN file to write
-		String bpmnFileName = properties.getProperty(Main.class.getName() + ".BPMNFileName",
-				// default is 'output.bpmn'
-				"output.bpmn");
+		// read uid of definitions to query
+		if (cmd.hasOption("uid")) {
+			writer.setRootUID(cmd.getOptionValue("uid"));
+		}
 
 		// read the output location
-		File outputFile = new File(cmd.getOptionValue("output", bpmnFileName)).getAbsoluteFile();
+		File outputFile = new File(cmd.getOptionValue("output",
+				// default is 'structure.net'
+				"structure.net")).getAbsoluteFile();
 		logger.debug("Output location is: {}", outputFile);
 
-
-		// Generate the BPMN file...
-		try (OutputStream bpmnOutput = new BufferedOutputStream(new FileOutputStream(outputFile))) {
-			logger.info("Starting the process...");
-			decoder.save(bpmnOutput);
-			logger.info("Finished the process.");
-		}
+		// Generate the SBN structure...
+		logger.info("Starting the process...");
+		writer.saveSBNFile(outputFile);
+		logger.info("Finished the process.");
 
 	}
 
