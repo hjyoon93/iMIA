@@ -1154,6 +1154,55 @@ public class EncoderImplTest {
 		}
 		assertTrue(foundConcept);
 	}
+	
+	/**
+	 * Test method for
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeSchema(java.io.OutputStream)}
+	 * and
+	 * {@link edu.gmu.c4i.dalnim.bpmn2typedb.encoder.EncoderImpl#encodeData(java.io.OutputStream)}
+	 * for UAV_material_transport_short.bpmn.
+	 * 
+	 * @see #testEncodeSchema(String)
+	 */
+	@Test
+	public final void testEncodeBPMNUAVSimple() throws Exception {
+		
+		// make sure the schema can be generated
+		testEncodeSchema("/UAV_material_transport_short.bpmn");
+		
+		// generate the data
+		EncoderImpl encoder = (EncoderImpl) EncoderImpl.getInstance();
+		
+		encoder.loadInput(getClass().getResourceAsStream("/UAV_material_transport_short.bpmn"));
+		String dataTypeQL;
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			encoder.encodeData(out);
+			dataTypeQL = out.toString();
+		}
+		
+		logger.debug("Generated typeql data: \n{}", dataTypeQL);
+		assertFalse(dataTypeQL.trim().isEmpty());
+		
+		// make sure the typeql data can be parsed
+		List<TypeQLQuery> parsedList = TypeQL.parseQueries(dataTypeQL).collect(Collectors.toList());
+		// there should be many commands
+		assertFalse("Size = " + parsedList.size(), parsedList.isEmpty());
+		// the 1st command should be an insert
+		assertNotNull(parsedList.get(0).asInsert());
+		
+		// We should also find declarations like the following:
+		// insert $concept isa Task, has UID ...;
+		boolean foundConcept = false;
+		for (int i = 0; i < parsedList.size(); i++) {
+			TypeQLQuery insertQuery = parsedList.get(i);
+			if (insertQuery.toString().startsWith("insert $concept isa Task")) {
+				foundConcept = true;
+				break;
+			}
+		}
+		assertTrue(foundConcept);
+		
+	}
 
 	/**
 	 * @return the keywords (entities and relations) that are part of the concept

@@ -111,7 +111,7 @@ public class EncoderImpl implements Encoder {
 	private String bpmnParentChildRelationName = bpmnEntityNamePrefix + "hasChildTag";
 
 	private String jsonBPMNConceptualModelMap = "{" + "'definitions':'Mission',"
-			+ "@org.camunda.bpm.model.bpmn.instance.Activity':'Task'," + "'lane':'Performer',"
+			+ "'@org.camunda.bpm.model.bpmn.instance.Activity':'Task'," + "'lane':'Performer',"
 			+ "'participant':'Performer'," + "'@org.camunda.bpm.model.bpmn.instance.ItemAwareElement':'Asset',"
 			+ "'@org.camunda.bpm.model.bpmn.instance.DataAssociation':'Service',"
 			+ "'parallelGateway':'ANDPrecedenceTaskList'," + "'exclusiveGateway':'ORPrecedenceTaskList',"
