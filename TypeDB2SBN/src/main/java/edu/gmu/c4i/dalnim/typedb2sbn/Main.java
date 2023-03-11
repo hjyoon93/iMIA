@@ -40,8 +40,8 @@ public class Main {
 		Options options = new Options();
 		options.addOption("h", "help", false,
 				"Prints this help. See application.properties for more configurable parameters.");
-		options.addOption("u", "url", true, "ddress of TypeDB. Default is \"localhost:1729\"");
-		options.addOption("d", "database", true, "Name of database in TypeDB to open a session. Default is \"BPMN\"");
+		options.addOption("u", "url", true, "Address of TypeDB. Default is \"localhost:1729\"");
+		options.addOption("d", "database", true, "Name of database in TypeDB to open a session. Default is \"demo\"");
 		options.addOption("i", "uid", true,
 				"UID of concept model element to query (regex supported). E.g., \"https://camunda.org/examples/#.*\"");
 		options.addOption("o", "output", true, "The output NET file. Default is \"structure.net\"");
