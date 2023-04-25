@@ -1,0 +1,2487 @@
+## =============== Begin ===============
+## Insert BPMN elements
+
+## definitions
+insert $x isa BPMN_definitions,
+	 has BPMNattrib_exporter "Camunda Modeler",
+	 has BPMNattrib_exporterVersion "5.2.0",
+	 has BPMNattrib_targetNamespace "http://bpmn.io/schema/bpmn",
+	 has BPMNattrib_typeLanguage "http://www.w3.org/2001/XMLSchema",
+	 has BPMNattrib_expressionLanguage "http://www.w3.org/1999/XPath",
+	 has BPMNattrib_id "Definitions_0buvjxg",
+	 has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+
+## Mapping to the conceptual model
+insert $concept isa Mission, has UID "http://bpmn.io/schema/bpmn/#Mission_Definitions_0buvjxg";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Definitions_0buvjxg';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Mission_Definitions_0buvjxg';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## process
+insert $x isa BPMN_process,
+	 has BPMNattrib_isClosed "false",
+	 has BPMNattrib_id "Process_1991ydl",
+	 has BPMNattrib_isExecutable "true",
+	 has BPMNattrib_processType "None",
+	 has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## laneSet
+insert $x isa BPMN_laneSet,
+	 has BPMNattrib_id "LaneSet_0okp3c2",
+	 has UID "http://bpmn.io/schema/bpmn/#LaneSet_0okp3c2";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#LaneSet_0okp3c2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## lane
+insert $x isa BPMN_lane,
+	 has BPMNattrib_name "Ground Control / UAV",
+	 has BPMNattrib_id "Lane_0uwans2",
+	 has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#LaneSet_0okp3c2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://bpmn.io/schema/bpmn/#Performer_Lane_0uwans2";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Lane_0uwans2';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Performer_Lane_0uwans2';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Event_171vetp",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_0gm9kom",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_1vu9vvw",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef2";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_1mizk6r",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef3";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_0ykhmca",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef4";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_14llohk",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef5";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Event_0t6aho5",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef6";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## lane
+insert $x isa BPMN_lane,
+	 has BPMNattrib_name "UTM",
+	 has BPMNattrib_id "Lane_0motn16",
+	 has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#LaneSet_0okp3c2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://bpmn.io/schema/bpmn/#Performer_Lane_0motn16";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Lane_0motn16';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Performer_Lane_0motn16';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Gateway_06vfc7x",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef7";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Gateway_0z9ba90",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef8";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_0qctz4b",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef9";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_0obqpid",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef10";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## lane
+insert $x isa BPMN_lane,
+	 has BPMNattrib_name "Remote ID Receiver",
+	 has BPMNattrib_id "Lane_08mw5lb",
+	 has UID "http://bpmn.io/schema/bpmn/#Lane_08mw5lb";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#LaneSet_0okp3c2";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_08mw5lb";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://bpmn.io/schema/bpmn/#Performer_Lane_08mw5lb";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Lane_08mw5lb';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Performer_Lane_08mw5lb';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_15e33ak",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef11";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_08mw5lb";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+	 has BPMN_textContent "Activity_07y81cl",
+	 has UID "http://bpmn.io/schema/bpmn/#flowNodeRef12";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_08mw5lb";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#flowNodeRef12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## manualTask
+insert $x isa BPMN_manualTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "UAV Flight Check",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_1vu9vvw",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_1vu9vvw";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1vu9vvw";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_1vu9vvw";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_1vu9vvw';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_1vu9vvw';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_17f5xo1",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1vu9vvw";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_09kuzox",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1vu9vvw";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_implementation "##WebService",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "UAV reaches destination (goal)",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_0gm9kom",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_0gm9kom";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0gm9kom";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_0gm9kom";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_0gm9kom';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_0gm9kom';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_0fyn5fw",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0gm9kom";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_1a21qsj",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0gm9kom";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_implementation "##WebService",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "Send commands to UAV",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_14llohk",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_14llohk";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_14llohk";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_14llohk";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_14llohk';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_14llohk';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_192xrlq",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming2";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_14llohk";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_14hpny5",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing2";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_14llohk";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_implementation "##WebService",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "Send fused tracks",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_0obqpid",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_0obqpid";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0obqpid";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_0obqpid";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_0obqpid';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_0obqpid';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_1bqzwur",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming3";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0obqpid";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_11gs6ys",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing3";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0obqpid";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_implementation "##WebService",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "Send RID information",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_15e33ak",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_15e33ak";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_15e33ak";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_15e33ak";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_15e33ak';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_15e33ak';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_0j2lhdq",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming4";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_15e33ak";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_0tmfnky",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing4";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_15e33ak";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sendTask
+insert $x isa BPMN_sendTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_implementation "##WebService",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "Broadcast data to RID receivers",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_07y81cl",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_07y81cl";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_07y81cl";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_07y81cl";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_07y81cl';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_07y81cl';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_1b7zo0i",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming5";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_07y81cl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_0j2lhdq",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing5";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_07y81cl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_implementation "##WebService",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "Generate flight data",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_1mizk6r",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_1mizk6r";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1mizk6r";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_1mizk6r";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_1mizk6r';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_1mizk6r';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_09kuzox",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming6";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1mizk6r";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_02z4tju",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing6";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1mizk6r";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_implementation "##WebService",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "Supervise flight path",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_0ykhmca",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_0ykhmca";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0ykhmca";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_0ykhmca";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_0ykhmca';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_0ykhmca';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_1c5o874",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming7";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0ykhmca";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_192xrlq",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing7";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0ykhmca";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_implementation "##WebService",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "Generate tracks fusion",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_0qctz4b",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_0qctz4b";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0qctz4b";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_0qctz4b";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_0qctz4b';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_0qctz4b';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_0uedo2p",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming8";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0qctz4b";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_1bqzwur",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing8";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0qctz4b";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## startEvent
+insert $x isa BPMN_startEvent,
+	 has BPMNattrib_parallelMultiple "false",
+	 has BPMNattrib_isInterrupting "true",
+	 has BPMNattrib_id "Event_171vetp",
+	 has UID "http://bpmn.io/schema/bpmn/#Event_171vetp";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_171vetp";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_17f5xo1",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing9";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_171vetp";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## endEvent
+insert $x isa BPMN_endEvent,
+	 has BPMNattrib_id "Event_0t6aho5",
+	 has UID "http://bpmn.io/schema/bpmn/#Event_0t6aho5";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0t6aho5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_1a21qsj",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming9";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0t6aho5";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## parallelGateway
+insert $x isa BPMN_parallelGateway,
+	 has BPMNattrib_gatewayDirection "Unspecified",
+	 has BPMNattrib_id "Gateway_06vfc7x",
+	 has UID "http://bpmn.io/schema/bpmn/#Gateway_06vfc7x";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_06vfc7x";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa ANDPrecedenceTaskList, has UID "http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_06vfc7x";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Gateway_06vfc7x';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_06vfc7x';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_02z4tju",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming10";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_06vfc7x";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_14ldiym",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing10";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_06vfc7x";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_1c5o874",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing11";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_06vfc7x";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_0uedo2p",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing12";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_06vfc7x";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_1b7zo0i",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing13";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_06vfc7x";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## parallelGateway
+insert $x isa BPMN_parallelGateway,
+	 has BPMNattrib_gatewayDirection "Unspecified",
+	 has BPMNattrib_id "Gateway_0z9ba90",
+	 has UID "http://bpmn.io/schema/bpmn/#Gateway_0z9ba90";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0z9ba90";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa ANDPrecedenceTaskList, has UID "http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_0z9ba90";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Gateway_0z9ba90';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#ANDPrecedenceTaskList_Gateway_0z9ba90';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_14hpny5",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming11";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0z9ba90";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_11gs6ys",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming12";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0z9ba90";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_14ldiym",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming13";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0z9ba90";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_0tmfnky",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming14";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0z9ba90";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_0fyn5fw",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing14";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_0z9ba90";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Gateway_0z9ba90",
+	 has BPMNattrib_id "Flow_14ldiym",
+	 has BPMNattrib_sourceRef "Gateway_06vfc7x",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_14ldiym";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_14ldiym";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_14ldiym";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_14ldiym';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_14ldiym';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_1vu9vvw",
+	 has BPMNattrib_id "Flow_17f5xo1",
+	 has BPMNattrib_sourceRef "Event_171vetp",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_17f5xo1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_17f5xo1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_17f5xo1";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_17f5xo1';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_17f5xo1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_0gm9kom",
+	 has BPMNattrib_id "Flow_0fyn5fw",
+	 has BPMNattrib_sourceRef "Gateway_0z9ba90",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0fyn5fw";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0fyn5fw";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0fyn5fw";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0fyn5fw';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0fyn5fw';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Event_0t6aho5",
+	 has BPMNattrib_id "Flow_1a21qsj",
+	 has BPMNattrib_sourceRef "Activity_0gm9kom",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1a21qsj";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1a21qsj";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1a21qsj";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1a21qsj';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1a21qsj';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_1mizk6r",
+	 has BPMNattrib_id "Flow_09kuzox",
+	 has BPMNattrib_sourceRef "Activity_1vu9vvw",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_09kuzox";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_09kuzox";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_09kuzox";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_09kuzox';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_09kuzox';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Gateway_06vfc7x",
+	 has BPMNattrib_id "Flow_02z4tju",
+	 has BPMNattrib_sourceRef "Activity_1mizk6r",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_02z4tju";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_02z4tju";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_02z4tju";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_02z4tju';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_02z4tju';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_14llohk",
+	 has BPMNattrib_id "Flow_192xrlq",
+	 has BPMNattrib_sourceRef "Activity_0ykhmca",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_192xrlq";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_192xrlq";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_192xrlq";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_192xrlq';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_192xrlq';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_0ykhmca",
+	 has BPMNattrib_id "Flow_1c5o874",
+	 has BPMNattrib_sourceRef "Gateway_06vfc7x",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1c5o874";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1c5o874";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1c5o874";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1c5o874';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1c5o874';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Gateway_0z9ba90",
+	 has BPMNattrib_id "Flow_14hpny5",
+	 has BPMNattrib_sourceRef "Activity_14llohk",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_14hpny5";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_14hpny5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_14hpny5";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_14hpny5';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_14hpny5';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_0obqpid",
+	 has BPMNattrib_id "Flow_1bqzwur",
+	 has BPMNattrib_sourceRef "Activity_0qctz4b",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1bqzwur";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1bqzwur";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1bqzwur";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1bqzwur';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1bqzwur';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_0qctz4b",
+	 has BPMNattrib_id "Flow_0uedo2p",
+	 has BPMNattrib_sourceRef "Gateway_06vfc7x",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0uedo2p";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0uedo2p";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0uedo2p";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0uedo2p';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0uedo2p';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Gateway_0z9ba90",
+	 has BPMNattrib_id "Flow_11gs6ys",
+	 has BPMNattrib_sourceRef "Activity_0obqpid",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_11gs6ys";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_11gs6ys";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_11gs6ys";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_11gs6ys';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_11gs6ys';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_15e33ak",
+	 has BPMNattrib_id "Flow_0j2lhdq",
+	 has BPMNattrib_sourceRef "Activity_07y81cl",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0j2lhdq";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0j2lhdq";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0j2lhdq";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0j2lhdq';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0j2lhdq';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_07y81cl",
+	 has BPMNattrib_id "Flow_1b7zo0i",
+	 has BPMNattrib_sourceRef "Gateway_06vfc7x",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1b7zo0i";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1b7zo0i";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1b7zo0i";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1b7zo0i';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1b7zo0i';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Gateway_0z9ba90",
+	 has BPMNattrib_id "Flow_0tmfnky",
+	 has BPMNattrib_sourceRef "Activity_15e33ak",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0tmfnky";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_1991ydl";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0tmfnky";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0tmfnky";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0tmfnky';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0tmfnky';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## process
+insert $x isa BPMN_process,
+	 has BPMNattrib_isClosed "false",
+	 has BPMNattrib_id "Process_18ulylt",
+	 has BPMNattrib_isExecutable "false",
+	 has BPMNattrib_processType "None",
+	 has UID "http://bpmn.io/schema/bpmn/#Process_18ulylt";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_18ulylt";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## process
+insert $x isa BPMN_process,
+	 has BPMNattrib_isClosed "false",
+	 has BPMNattrib_id "Process_18aydi9",
+	 has BPMNattrib_isExecutable "false",
+	 has BPMNattrib_processType "None",
+	 has UID "http://bpmn.io/schema/bpmn/#Process_18aydi9";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_18aydi9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## manualTask
+insert $x isa BPMN_manualTask,
+	 has BPMNattrib_startQuantity "1",
+	 has BPMNattrib_isForCompensation "false",
+	 has BPMNattrib_name "Delivery done",
+	 has BPMNattrib_completionQuantity "1",
+	 has BPMNattrib_id "Activity_08de82z",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_08de82z";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_18aydi9";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_08de82z";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://bpmn.io/schema/bpmn/#Task_Activity_08de82z";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Activity_08de82z';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Task_Activity_08de82z';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_1aup2f9",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming15";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_08de82z";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_0nyhjav",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing15";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_08de82z";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## startEvent
+insert $x isa BPMN_startEvent,
+	 has BPMNattrib_parallelMultiple "false",
+	 has BPMNattrib_isInterrupting "true",
+	 has BPMNattrib_id "Event_0r7i1nk",
+	 has UID "http://bpmn.io/schema/bpmn/#Event_0r7i1nk";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_18aydi9";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0r7i1nk";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+	 has BPMN_textContent "Flow_1aup2f9",
+	 has UID "http://bpmn.io/schema/bpmn/#outgoing16";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0r7i1nk";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#outgoing16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## endEvent
+insert $x isa BPMN_endEvent,
+	 has BPMNattrib_id "Event_1mj0as1",
+	 has UID "http://bpmn.io/schema/bpmn/#Event_1mj0as1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_18aydi9";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_1mj0as1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+	 has BPMN_textContent "Flow_0nyhjav",
+	 has UID "http://bpmn.io/schema/bpmn/#incoming16";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_1mj0as1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#incoming16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Activity_08de82z",
+	 has BPMNattrib_id "Flow_1aup2f9",
+	 has BPMNattrib_sourceRef "Event_0r7i1nk",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1aup2f9";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_18aydi9";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1aup2f9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1aup2f9";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1aup2f9';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_1aup2f9';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+	 has BPMNattrib_targetRef "Event_1mj0as1",
+	 has BPMNattrib_id "Flow_0nyhjav",
+	 has BPMNattrib_sourceRef "Activity_08de82z",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0nyhjav";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Process_18aydi9";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0nyhjav";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0nyhjav";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_0nyhjav';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#PrecedenceTask_Flow_0nyhjav';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## collaboration
+insert $x isa BPMN_collaboration,
+	 has BPMNattrib_isClosed "false",
+	 has BPMNattrib_id "Collaboration_1iq2twn",
+	 has UID "http://bpmn.io/schema/bpmn/#Collaboration_1iq2twn";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Collaboration_1iq2twn";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Service, has UID "http://bpmn.io/schema/bpmn/#Service_Collaboration_1iq2twn";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Collaboration_1iq2twn';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Service_Collaboration_1iq2twn';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## participant
+insert $x isa BPMN_participant,
+	 has BPMNattrib_id "Participant_0uci2xt",
+	 has BPMNattrib_processRef "Process_1991ydl",
+	 has UID "http://bpmn.io/schema/bpmn/#Participant_0uci2xt";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Collaboration_1iq2twn";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0uci2xt";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://bpmn.io/schema/bpmn/#Performer_Participant_0uci2xt";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Participant_0uci2xt';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Performer_Participant_0uci2xt';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## participant
+insert $x isa BPMN_participant,
+	 has BPMNattrib_name "GNSS",
+	 has BPMNattrib_id "Participant_0vsodfj",
+	 has BPMNattrib_processRef "Process_18ulylt",
+	 has UID "http://bpmn.io/schema/bpmn/#Participant_0vsodfj";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Collaboration_1iq2twn";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0vsodfj";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://bpmn.io/schema/bpmn/#Performer_Participant_0vsodfj";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Participant_0vsodfj';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Performer_Participant_0vsodfj';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## participant
+insert $x isa BPMN_participant,
+	 has BPMNattrib_name "Destination HUB",
+	 has BPMNattrib_id "Participant_0ycvtel",
+	 has BPMNattrib_processRef "Process_18aydi9",
+	 has UID "http://bpmn.io/schema/bpmn/#Participant_0ycvtel";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Collaboration_1iq2twn";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0ycvtel";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://bpmn.io/schema/bpmn/#Performer_Participant_0ycvtel";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Participant_0ycvtel';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Performer_Participant_0ycvtel';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## messageFlow
+insert $x isa BPMN_messageFlow,
+	 has BPMNattrib_targetRef "Activity_08de82z",
+	 has BPMNattrib_id "Flow_1wx7ndn",
+	 has BPMNattrib_sourceRef "Activity_0gm9kom",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1wx7ndn";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Collaboration_1iq2twn";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1wx7ndn";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://bpmn.io/schema/bpmn/#Asset_Flow_1wx7ndn";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1wx7ndn';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Asset_Flow_1wx7ndn';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## messageFlow
+insert $x isa BPMN_messageFlow,
+	 has BPMNattrib_targetRef "Activity_1mizk6r",
+	 has BPMNattrib_id "Flow_1chf9o0",
+	 has BPMNattrib_sourceRef "Participant_0vsodfj",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1chf9o0";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Collaboration_1iq2twn";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1chf9o0";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://bpmn.io/schema/bpmn/#Asset_Flow_1chf9o0";
+match
+	 $bpmnEntity isa BPMN_Entity, has UID 'http://bpmn.io/schema/bpmn/#Flow_1chf9o0';
+	 $concept isa MIAEntity, has UID 'http://bpmn.io/schema/bpmn/#Asset_Flow_1chf9o0';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## BPMNDiagram
+insert $x isa BPMN_BPMNDiagram,
+	 has BPMNattrib_id "BPMNDiagram_1",
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNDiagram_1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Definitions_0buvjxg";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNDiagram_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNPlane
+insert $x isa BPMN_BPMNPlane,
+	 has BPMNattrib_bpmnElement "Collaboration_1iq2twn",
+	 has BPMNattrib_id "BPMNPlane_1",
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNDiagram_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_09kuzox",
+	 has BPMNattrib_id "Flow_09kuzox_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_09kuzox_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_09kuzox_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "357",
+	 has BPMNattrib_y "303",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_09kuzox_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "430",
+	 has BPMNattrib_y "303",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_09kuzox_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_1a21qsj",
+	 has BPMNattrib_id "Flow_1a21qsj_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1a21qsj_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1a21qsj_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1116",
+	 has BPMNattrib_y "266",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint2";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1a21qsj_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1116",
+	 has BPMNattrib_y "246",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint3";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1a21qsj_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1210",
+	 has BPMNattrib_y "246",
+	 has BPMNattrib_sort "2",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint4";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1a21qsj_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1210",
+	 has BPMNattrib_y "288",
+	 has BPMNattrib_sort "3",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint5";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1a21qsj_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_0fyn5fw",
+	 has BPMNattrib_id "Flow_0fyn5fw_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0fyn5fw_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0fyn5fw_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1116",
+	 has BPMNattrib_y "415",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint6";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0fyn5fw_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1116",
+	 has BPMNattrib_y "346",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint7";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0fyn5fw_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_17f5xo1",
+	 has BPMNattrib_id "Flow_17f5xo1_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_17f5xo1_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_17f5xo1_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "230",
+	 has BPMNattrib_y "288",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint8";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_17f5xo1_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "230",
+	 has BPMNattrib_y "243",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint9";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_17f5xo1_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "267",
+	 has BPMNattrib_y "243",
+	 has BPMNattrib_sort "2",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint10";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_17f5xo1_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "267",
+	 has BPMNattrib_y "263",
+	 has BPMNattrib_sort "3",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint11";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_17f5xo1_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_14ldiym",
+	 has BPMNattrib_id "Flow_14ldiym_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_14ldiym_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_14ldiym_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "625",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint12";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_14ldiym_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1091",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint13";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_14ldiym_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_02z4tju",
+	 has BPMNattrib_id "Flow_02z4tju_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_02z4tju_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_02z4tju_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "480",
+	 has BPMNattrib_y "343",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint14";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_02z4tju_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "480",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint15";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_02z4tju_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "575",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "2",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint16";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_02z4tju_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_192xrlq",
+	 has BPMNattrib_id "Flow_192xrlq_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_192xrlq_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_192xrlq_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "830",
+	 has BPMNattrib_y "290",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint17";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_192xrlq_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "890",
+	 has BPMNattrib_y "290",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint18";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_192xrlq_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint18";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_1c5o874",
+	 has BPMNattrib_id "Flow_1c5o874_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1c5o874_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1c5o874_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "600",
+	 has BPMNattrib_y "415",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint19";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1c5o874_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint19";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "600",
+	 has BPMNattrib_y "290",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint20";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1c5o874_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint20";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "730",
+	 has BPMNattrib_y "290",
+	 has BPMNattrib_sort "2",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint21";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1c5o874_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint21";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_14hpny5",
+	 has BPMNattrib_id "Flow_14hpny5_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_14hpny5_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_14hpny5_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "986",
+	 has BPMNattrib_y "327",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint22";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_14hpny5_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint22";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1103",
+	 has BPMNattrib_y "428",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint23";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_14hpny5_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint23";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_1bqzwur",
+	 has BPMNattrib_id "Flow_1bqzwur_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1bqzwur_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1bqzwur_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "830",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint24";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1bqzwur_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint24";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "890",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint25";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1bqzwur_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint25";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_0uedo2p",
+	 has BPMNattrib_id "Flow_0uedo2p_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0uedo2p_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0uedo2p_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "625",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint26";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0uedo2p_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint26";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "730",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint27";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0uedo2p_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint27";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_11gs6ys",
+	 has BPMNattrib_id "Flow_11gs6ys_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_11gs6ys_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_11gs6ys_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "990",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint28";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_11gs6ys_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint28";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1091",
+	 has BPMNattrib_y "440",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint29";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_11gs6ys_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint29";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_0j2lhdq",
+	 has BPMNattrib_id "Flow_0j2lhdq_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0j2lhdq_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0j2lhdq_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "830",
+	 has BPMNattrib_y "570",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint30";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0j2lhdq_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint30";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "890",
+	 has BPMNattrib_y "570",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint31";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0j2lhdq_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint31";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_1b7zo0i",
+	 has BPMNattrib_id "Flow_1b7zo0i_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1b7zo0i_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1b7zo0i_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "600",
+	 has BPMNattrib_y "465",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint32";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1b7zo0i_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint32";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "600",
+	 has BPMNattrib_y "570",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint33";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1b7zo0i_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint33";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "730",
+	 has BPMNattrib_y "570",
+	 has BPMNattrib_sort "2",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint34";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1b7zo0i_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint34";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_0tmfnky",
+	 has BPMNattrib_id "Flow_0tmfnky_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0tmfnky_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0tmfnky_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "990",
+	 has BPMNattrib_y "570",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint35";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0tmfnky_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint35";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1116",
+	 has BPMNattrib_y "570",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint36";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0tmfnky_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint36";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1116",
+	 has BPMNattrib_y "465",
+	 has BPMNattrib_sort "2",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint37";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0tmfnky_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint37";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_0nyhjav",
+	 has BPMNattrib_id "Flow_0nyhjav_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_0nyhjav_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0nyhjav_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1138",
+	 has BPMNattrib_y "160",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint38";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0nyhjav_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint38";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1170",
+	 has BPMNattrib_y "160",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint39";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_0nyhjav_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint39";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_1aup2f9",
+	 has BPMNattrib_id "Flow_1aup2f9_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1aup2f9_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1aup2f9_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "996",
+	 has BPMNattrib_y "160",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint40";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1aup2f9_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint40";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1038",
+	 has BPMNattrib_y "160",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint41";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1aup2f9_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint41";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_1wx7ndn",
+	 has BPMNattrib_id "Flow_1wx7ndn_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1wx7ndn_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1wx7ndn_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1090",
+	 has BPMNattrib_y "260",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint42";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1wx7ndn_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint42";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "1090",
+	 has BPMNattrib_y "200",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint43";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1wx7ndn_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint43";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+	 has BPMNattrib_bpmnElement "Flow_1chf9o0",
+	 has BPMNattrib_id "Flow_1chf9o0_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Flow_1chf9o0_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1chf9o0_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "480",
+	 has BPMNattrib_y "200",
+	 has BPMNattrib_sort "0",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint44";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1chf9o0_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint44";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+	 has BPMNattrib_x "480",
+	 has BPMNattrib_y "263",
+	 has BPMNattrib_sort "1",
+	 has UID "http://bpmn.io/schema/bpmn/#waypoint45";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Flow_1chf9o0_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#waypoint45";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Participant_0uci2xt",
+	 has BPMNattrib_id "Participant_0uci2xt_di",
+	 has BPMNattrib_isHorizontal "true",
+	 has UID "http://bpmn.io/schema/bpmn/#Participant_0uci2xt_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0uci2xt_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "1168",
+	 has BPMNattrib_x "160",
+	 has BPMNattrib_y "230",
+	 has BPMNattrib_height "400",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0uci2xt_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Lane_08mw5lb",
+	 has BPMNattrib_id "Lane_08mw5lb_di",
+	 has BPMNattrib_isHorizontal "true",
+	 has UID "http://bpmn.io/schema/bpmn/#Lane_08mw5lb_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_08mw5lb_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "1138",
+	 has BPMNattrib_x "190",
+	 has BPMNattrib_y "510",
+	 has BPMNattrib_height "120",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_08mw5lb_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNLabel";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_08mw5lb_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Lane_0motn16",
+	 has BPMNattrib_id "Lane_0motn16_di",
+	 has BPMNattrib_isHorizontal "true",
+	 has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "1138",
+	 has BPMNattrib_x "190",
+	 has BPMNattrib_y "370",
+	 has BPMNattrib_height "140",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds2";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNLabel1";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0motn16_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Lane_0uwans2",
+	 has BPMNattrib_id "Lane_0uwans2_di",
+	 has BPMNattrib_isHorizontal "true",
+	 has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "1138",
+	 has BPMNattrib_x "190",
+	 has BPMNattrib_y "230",
+	 has BPMNattrib_height "140",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds3";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNLabel2";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Lane_0uwans2_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Gateway_06vfc7x",
+	 has BPMNattrib_id "Gateway_06drgxl_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Gateway_06drgxl_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_06drgxl_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "50",
+	 has BPMNattrib_x "575",
+	 has BPMNattrib_y "415",
+	 has BPMNattrib_height "50",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds4";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Gateway_06drgxl_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Event_171vetp",
+	 has BPMNattrib_id "Event_171vetp_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Event_171vetp_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_171vetp_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "36",
+	 has BPMNattrib_x "212",
+	 has BPMNattrib_y "288",
+	 has BPMNattrib_height "36",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds5";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_171vetp_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_0gm9kom",
+	 has BPMNattrib_id "Activity_19vrxnt_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_19vrxnt_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_19vrxnt_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "1066",
+	 has BPMNattrib_y "266",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds6";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_19vrxnt_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNLabel3";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_19vrxnt_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Gateway_0z9ba90",
+	 has BPMNattrib_id "BPMNShape_15u8xy0",
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNShape_15u8xy0";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNShape_15u8xy0";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "50",
+	 has BPMNattrib_x "1091",
+	 has BPMNattrib_y "415",
+	 has BPMNattrib_height "50",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds7";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNShape_15u8xy0";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_1vu9vvw",
+	 has BPMNattrib_id "Activity_1mwsy9u_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_1mwsy9u_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1mwsy9u_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "257",
+	 has BPMNattrib_y "263",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds8";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1mwsy9u_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_1mizk6r",
+	 has BPMNattrib_id "Activity_0h80i4f_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_0h80i4f_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0h80i4f_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "430",
+	 has BPMNattrib_y "263",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds9";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0h80i4f_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_0ykhmca",
+	 has BPMNattrib_id "Activity_1jltzh6_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_1jltzh6_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1jltzh6_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "730",
+	 has BPMNattrib_y "250",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds10";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1jltzh6_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds10";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_14llohk",
+	 has BPMNattrib_id "Activity_11ztef1_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_11ztef1_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_11ztef1_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "890",
+	 has BPMNattrib_y "250",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds11";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_11ztef1_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds11";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_0qctz4b",
+	 has BPMNattrib_id "Activity_0j3ekfq_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_0j3ekfq_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0j3ekfq_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "730",
+	 has BPMNattrib_y "400",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds12";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_0j3ekfq_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds12";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_0obqpid",
+	 has BPMNattrib_id "Activity_1fd38w1_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_1fd38w1_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1fd38w1_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "890",
+	 has BPMNattrib_y "400",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds13";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_1fd38w1_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds13";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_15e33ak",
+	 has BPMNattrib_id "Activity_02ni4jl_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_02ni4jl_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_02ni4jl_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "890",
+	 has BPMNattrib_y "530",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds14";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_02ni4jl_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds14";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_07y81cl",
+	 has BPMNattrib_id "Activity_04x4z0y_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_04x4z0y_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_04x4z0y_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "730",
+	 has BPMNattrib_y "530",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds15";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_04x4z0y_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds15";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Event_0t6aho5",
+	 has BPMNattrib_id "Event_0t6aho5_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Event_0t6aho5_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0t6aho5_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "36",
+	 has BPMNattrib_x "1192",
+	 has BPMNattrib_y "288",
+	 has BPMNattrib_height "36",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds16";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0t6aho5_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds16";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Participant_0vsodfj",
+	 has BPMNattrib_id "Participant_0vsodfj_di",
+	 has BPMNattrib_isHorizontal "true",
+	 has UID "http://bpmn.io/schema/bpmn/#Participant_0vsodfj_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0vsodfj_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "300",
+	 has BPMNattrib_x "350",
+	 has BPMNattrib_y "140",
+	 has BPMNattrib_height "60",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds17";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0vsodfj_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds17";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNLabel4";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Participant_0vsodfj_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Participant_0ycvtel",
+	 has BPMNattrib_id "BPMNShape_114rf1p",
+	 has BPMNattrib_isHorizontal "true",
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNShape_114rf1p";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNShape_114rf1p";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "310",
+	 has BPMNattrib_x "918",
+	 has BPMNattrib_y "110",
+	 has BPMNattrib_height "100",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds18";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNShape_114rf1p";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds18";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+	 has UID "http://bpmn.io/schema/bpmn/#BPMNLabel5";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNShape_114rf1p";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNLabel5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Event_0r7i1nk",
+	 has BPMNattrib_id "Event_0r7i1nk_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Event_0r7i1nk_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0r7i1nk_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "36",
+	 has BPMNattrib_x "960",
+	 has BPMNattrib_y "142",
+	 has BPMNattrib_height "36",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds19";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_0r7i1nk_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds19";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Event_1mj0as1",
+	 has BPMNattrib_id "Event_1mj0as1_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Event_1mj0as1_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_1mj0as1_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "36",
+	 has BPMNattrib_x "1170",
+	 has BPMNattrib_y "142",
+	 has BPMNattrib_height "36",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds20";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Event_1mj0as1_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds20";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+	 has BPMNattrib_bpmnElement "Activity_08de82z",
+	 has BPMNattrib_id "Activity_052us4j_di",
+	 has UID "http://bpmn.io/schema/bpmn/#Activity_052us4j_di";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#BPMNPlane_1";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_052us4j_di";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+	 has BPMNattrib_width "100",
+	 has BPMNattrib_x "1038",
+	 has BPMNattrib_y "120",
+	 has BPMNattrib_height "80",
+	 has UID "http://bpmn.io/schema/bpmn/#Bounds21";
+match
+	 $parent isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Activity_052us4j_di";
+	 $child isa BPMN_Entity, has UID "http://bpmn.io/schema/bpmn/#Bounds21";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## =============== End ===============

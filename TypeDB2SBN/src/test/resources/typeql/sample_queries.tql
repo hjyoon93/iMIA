@@ -1,0 +1,47 @@
+
+# all node-like entities
+match
+    $entity isa $type, has UID $uid;
+    {$type sub ANDPrecedenceTaskList;}
+        or {$type sub ORPrecedenceTaskList;}
+        or {$type sub Mission;}
+        or {$type sub Task;}
+        or {$type sub Performer;};
+get $entity,$uid;
+
+# Parents of a given node
+match 
+    $child isa $childType, has UID $cuid;
+    $parent isa $parentType, has UID $puid;
+    $cuid = "http://bpmn.io/schema/bpmn/#Task_Activity_1mizk6r" ;
+    {
+        # Parents from PrecedenceTask
+        $childType sub Task;
+        $parentType sub Task;
+        $precedence isa! PrecedenceTask;
+        (precedence_task: $precedence, task: $child) isa isPrecededBySetOfTask;
+        (precedence_task: $precedence, task: $parent) isa isCompoundBySetOfTask;
+    } or {
+        #  Parents that are AND/OR PrecedenceTask
+        $childType sub Task;
+        {$parentType sub ANDPrecedenceTaskList;} 
+            or {$parentType sub ORPrecedenceTaskList;};
+        (precedence_task: $parent, task: $child) isa isPrecededBySetOfTask;
+    } or {
+        #  Parents of AND/OR PrecedenceTask
+        $parentType sub Task;
+        {$childType sub ANDPrecedenceTaskList;} 
+            or {$childType sub ORPrecedenceTaskList;};
+        (precedence_task: $child, task: $parent) isa isCompoundBySetOfTask;
+    } or {
+        # Parents from isPerformedBy
+        $childType sub Task;
+        $parentType sub Performer;
+        (performer: $parent, task: $child) isa isPerformedBy;
+    } or {
+        # Parents from provides
+        $childType sub Service;
+        $parentType sub Asset;
+        (asset: $parent, service: $child) isa provides;
+    };
+get $parent, $puid;

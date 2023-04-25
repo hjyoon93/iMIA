@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions targetNamespace="https://camunda.org/examples" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process>
+    <startEvent id="start">
+      <outgoing>flow1</outgoing>
+    </startEvent>
+    <userTask id="task" name="User Task">
+      <incoming>flow1</incoming>
+      <outgoing>flow2</outgoing>
+    </userTask>
+    <sequenceFlow id="flow1" sourceRef="start" targetRef="task"/>
+    <endEvent id="end">
+      <incoming>flow2</incoming>
+    </endEvent>
+    <sequenceFlow id="flow2" sourceRef="task" targetRef="end"/>
+  </process>
+</definitions>

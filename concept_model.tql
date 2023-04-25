@@ -1,0 +1,298 @@
+#redeclaration is completed;
+#shared concept model schema for VT AND GMU 
+#define entity
+define 
+MIAEntity sub entity;
+Performer sub MIAEntity;
+#attack is same as cyber attack in the model
+#CyberAttack sub MIAEntity;
+Attacker sub Performer;
+Defender sub Performer;
+Service sub Performer;
+Asset sub Performer;    
+#asset is subtype of performer that is associated with task 
+#defense is same as defense mechanism in the model
+Attack sub MIAEntity; #Note: Attack refers to the CyberAttack in the concept model
+DefenseMechanism sub MIAEntity;
+#ips and ids are subtpyes of defense mechanism
+IPS sub DefenseMechanism;
+IDS sub DefenseMechanism; 
+IRS sub DefenseMechanism; #new line; including IRS to CM
+
+#Asset sub MIAEntity;   #avoid redeclaration 
+Vulnerability sub MIAEntity;
+Capacity sub MIAEntity;
+Task sub MIAEntity;
+PrecedenceTask sub MIAEntity;
+ORPrecedenceTaskList sub PrecedenceTask;
+ANDPrecedenceTaskList sub PrecedenceTask;
+
+Mission sub MIAEntity;
+STRAM sub MIAEntity;
+VulnerabilityMetric sub MIAEntity;
+Goal sub MIAEntity;
+Outcome sub MIAEntity;
+
+#define attributes - attribute can only be instantiated at the leaves. A parent attribute can't be instantiated with data
+# I don't have UID attributes for other entity node other than the super-entity node here due to inheritance.
+define 
+UID sub attribute,
+    value string; 
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns UID @key;
+    
+name sub attribute,
+    value string;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns name;
+
+address sub attribute,
+    value string;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns address;
+    
+description sub attribute,
+    value string;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns description;
+    
+value sub attribute,
+    value double;
+#MIAEntity sub entity, #avoid redeclaration
+MIAEntity owns value;
+    
+#name sub attribute,
+#   value string; 
+#MIAEntity sub entity,
+#    owns name;
+
+
+
+####### define relation between entities
+define
+hasVulnerability sub relation,
+    relates asset, 
+    relates vulnerability;
+
+#Asset sub MIAEntity, #avoid redeclaration 
+Asset plays hasVulnerability:asset;
+#Vulnerabilities sub MIAEntity, #avoid redeclaration
+Vulnerability plays hasVulnerability:vulnerability;
+    
+
+#####################
+define
+hasCapacity sub relation,
+    relates asset, 
+    relates capacity;
+
+#Asset sub MIAEntity, #avoid redeclaration
+Asset plays hasCapacity:asset;
+#Capacity sub MIAEntity, #avoid redeclaration
+Capacity plays hasCapacity:capacity;
+    
+###############
+define
+hasGoal sub relation,
+    relates mission, 
+    relates goal;
+
+#Mission sub MIAEntity,  #avoid redeclaration
+Mission plays hasGoal:mission;
+#Goal sub MIAEntity, #avoid redeclaration
+Goal plays hasGoal:goal;
+    
+####
+define
+hasOutcome sub relation,
+    relates mission, 
+    relates outcome;
+
+#Mission sub MIAEntity, #avoid redeclaration
+Mission plays hasOutcome:mission;
+#Outcome sub MIAEntity, #avoid redeclaration
+Outcome plays hasOutcome:outcome;    
+    
+    
+####
+define
+isMeasuredBySTRAM sub relation,
+    relates outcome, 
+    relates stram;
+
+#Outcome sub MIAEntity,  #avoid redeclaration
+Outcome plays isMeasuredBySTRAM:outcome;
+#STRAM sub MIAEntity, #avoid redeclaration
+STRAM plays isMeasuredBySTRAM:stram;   
+    
+    
+####
+define
+isMeasuredByVulnerabilityMetric sub relation,
+    relates vulnerability, 
+    relates vulnerability_metric;
+
+#Vulnerabilities sub MIAEntity  #avoid redeclaration
+Vulnerability plays isMeasuredByVulnerabilityMetric:vulnerability;
+#VulnerabilityMetrics sub MIAEntity, #avoid redeclaration
+VulnerabilityMetric plays isMeasuredByVulnerabilityMetric:vulnerability_metric;   
+
+
+####
+define
+performsAttack sub relation,
+    relates attacker, 
+    relates attack;
+
+#Attacker sub Performer, #avoid redeclaration
+Attacker plays performsAttack:attacker;
+#Attack sub MIAEntity,  #avoid redeclaration
+Attack plays performsAttack:attack;  
+    
+####
+define
+performsDefense sub relation,
+    relates defender, 
+    relates defense_mechanism;
+
+#Defender sub Performer, #avoid reclaration
+Defender plays performsDefense:defender;
+#DefenseMechanisms sub MIAEntity,# avoid redeclaration
+DefenseMechanism plays performsDefense:defense_mechanism;  
+
+
+####
+define
+detects sub relation,
+    relates ids, 
+    relates attack;
+
+#IDS sub DefenseMechanisms, #avoid redeclaration
+IDS plays detects:ids;
+#Attack sub MIAEntity, #avoid redeclaration
+Attack plays detects:attack;
+    
+    
+####
+define
+deters sub relation,
+    relates ips, 
+    relates attack;
+
+#IPS sub DefenseMechanisms, #avoid redeclaration
+IPS plays deters:ips;
+#Attack sub MIAEntity, #avoid redeclaration
+Attack plays deters:attack;
+    
+    
+#### #new line
+define
+mitigatesAttack sub relation,
+    relates irs, 
+    relates attack;
+
+IRS sub DefenseMechanism,
+    plays mitigatesAttack:irs;
+Attack sub MIAEntity,
+    plays mitigatesAttack:attack;
+    
+####
+define
+exploits sub relation,
+    relates attack, 
+    relates vulnerability;
+
+#Attack sub MIAEntity, #avoid redeclaration
+Attack plays exploits:attack;
+#Vulnerabilities sub MIAEntity,  #avoid redeclaration
+Vulnerability plays exploits:vulnerability;
+  
+####
+define
+mitigatesVulnerability sub relation,
+    relates defense_mechanism, 
+    relates vulnerability;
+
+#DefenseMechanisms sub MIAEntity, #avoid redeclaration
+DefenseMechanism plays mitigatesVulnerability:defense_mechanism;
+#Vulnerabilities sub MIAEntity,  #avoid redeclaration
+Vulnerability plays mitigatesVulnerability:vulnerability;
+    
+####
+define
+provides sub relation,
+    relates asset, 
+    relates service;
+
+#Asset sub MIAEntity, #avoid redeclaration
+Asset plays provides:asset;
+#Service sub Performer, #avoid redeclaration
+Service plays provides:service;
+
+
+####
+#define
+#enablement sub relation,
+ #   relates enabler, 
+  #  relates enabled;
+
+#service sub entity,
+ #   plays enablement:enabler;
+#task sub entity,
+ #   plays enablement:enabled;
+   
+
+####
+define
+isCompoundBy sub relation,
+    relates task, 
+    relates mission;
+
+#Task sub MIAEntity, #avoid redeclaration
+Task plays isCompoundBy:task;
+#Mission sub MIAEntity, #avoid redeclaration
+Mission plays isCompoundBy:mission;
+    
+####
+define
+isCompoundBySetOfTask sub relation,
+    relates task, 
+    relates precedence_task;
+
+#Task sub MIAEntity, #avoid redeclaration
+Task plays isCompoundBySetOfTask:task;
+PrecedenceTask plays isCompoundBySetOfTask:precedence_task;
+    
+    
+#######
+define
+isPrecededBySetOfTask sub relation,
+    relates task, 
+    relates precedence_task;
+
+#Task sub MIAEntity, #avoid redeclaration
+Task plays isPrecededBySetOfTask:task;
+PrecedenceTask plays isPrecededBySetOfTask:precedence_task;
+
+
+##################
+define 
+isPerformedBy sub relation,
+    relates performer,
+    relates task;
+#Performer sub MIAEntity, #avoid redeclaration
+Performer plays isPerformedBy:performer;
+#Task sub MIAEntity,#avoid redeclaration
+Task plays isPerformedBy:task;
+    
+
+########
+#relation for topology discovery
+#define
+#c sub relation,
+#    relates connected, 
+#    relates connected;
+#MIAEntity sub entity,
+#   plays c:connected;
+#MIAEntity sub entity,
+#   plays c:connected;

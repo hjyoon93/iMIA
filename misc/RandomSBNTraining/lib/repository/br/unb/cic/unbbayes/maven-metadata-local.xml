@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>br.unb.cic</groupId>
+  <artifactId>unbbayes</artifactId>
+  <versioning>
+    <versions>
+      <version>4.22.19-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20221219140812</lastUpdated>
+  </versioning>
+</metadata>

@@ -1,0 +1,714 @@
+## =============== Begin ===============
+## Insert BPMN elements
+
+## definitions
+insert $x isa BPMN_definitions,
+     has BPMNattrib_exporter "org.eclipse.bpmn2.modeler.core",
+     has BPMNattrib_xmlns "http://www.omg.org/spec/BPMN/20100524/MODEL",
+     has BPMNattrib_exporterVersion "1.5.3.Final-v20210519-2007-B1",
+     has BPMNattrib_targetNamespace "http://c4i.gmu.edu/dalnim/examples",
+     has BPMNattrib_typeLanguage "http://www.w3.org/2001/XMLSchema",
+     has BPMNattrib_expressionLanguage "http://www.w3.org/1999/XPath",
+     has BPMNattrib_id "Definitions_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Definitions_1";
+
+## Mapping to the conceptual model
+insert $concept isa Mission, has UID "http://c4i.gmu.edu/dalnim/examples/#Mission_Definitions_1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#Definitions_1';
+     $concept isa entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#Mission_Definitions_1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## process
+insert $x isa BPMN_process,
+     has BPMNattrib_isClosed "false",
+     has BPMNattrib_name "dataObjectProcess",
+     has BPMNattrib_id "Process_1",
+     has BPMNattrib_isExecutable "false",
+     has BPMNattrib_processType "None",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Definitions_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## laneSet
+insert $x isa BPMN_laneSet,
+     has BPMNattrib_name "Lane Set 1",
+     has BPMNattrib_id "LaneSet_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#LaneSet_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#LaneSet_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## lane
+insert $x isa BPMN_lane,
+     has BPMNattrib_name "Someone",
+     has BPMNattrib_id "Lane_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Lane_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#LaneSet_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Lane_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Performer, has UID "http://c4i.gmu.edu/dalnim/examples/#Performer_Lane_1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#Lane_1';
+     $concept isa entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#Performer_Lane_1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "ServiceTask_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#flowNodeRef";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Lane_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#flowNodeRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "start",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#flowNodeRef1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Lane_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#flowNodeRef1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## flowNodeRef
+insert $x isa BPMN_flowNodeRef,
+     has BPMN_textContent "end",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#flowNodeRef2";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Lane_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#flowNodeRef2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataObject
+insert $x isa BPMN_dataObject,
+     has BPMNattrib_isCollection "false",
+     has BPMNattrib_name "Data",
+     has BPMNattrib_id "DataObject_2",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#DataObject_2";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#DataObject_2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://c4i.gmu.edu/dalnim/examples/#Asset_DataObject_2";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#DataObject_2';
+     $concept isa entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#Asset_DataObject_2';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## serviceTask
+insert $x isa BPMN_serviceTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##WebService",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "ServiceTask",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "ServiceTask_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#ServiceTask_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#ServiceTask_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "http://c4i.gmu.edu/dalnim/examples/#Task_ServiceTask_1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#ServiceTask_1';
+     $concept isa entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#Task_ServiceTask_1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "flow1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#incoming";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#ServiceTask_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#incoming";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "flow2",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#outgoing";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#ServiceTask_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#outgoing";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## ioSpecification
+insert $x isa BPMN_ioSpecification,
+     has BPMNattrib_id "InputOutputSpecification_5",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#InputOutputSpecification_5";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#ServiceTask_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#InputOutputSpecification_5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataInput
+insert $x isa BPMN_dataInput,
+     has BPMNattrib_isCollection "false",
+     has BPMNattrib_name "input1",
+     has BPMNattrib_id "DataInput_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#DataInput_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#InputOutputSpecification_5";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#DataInput_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Asset, has UID "http://c4i.gmu.edu/dalnim/examples/#Asset_DataInput_1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#DataInput_1';
+     $concept isa entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#Asset_DataInput_1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## inputSet
+insert $x isa BPMN_inputSet,
+     has BPMNattrib_name "Input Set 5",
+     has BPMNattrib_id "InputSet_5",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#InputSet_5";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#InputOutputSpecification_5";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#InputSet_5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataInputRefs
+insert $x isa BPMN_dataInputRefs,
+     has BPMN_textContent "DataInput_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#dataInputRefs";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#InputSet_5";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#dataInputRefs";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outputSet
+insert $x isa BPMN_outputSet,
+     has BPMNattrib_name "Output Set 5",
+     has BPMNattrib_id "OutputSet_5",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#OutputSet_5";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#InputOutputSpecification_5";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#OutputSet_5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## dataInputAssociation
+insert $x isa BPMN_dataInputAssociation,
+     has BPMNattrib_id "DataInputAssociation_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#DataInputAssociation_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#ServiceTask_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#DataInputAssociation_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Service, has UID "http://c4i.gmu.edu/dalnim/examples/#Service_DataInputAssociation_1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#DataInputAssociation_1';
+     $concept isa entity, has UID 'http://c4i.gmu.edu/dalnim/examples/#Service_DataInputAssociation_1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sourceRef
+insert $x isa BPMN_sourceRef,
+     has BPMN_textContent "DataObject_2",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#sourceRef";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#DataInputAssociation_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#sourceRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## targetRef
+insert $x isa BPMN_targetRef,
+     has BPMN_textContent "DataInput_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#targetRef";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#DataInputAssociation_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#targetRef";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## performer
+insert $x isa BPMN_performer,
+     has BPMNattrib_name "Performer 1",
+     has BPMNattrib_id "Performer_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Performer_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#ServiceTask_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Performer_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## startEvent
+insert $x isa BPMN_startEvent,
+     has BPMNattrib_parallelMultiple "false",
+     has BPMNattrib_isInterrupting "true",
+     has BPMNattrib_id "start",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#start";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#start";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "flow1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#outgoing1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#start";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#outgoing1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## endEvent
+insert $x isa BPMN_endEvent,
+     has BPMNattrib_id "end",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#end";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#end";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "flow2",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#incoming1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#end";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#incoming1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "ServiceTask_1",
+     has BPMNattrib_id "flow1",
+     has BPMNattrib_sourceRef "start",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#flow1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#flow1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "end",
+     has BPMNattrib_id "flow2",
+     has BPMNattrib_sourceRef "ServiceTask_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#flow2";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#flow2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNDiagram
+insert $x isa BPMN_BPMNDiagram,
+     has BPMNattrib_id "BPMNDiagram_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNDiagram_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Definitions_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNDiagram_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNPlane
+insert $x isa BPMN_BPMNPlane,
+     has BPMNattrib_bpmnElement "Process_1",
+     has BPMNattrib_id "BPMNPlane_Process_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNDiagram_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "flow1",
+     has BPMNattrib_sourceElement "BPMNShape_StartEvent_1",
+     has BPMNattrib_id "BPMNEdge_SequenceFlow_1",
+     has BPMNattrib_targetElement "BPMNShape_ServiceTask_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "118.0",
+     has BPMNattrib_y "320.0",
+     has BPMNattrib_sort "0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "118.0",
+     has BPMNattrib_y "338.0",
+     has BPMNattrib_sort "1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "230.0",
+     has BPMNattrib_y "338.0",
+     has BPMNattrib_sort "2",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint2";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_3",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_3";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "flow2",
+     has BPMNattrib_sourceElement "BPMNShape_ServiceTask_1",
+     has BPMNattrib_id "BPMNEdge_SequenceFlow_2",
+     has BPMNattrib_targetElement "BPMNShape_EndEvent_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_2";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "340.0",
+     has BPMNattrib_y "330.0",
+     has BPMNattrib_sort "0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint3";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_2";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "410.0",
+     has BPMNattrib_y "330.0",
+     has BPMNattrib_sort "1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint4";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_2";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "410.0",
+     has BPMNattrib_y "323.0",
+     has BPMNattrib_sort "2",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint5";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_2";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "480.0",
+     has BPMNattrib_y "323.0",
+     has BPMNattrib_sort "3",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint6";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_2";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_4",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_4";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_SequenceFlow_2";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNEdge
+insert $x isa BPMN_BPMNEdge,
+     has BPMNattrib_bpmnElement "DataInputAssociation_1",
+     has BPMNattrib_sourceElement "BPMNShape_DataObject_1",
+     has BPMNattrib_id "BPMNEdge_DataInputAssociation_1",
+     has BPMNattrib_targetElement "BPMNShape_ServiceTask_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_DataInputAssociation_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_DataInputAssociation_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "188.0",
+     has BPMNattrib_y "271.0",
+     has BPMNattrib_sort "0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint7";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_DataInputAssociation_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "188.0",
+     has BPMNattrib_y "321.0",
+     has BPMNattrib_sort "1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint8";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_DataInputAssociation_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## waypoint
+insert $x isa BPMN_waypoint,
+     has BPMNattrib_x "230.0",
+     has BPMNattrib_y "321.0",
+     has BPMNattrib_sort "2",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint9";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_DataInputAssociation_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#waypoint9";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_id "BPMNLabel_7",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_7";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNEdge_DataInputAssociation_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "Lane_1",
+     has BPMNattrib_id "BPMNShape_Lane_1",
+     has BPMNattrib_isHorizontal "true",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_Lane_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_Lane_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "500.0",
+     has BPMNattrib_x "50.0",
+     has BPMNattrib_y "220.0",
+     has BPMNattrib_height "150.0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_Lane_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_8",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_8";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_Lane_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_8";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "14.0",
+     has BPMNattrib_x "56.0",
+     has BPMNattrib_y "268.0",
+     has BPMNattrib_height "53.0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_8";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "start",
+     has BPMNattrib_id "BPMNShape_StartEvent_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_StartEvent_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_StartEvent_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36.0",
+     has BPMNattrib_x "100.0",
+     has BPMNattrib_y "284.0",
+     has BPMNattrib_height "36.0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds2";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_StartEvent_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_StartEvent_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "end",
+     has BPMNattrib_id "BPMNShape_EndEvent_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_EndEvent_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_EndEvent_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36.0",
+     has BPMNattrib_x "480.0",
+     has BPMNattrib_y "305.0",
+     has BPMNattrib_height "36.0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds3";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_EndEvent_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds3";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_2",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_2";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_EndEvent_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "ServiceTask_1",
+     has BPMNattrib_id "BPMNShape_ServiceTask_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_ServiceTask_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_ServiceTask_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "110.0",
+     has BPMNattrib_x "230.0",
+     has BPMNattrib_y "305.0",
+     has BPMNattrib_height "50.0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds4";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_ServiceTask_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds4";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_5",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_5";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_ServiceTask_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "66.0",
+     has BPMNattrib_x "252.0",
+     has BPMNattrib_y "323.0",
+     has BPMNattrib_height "14.0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds5";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_5";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds5";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNShape
+insert $x isa BPMN_BPMNShape,
+     has BPMNattrib_bpmnElement "DataObject_2",
+     has BPMNattrib_id "BPMNShape_DataObject_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_DataObject_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNPlane_Process_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_DataObject_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "36.0",
+     has BPMNattrib_x "170.0",
+     has BPMNattrib_y "221.0",
+     has BPMNattrib_height "50.0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds6";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_DataObject_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabel
+insert $x isa BPMN_BPMNLabel,
+     has BPMNattrib_labelStyle "BPMNLabelStyle_1",
+     has BPMNattrib_id "BPMNLabel_6",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_6";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNShape_DataObject_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_6";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Bounds
+insert $x isa BPMN_Bounds,
+     has BPMNattrib_width "26.0",
+     has BPMNattrib_x "175.0",
+     has BPMNattrib_y "271.0",
+     has BPMNattrib_height "14.0",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds7";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabel_6";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Bounds7";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## BPMNLabelStyle
+insert $x isa BPMN_BPMNLabelStyle,
+     has BPMNattrib_id "BPMNLabelStyle_1",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabelStyle_1";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNDiagram_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabelStyle_1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Font
+insert $x isa BPMN_Font,
+     has BPMNattrib_size "9.0",
+     has BPMNattrib_name "arial",
+     has UID "http://c4i.gmu.edu/dalnim/examples/#Font";
+match
+     $parent isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#BPMNLabelStyle_1";
+     $child isa BPMN_Entity, has UID "http://c4i.gmu.edu/dalnim/examples/#Font";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## =============== End ===============
