@@ -9,7 +9,7 @@ Some source code and scripts for the Interdependent Mission Impact Assessment fr
 
 *  *Final_Concept_Model_Version\<N\>*: the DALNIM conceptual model. This picture illustrates the main entities and relationships considered in the domain of DALNIM project.
 
-*  *concept_model.tql*: TypeQL script that will save the the DALNIM conceptual model schema to TypeDB.
+*  *concept_model.tql*: TypeQL script that will save the the iMIA conceptual model schema to TypeDB.
 
 *  *dependencies.drawio.svg*: a diagram describing the maven dependencies of the projects in this folder. This can be edited in [draw.io](https://app.diagrams.net/).
 
