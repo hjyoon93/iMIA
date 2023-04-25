@@ -1,0 +1,665 @@
+## =============== Begin ===============
+define
+
+## Note: conceptual model is required in DALNIM. Uncomment the following if not declared yet.
+# UID sub attribute, value string;
+# MIAEntity sub entity, owns UID @key;
+# Mission sub MIAEntity;
+# Task sub MIAEntity;
+# Performer sub MIAEntity;
+# Service sub Performer;
+# Asset sub MIAEntity;
+# PrecedenceTask sub MIAEntity;
+# ORPrecedenceTaskList sub PrecedenceTask;
+# ANDPrecedenceTaskList sub PrecedenceTask;
+# isCompoundBy sub relation, relates mission, relates task;
+# Mission plays isCompoundBy:mission;
+# Task plays isCompoundBy:task;
+# isPerformedBy sub relation, relates task, relates performer;
+# Task plays isPerformedBy:task;
+# Performer plays isPerformedBy:performer;
+# provides sub relation, relates asset, relates service;
+# Asset plays provides:asset;
+# Service plays provides:service;
+# isCompoundBySetOfTask sub relation, relates precedence_task, relates task;
+# PrecedenceTask plays isCompoundBySetOfTask:precedence_task;
+# Task plays isCompoundBySetOfTask:task;
+# isPrecededBySetOfTask sub relation, relates precedence_task, relates task;
+# PrecedenceTask plays isPrecededBySetOfTask:precedence_task;
+# Task plays isPrecededBySetOfTask:task;
+
+## BPMN entities in general
+BPMNattrib_id sub attribute, value string;
+BPMNattrib_name sub attribute, value string;
+BPMN_textContent sub attribute, value string;
+BPMN_Entity sub entity, owns BPMNattrib_id, owns BPMNattrib_name, owns BPMN_textContent, owns UID @key;
+
+## Common BPMN super-entities
+BPMN_Gateway sub BPMN_Entity;
+
+BPMN_Activity sub BPMN_Entity;
+
+
+## Parent-child relationship of BPMN/XML tags
+BPMN_hasChildTag sub relation, relates parent, relates child;
+BPMN_Entity plays BPMN_hasChildTag:child;
+BPMN_Entity plays BPMN_hasChildTag:parent;
+
+## relation about chain of gateways
+BPMN_gatewayTransitiveChain sub relation, relates previous, relates next;
+BPMN_Gateway plays BPMN_gatewayTransitiveChain:previous;
+BPMN_Gateway plays BPMN_gatewayTransitiveChain:next;
+
+## =============== Body ===============
+
+## BPMN 'BPMN_definitions' tag/node
+BPMN_definitions sub BPMN_Entity;
+
+BPMNattrib_exporter sub attribute, value string;
+BPMN_definitions owns BPMNattrib_exporter;
+BPMNattrib_exporterVersion sub attribute, value string;
+BPMN_definitions owns BPMNattrib_exporterVersion;
+BPMNattrib_targetNamespace sub attribute, value string;
+BPMN_definitions owns BPMNattrib_targetNamespace;
+BPMNattrib_typeLanguage sub attribute, value string;
+BPMN_definitions owns BPMNattrib_typeLanguage;
+BPMNattrib_expressionLanguage sub attribute, value string;
+BPMN_definitions owns BPMNattrib_expressionLanguage;
+
+## BPMN 'BPMN_process' tag/node
+BPMN_process sub BPMN_Entity;
+
+BPMNattrib_isClosed sub attribute, value string;
+BPMN_process owns BPMNattrib_isClosed;
+BPMNattrib_taskPriority sub attribute, value string;
+BPMN_process owns BPMNattrib_taskPriority;
+BPMNattrib_historyTimeToLive sub attribute, value string;
+BPMN_process owns BPMNattrib_historyTimeToLive;
+BPMNattrib_isStartableInTasklist sub attribute, value string;
+BPMN_process owns BPMNattrib_isStartableInTasklist;
+BPMNattrib_versionTag sub attribute, value string;
+BPMN_process owns BPMNattrib_versionTag;
+BPMNattrib_processType sub attribute, value string;
+BPMN_process owns BPMNattrib_processType;
+BPMNattrib_isExecutable sub attribute, value string;
+BPMN_process owns BPMNattrib_isExecutable;
+BPMNattrib_candidateStarterUsers sub attribute, value string;
+BPMN_process owns BPMNattrib_candidateStarterUsers;
+BPMNattrib_jobPriority sub attribute, value string;
+BPMN_process owns BPMNattrib_jobPriority;
+BPMNattrib_candidateStarterGroups sub attribute, value string;
+BPMN_process owns BPMNattrib_candidateStarterGroups;
+
+## BPMN 'BPMN_laneSet' tag/node
+BPMN_laneSet sub BPMN_Entity;
+
+
+## BPMN 'BPMN_lane' tag/node
+BPMN_lane sub BPMN_Entity;
+
+BPMNattrib_partitionElementRef sub attribute, value string;
+BPMN_lane owns BPMNattrib_partitionElementRef;
+
+## BPMN 'BPMN_flowNodeRef' tag/node
+BPMN_flowNodeRef sub BPMN_Entity;
+
+
+## BPMN 'BPMN_manualTask' tag/node
+BPMN_manualTask sub BPMN_Activity;
+
+BPMNattrib_startQuantity sub attribute, value string;
+BPMN_manualTask owns BPMNattrib_startQuantity;
+BPMNattrib_isForCompensation sub attribute, value string;
+BPMN_manualTask owns BPMNattrib_isForCompensation;
+BPMNattrib_completionQuantity sub attribute, value string;
+BPMN_manualTask owns BPMNattrib_completionQuantity;
+
+## BPMN 'BPMN_incoming' tag/node
+BPMN_incoming sub BPMN_Entity;
+
+
+## BPMN 'BPMN_outgoing' tag/node
+BPMN_outgoing sub BPMN_Entity;
+
+
+## BPMN 'BPMN_receiveTask' tag/node
+BPMN_receiveTask sub BPMN_Activity;
+
+BPMN_receiveTask owns BPMNattrib_startQuantity;
+BPMNattrib_messageRef sub attribute, value string;
+BPMN_receiveTask owns BPMNattrib_messageRef;
+BPMNattrib_operationRef sub attribute, value string;
+BPMN_receiveTask owns BPMNattrib_operationRef;
+BPMNattrib_implementation sub attribute, value string;
+BPMN_receiveTask owns BPMNattrib_implementation;
+BPMN_receiveTask owns BPMNattrib_isForCompensation;
+BPMN_receiveTask owns BPMNattrib_completionQuantity;
+BPMNattrib_instantiate sub attribute, value string;
+BPMN_receiveTask owns BPMNattrib_instantiate;
+
+## BPMN 'BPMN_sendTask' tag/node
+BPMN_sendTask sub BPMN_Activity;
+
+BPMNattrib_expression sub attribute, value string;
+BPMN_sendTask owns BPMNattrib_expression;
+BPMN_sendTask owns BPMNattrib_operationRef;
+BPMN_sendTask owns BPMNattrib_implementation;
+BPMN_sendTask owns BPMNattrib_taskPriority;
+BPMNattrib_type sub attribute, value string;
+BPMN_sendTask owns BPMNattrib_type;
+BPMN_sendTask owns BPMNattrib_startQuantity;
+BPMN_sendTask owns BPMNattrib_messageRef;
+BPMN_sendTask owns BPMNattrib_isForCompensation;
+BPMNattrib_topic sub attribute, value string;
+BPMN_sendTask owns BPMNattrib_topic;
+BPMN_sendTask owns BPMNattrib_completionQuantity;
+BPMNattrib_resultVariable sub attribute, value string;
+BPMN_sendTask owns BPMNattrib_resultVariable;
+BPMNattrib_class sub attribute, value string;
+BPMN_sendTask owns BPMNattrib_class;
+BPMNattrib_delegateExpression sub attribute, value string;
+BPMN_sendTask owns BPMNattrib_delegateExpression;
+
+## BPMN 'BPMN_ioSpecification' tag/node
+BPMN_ioSpecification sub BPMN_Entity;
+
+
+## BPMN 'BPMN_dataInput' tag/node
+BPMN_dataInput sub BPMN_Entity;
+
+BPMNattrib_itemSubjectRef sub attribute, value string;
+BPMN_dataInput owns BPMNattrib_itemSubjectRef;
+BPMNattrib_isCollection sub attribute, value string;
+BPMN_dataInput owns BPMNattrib_isCollection;
+
+## BPMN 'BPMN_inputSet' tag/node
+BPMN_inputSet sub BPMN_Entity;
+
+
+## BPMN 'BPMN_dataInputRefs' tag/node
+BPMN_dataInputRefs sub BPMN_Entity;
+
+
+## BPMN 'BPMN_outputSet' tag/node
+BPMN_outputSet sub BPMN_Entity;
+
+
+## BPMN 'BPMN_serviceTask' tag/node
+BPMN_serviceTask sub BPMN_Activity;
+
+BPMN_serviceTask owns BPMNattrib_expression;
+BPMN_serviceTask owns BPMNattrib_operationRef;
+BPMN_serviceTask owns BPMNattrib_implementation;
+BPMN_serviceTask owns BPMNattrib_taskPriority;
+BPMN_serviceTask owns BPMNattrib_type;
+BPMN_serviceTask owns BPMNattrib_startQuantity;
+BPMN_serviceTask owns BPMNattrib_isForCompensation;
+BPMN_serviceTask owns BPMNattrib_topic;
+BPMN_serviceTask owns BPMNattrib_completionQuantity;
+BPMN_serviceTask owns BPMNattrib_resultVariable;
+BPMN_serviceTask owns BPMNattrib_class;
+BPMN_serviceTask owns BPMNattrib_delegateExpression;
+
+## BPMN 'BPMN_startEvent' tag/node
+BPMN_startEvent sub BPMN_Entity;
+
+BPMNattrib_async sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_async;
+BPMNattrib_formRef sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_formRef;
+BPMNattrib_parallelMultiple sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_parallelMultiple;
+BPMNattrib_isInterrupting sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_isInterrupting;
+BPMNattrib_formHandlerClass sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_formHandlerClass;
+BPMNattrib_formKey sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_formKey;
+BPMNattrib_initiator sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_initiator;
+BPMNattrib_formRefBinding sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_formRefBinding;
+BPMNattrib_formRefVersion sub attribute, value string;
+BPMN_startEvent owns BPMNattrib_formRefVersion;
+
+## BPMN 'BPMN_endEvent' tag/node
+BPMN_endEvent sub BPMN_Entity;
+
+
+## BPMN 'BPMN_parallelGateway' tag/node
+BPMN_parallelGateway sub BPMN_Gateway;
+
+BPMN_parallelGateway owns BPMNattrib_async;
+BPMNattrib_gatewayDirection sub attribute, value string;
+BPMN_parallelGateway owns BPMNattrib_gatewayDirection;
+
+## BPMN 'BPMN_sequenceFlow' tag/node
+BPMN_sequenceFlow sub BPMN_Entity;
+
+BPMNattrib_targetRef sub attribute, value string;
+BPMN_sequenceFlow owns BPMNattrib_targetRef;
+BPMNattrib_isImmediate sub attribute, value string;
+BPMN_sequenceFlow owns BPMNattrib_isImmediate;
+BPMNattrib_sourceRef sub attribute, value string;
+BPMN_sequenceFlow owns BPMNattrib_sourceRef;
+
+## BPMN 'BPMN_collaboration' tag/node
+BPMN_collaboration sub BPMN_Entity;
+
+BPMN_collaboration owns BPMNattrib_isClosed;
+
+## BPMN 'BPMN_participant' tag/node
+BPMN_participant sub BPMN_Entity;
+
+BPMNattrib_processRef sub attribute, value string;
+BPMN_participant owns BPMNattrib_processRef;
+
+## BPMN 'BPMN_messageFlow' tag/node
+BPMN_messageFlow sub BPMN_Entity;
+
+BPMN_messageFlow owns BPMNattrib_targetRef;
+BPMN_messageFlow owns BPMNattrib_messageRef;
+BPMN_messageFlow owns BPMNattrib_sourceRef;
+
+## BPMN 'BPMN_interface' tag/node
+BPMN_interface sub BPMN_Entity;
+
+BPMNattrib_implementationRef sub attribute, value string;
+BPMN_interface owns BPMNattrib_implementationRef;
+
+## BPMN 'BPMN_operation' tag/node
+BPMN_operation sub BPMN_Entity;
+
+BPMN_operation owns BPMNattrib_implementationRef;
+
+## BPMN 'BPMN_inMessageRef' tag/node
+BPMN_inMessageRef sub BPMN_Entity;
+
+
+## BPMN 'BPMN_outMessageRef' tag/node
+BPMN_outMessageRef sub BPMN_Entity;
+
+
+## BPMN 'BPMN_itemDefinition' tag/node
+BPMN_itemDefinition sub BPMN_Entity;
+
+BPMN_itemDefinition owns BPMNattrib_isCollection;
+BPMNattrib_itemKind sub attribute, value string;
+BPMN_itemDefinition owns BPMNattrib_itemKind;
+BPMNattrib_structureRef sub attribute, value string;
+BPMN_itemDefinition owns BPMNattrib_structureRef;
+
+## BPMN 'BPMN_message' tag/node
+BPMN_message sub BPMN_Entity;
+
+BPMNattrib_itemRef sub attribute, value string;
+BPMN_message owns BPMNattrib_itemRef;
+
+## BPMN 'BPMN_BPMNDiagram' tag/node
+BPMN_BPMNDiagram sub BPMN_Entity;
+
+
+## BPMN 'BPMN_BPMNPlane' tag/node
+BPMN_BPMNPlane sub BPMN_Entity;
+
+BPMNattrib_bpmnElement sub attribute, value string;
+BPMN_BPMNPlane owns BPMNattrib_bpmnElement;
+
+## BPMN 'BPMN_BPMNEdge' tag/node
+BPMN_BPMNEdge sub BPMN_Entity;
+
+BPMNattrib_messageVisibleKind sub attribute, value string;
+BPMN_BPMNEdge owns BPMNattrib_messageVisibleKind;
+BPMN_BPMNEdge owns BPMNattrib_bpmnElement;
+BPMNattrib_sourceElement sub attribute, value string;
+BPMN_BPMNEdge owns BPMNattrib_sourceElement;
+BPMNattrib_targetElement sub attribute, value string;
+BPMN_BPMNEdge owns BPMNattrib_targetElement;
+
+## BPMN 'BPMN_waypoint' tag/node
+BPMN_waypoint sub BPMN_Entity;
+
+BPMNattrib_x sub attribute, value string;
+BPMN_waypoint owns BPMNattrib_x;
+BPMNattrib_y sub attribute, value string;
+BPMN_waypoint owns BPMNattrib_y;
+
+## BPMN 'BPMN_BPMNLabel' tag/node
+BPMN_BPMNLabel sub BPMN_Entity;
+
+BPMNattrib_labelStyle sub attribute, value string;
+BPMN_BPMNLabel owns BPMNattrib_labelStyle;
+
+## BPMN 'BPMN_Bounds' tag/node
+BPMN_Bounds sub BPMN_Entity;
+
+BPMN_Bounds owns BPMNattrib_x;
+BPMNattrib_width sub attribute, value string;
+BPMN_Bounds owns BPMNattrib_width;
+BPMN_Bounds owns BPMNattrib_y;
+BPMNattrib_height sub attribute, value string;
+BPMN_Bounds owns BPMNattrib_height;
+
+## BPMN 'BPMN_BPMNShape' tag/node
+BPMN_BPMNShape sub BPMN_Entity;
+
+BPMNattrib_isExpanded sub attribute, value string;
+BPMN_BPMNShape owns BPMNattrib_isExpanded;
+BPMN_BPMNShape owns BPMNattrib_bpmnElement;
+BPMNattrib_isMessageVisible sub attribute, value string;
+BPMN_BPMNShape owns BPMNattrib_isMessageVisible;
+BPMNattrib_participantBandKind sub attribute, value string;
+BPMN_BPMNShape owns BPMNattrib_participantBandKind;
+BPMNattrib_isMarkerVisible sub attribute, value string;
+BPMN_BPMNShape owns BPMNattrib_isMarkerVisible;
+BPMNattrib_isHorizontal sub attribute, value string;
+BPMN_BPMNShape owns BPMNattrib_isHorizontal;
+BPMNattrib_choreographyActivityShape sub attribute, value string;
+BPMN_BPMNShape owns BPMNattrib_choreographyActivityShape;
+
+## BPMN 'BPMN_BPMNLabelStyle' tag/node
+BPMN_BPMNLabelStyle sub BPMN_Entity;
+
+
+## BPMN 'BPMN_Font' tag/node
+BPMN_Font sub BPMN_Entity;
+
+BPMNattrib_isItalic sub attribute, value string;
+BPMN_Font owns BPMNattrib_isItalic;
+BPMNattrib_size sub attribute, value string;
+BPMN_Font owns BPMNattrib_size;
+BPMNattrib_isUnderline sub attribute, value string;
+BPMN_Font owns BPMNattrib_isUnderline;
+BPMNattrib_isStrikeThrough sub attribute, value string;
+BPMN_Font owns BPMNattrib_isStrikeThrough;
+BPMNattrib_isBold sub attribute, value string;
+BPMN_Font owns BPMNattrib_isBold;
+
+## =============== Implementation-specific schema elements ===============
+BPMNattrib_xmlns sub attribute, value string;
+BPMN_definitions owns BPMNattrib_xmlns;
+
+BPMN_waypoint owns BPMNattrib_x;
+BPMN_waypoint owns BPMNattrib_y;
+
+BPMNattrib_sort sub attribute, value string;
+BPMN_waypoint owns BPMNattrib_sort;
+
+## =============== Mapping to conceptual model ===============
+BPMN_hasConceptualModelElement sub relation, relates bpmnEntity, relates conceptualModel;
+BPMN_Entity plays BPMN_hasConceptualModelElement:bpmnEntity;
+MIAEntity plays BPMN_hasConceptualModelElement:conceptualModel;
+
+## Rules that inject BPMN semantics to entities in the conceptual model
+
+## Mission isCompoundBy Task
+rule rule_misson_isCompoundBy_task:
+when {
+     $bpmndefinitions isa BPMN_definitions;
+     $bpmnprocess isa BPMN_process;
+     $mission isa Mission;
+     $task isa Task;
+     (parent: $bpmndefinitions, child: $bpmnprocess) isa BPMN_hasChildTag;
+     (parent: $bpmnprocess, child: $bpmntask) isa BPMN_hasChildTag;
+     (bpmnEntity: $bpmndefinitions, conceptualModel: $mission) isa BPMN_hasConceptualModelElement;
+     (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
+} then {
+     (mission: $mission, task: $task) isa isCompoundBy;
+};
+
+## Task isPerformedBy Performer
+rule rule_task_isperformedBy_performer:
+when {
+     $bpmnflowNodeRef isa BPMN_flowNodeRef, has BPMN_textContent $id-ref;
+     $bpmntask isa BPMN_Entity, has BPMNattrib_id $id;
+     $id = $id-ref;
+     $task isa Task;
+     $performer isa Performer;
+     (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
+     (parent: $bpmnlane, child: $bpmnflowNodeRef) isa BPMN_hasChildTag;
+     (bpmnEntity: $bpmnlane, conceptualModel: $performer) isa BPMN_hasConceptualModelElement;
+} then {
+     (task: $task, performer: $performer) isa isPerformedBy;
+};
+
+## Task isPrecededBySetOfTask precedence tasks (sequence flow)
+rule rule_task_isPrecededBySetOfTask_precedenceTask_sequenceFlow:
+when {
+     $precedenceTask isa PrecedenceTask;
+     $task1 isa Task;
+     $task2 isa Task;
+     $sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $sourceRef, has BPMNattrib_targetRef $targetRef;
+     $bpmntask1 isa BPMN_Entity, has BPMNattrib_id $taskID1;
+     $bpmntask2 isa BPMN_Entity, has BPMNattrib_id $taskID2;
+     $taskID1 = $sourceRef;
+     $taskID2 = $targetRef;
+     (bpmnEntity: $sequenceFlow, conceptualModel: $precedenceTask) isa BPMN_hasConceptualModelElement;
+     (bpmnEntity: $bpmntask1, conceptualModel: $task1) isa BPMN_hasConceptualModelElement;
+     (bpmnEntity: $bpmntask2, conceptualModel: $task2) isa BPMN_hasConceptualModelElement;
+} then {
+     (precedence_task: $precedenceTask, task: $task2) isa isPrecededBySetOfTask;
+};
+
+## Precedence task isCompoundBySetOfTask tasks (sequence flow)
+rule rule_precedenceTask_isCompoundBySetOfTask_task_sequenceFlow:
+when {
+     $precedenceTask isa PrecedenceTask;
+     $task1 isa Task;
+     $task2 isa Task;
+     $sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $sourceRef, has BPMNattrib_targetRef $targetRef;
+     $bpmntask1 isa BPMN_Entity, has BPMNattrib_id $taskID1;
+     $bpmntask2 isa BPMN_Entity, has BPMNattrib_id $taskID2;
+     $taskID1 = $sourceRef;
+     $taskID2 = $targetRef;
+     (bpmnEntity: $sequenceFlow, conceptualModel: $precedenceTask) isa BPMN_hasConceptualModelElement;
+     (bpmnEntity: $bpmntask1, conceptualModel: $task1) isa BPMN_hasConceptualModelElement;
+     (bpmnEntity: $bpmntask2, conceptualModel: $task2) isa BPMN_hasConceptualModelElement;
+} then {
+     (precedence_task: $precedenceTask, task: $task1) isa isCompoundBySetOfTask;
+};
+
+## chain of gateways, direct
+rule rule_gateway_chain_direct:
+when {
+     $sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $source, has BPMNattrib_targetRef $target;
+     $gateway1 isa BPMN_Gateway, has BPMNattrib_id $id1;
+     $gateway2 isa BPMN_Gateway, has BPMNattrib_id $id2;
+     $id1 = $source;
+     $id2 = $target;
+} then {
+     (previous: $gateway1, next: $gateway2) isa BPMN_gatewayTransitiveChain;
+};
+## chain of gateways, transitive
+rule rule_gateway_chain_transitive:
+when {
+     $sequenceFlow isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $source, has BPMNattrib_targetRef $target;
+     $gateway1 isa BPMN_Gateway, has BPMNattrib_id $id1;
+     $gateway2 isa BPMN_Gateway, has BPMNattrib_id $id2;
+     $gateway3 isa BPMN_Gateway;
+     $id1 = $source;
+     $id2 = $target;
+     (previous: $gateway2, next: $gateway3) isa BPMN_gatewayTransitiveChain;
+} then {
+     (previous: $gateway1, next: $gateway3) isa BPMN_gatewayTransitiveChain;
+};
+
+## Task isPrecededBySetOfTask ORPrecedenceTaskList, direct
+rule rule_task_isPrecededBySetOfTask_ORPrecedenceTaskList_direct:
+when {
+ $bpmngate isa BPMN_Gateway, has BPMNattrib_id $gateId;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateId;
+ $fromSource = $taskFromId;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_id $taskToId;
+ $flowTo isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $toSource, has BPMNattrib_targetRef $toTarget;
+ $toTarget = $taskToId;
+ $toSource = $gateId;
+ $taskTo isa Task;
+ (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+ (bpmnEntity: $bpmngate, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $prec isa ORPrecedenceTaskList;
+} then {
+     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+};
+
+## Task isPrecededBySetOfTask ANDPrecedenceTaskList, direct
+rule rule_task_isPrecededBySetOfTask_ANDPrecedenceTaskList_direct:
+when {
+ $bpmngate isa BPMN_Gateway, has BPMNattrib_id $gateId;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateId;
+ $fromSource = $taskFromId;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_id $taskToId;
+ $flowTo isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $toSource, has BPMNattrib_targetRef $toTarget;
+ $toTarget = $taskToId;
+ $toSource = $gateId;
+ $taskTo isa Task;
+ (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+ (bpmnEntity: $bpmngate, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $prec isa ANDPrecedenceTaskList;
+} then {
+     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+};
+
+## Task isPrecededBySetOfTask ORPrecedenceTaskList, transitive
+rule rule_task_isPrecededBySetOfTask_ORPrecedenceTaskList_transitive:
+when {
+ $bpmngateFrom isa BPMN_Gateway, has BPMNattrib_id $gateFromId;
+ $bpmngateTo isa BPMN_Gateway, has BPMNattrib_id $gateToId;
+ (previous: $bpmngateFrom, next: $bpmngateTo) isa BPMN_gatewayTransitiveChain;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateFromId;
+ $fromSource = $taskFromId;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_id $taskToId;
+ $flowTo isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $toSource, has BPMNattrib_targetRef $toTarget;
+ $toTarget = $taskToId;
+ $toSource = $gateToId;
+ $taskTo isa Task;
+ (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+ (bpmnEntity: $bpmngateTo, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $prec isa ORPrecedenceTaskList;
+} then {
+     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+};
+
+## Task isPrecededBySetOfTask ANDPrecedenceTaskList, transitive
+rule rule_task_isPrecededBySetOfTask_ANDPrecedenceTaskList_transitive:
+when {
+ $bpmngateFrom isa BPMN_Gateway, has BPMNattrib_id $gateFromId;
+ $bpmngateTo isa BPMN_Gateway, has BPMNattrib_id $gateToId;
+ (previous: $bpmngateFrom, next: $bpmngateTo) isa BPMN_gatewayTransitiveChain;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateFromId;
+ $fromSource = $taskFromId;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_id $taskToId;
+ $flowTo isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $toSource, has BPMNattrib_targetRef $toTarget;
+ $toTarget = $taskToId;
+ $toSource = $gateToId;
+ $taskTo isa Task;
+ (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+ (bpmnEntity: $bpmngateTo, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $prec isa ANDPrecedenceTaskList;
+} then {
+     (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+};
+
+## AND/ORPrecedenceTaskList isCompoundBySetOfTask Task, direct
+rule rule_ANDORPrecedenceTaskList_isCompoundBySetOfTask_task_direct:
+when {
+ $prec isa PrecedenceTask;
+ $taskTo isa Task;
+ $taskFrom isa Task;
+ (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+ (bpmnEntity: $bpmngate, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $bpmngate isa BPMN_Gateway, has BPMNattrib_id $gateId;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateId;
+ $fromSource = $taskFromId;
+ (bpmnEntity: $bpmntaskFrom, conceptualModel: $taskFrom) isa BPMN_hasConceptualModelElement;
+} then {
+     (task: $taskFrom, precedence_task: $prec) isa isCompoundBySetOfTask;
+};
+
+## AND/ORPrecedenceTaskList isCompoundBySetOfTask Task, transitive
+rule rule_ANDORPrecedenceTaskList_isCompoundBySetOfTask_task_transitive:
+when {
+ $prec isa PrecedenceTask;
+ $taskTo isa Task;
+ $taskFrom isa Task;
+ (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+ (bpmnEntity: $bpmngateTo, conceptualModel: $prec) isa BPMN_hasConceptualModelElement;
+ $bpmngateTo isa BPMN_Gateway;
+ (previous: $bpmngateFrom, next: $bpmngateTo) isa BPMN_gatewayTransitiveChain;
+ $bpmngateFrom isa BPMN_Gateway, has BPMNattrib_id $gateId;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_id $taskFromId;
+ $flowFrom isa BPMN_sequenceFlow, has BPMNattrib_sourceRef $fromSource, has BPMNattrib_targetRef $fromTarget;
+ $fromTarget = $gateId;
+ $fromSource = $taskFromId;
+ (bpmnEntity: $bpmntaskFrom, conceptualModel: $taskFrom) isa BPMN_hasConceptualModelElement;
+} then {
+     (task: $taskFrom, precedence_task: $prec) isa isCompoundBySetOfTask;
+};
+
+## Sample queries for the above rules
+
+## query isCompoundBy
+# match 
+# $r isa isCompoundBy; 
+# $m isa Mission, has UID $muid; 
+# $t isa Task, has UID $tuid; 
+# $bpmntask isa BPMN_Entity, has UID $buid;
+# (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;
+# get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;
+
+## query isPerformedBy
+# match
+# $bpmntask isa BPMN_Entity, has UID $uid1;
+# $bpmnperfomer isa BPMN_Entity, has UID $uid2;
+# $rel1 (task: $task, performer: $performer) isa isPerformedBy;
+# $rel2 (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
+# $rel3 (bpmnEntity: $bpmnperfomer, conceptualModel: $performer) isa BPMN_hasConceptualModelElement;
+# get $rel1, $rel2, $rel3, $uid1, $uid2;
+
+## query provides
+# match
+# $asset isa Asset, has UID $uid1;
+# $service isa Service, has UID $uid2;
+# $bpmnasset isa BPMN_Entity, has UID $uid3;
+# $bpmnservice isa BPMN_Entity, has UID $uid4;
+# $rel1 (asset: $asset, service: $service) isa provides;
+# $rel2 (bpmnEntity: $bpmnasset, conceptualModel: $asset) isa BPMN_hasConceptualModelElement;
+# $rel3 (bpmnEntity: $bpmnservice, conceptualModel: $service) isa BPMN_hasConceptualModelElement;
+# get $rel1, $rel2, $rel3, $uid1, $uid2, $uid3, $uid4;
+
+## query isPrecededBySetOfTask and isCompoundBySetOfTask associated with sequenceFlow
+# match
+# $p isa PrecedenceTask;
+# $t1 isa Task;
+# $t2 isa Task;
+# $r1  (precedence_task: $p, task: $t2) isa isPrecededBySetOfTask; 
+# $r2  (precedence_task: $p, task: $t1) isa isCompoundBySetOfTask; 
+# $bpmntask1 isa BPMN_Entity;
+# $bpmntask2 isa BPMN_Entity;
+# $seq isa BPMN_sequenceFlow;
+# $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa BPMN_hasConceptualModelElement;
+# $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa BPMN_hasConceptualModelElement;
+# $rel3  (bpmnEntity: $seq, conceptualModel: $p) isa BPMN_hasConceptualModelElement;
+
+## Query AND/ORPrecedenceTaskList
+# match
+# $taskFrom isa Task;
+# $taskTo isa Task;
+# {$prec isa ANDPrecedenceTaskList;} or {$prec isa ORPrecedenceTaskList;};
+# $relFrom (task: $taskFrom, precedence_task: $prec) isa isCompoundBySetOfTask;
+# $relTo (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+# $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_name $attribFrom;
+# $bpmntaskTo isa BPMN_Activity, has BPMNattrib_name $attribTo;
+# $mapFrom (bpmnEntity: $bpmntaskFrom, conceptualModel: $taskFrom) isa BPMN_hasConceptualModelElement;
+# $mapTo (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+
+## =============== End ===============

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>edu.gmu.c4i</groupId>
+	<artifactId>unbbayes.prs.sbn</artifactId>
+	<name>UnBBayes-SBN Parent project</name>
+	<description>Implementation of Subjective Bayesian Network -- a Bayesian Network with second-order uncertainty based on Subjective Logic's opinions</description>
+	<!-- If you change the below version, -->
+	<!-- change version and library settings on plugin.xml too, because this 
+		is included as library -->
+	<version>0.0.1-SNAPSHOT</version>
+	<url>http://unbbayes.sourceforge.net</url>
+	<packaging>pom</packaging>
+
+	<licenses>
+		<license>
+			<name> GNU Lesser General Public License, Version 3</name>
+			<url>https://www.gnu.org/licenses/lgpl-3.0.html</url>
+		</license>
+	</licenses>
+
+	<issueManagement>
+		<system>SourceForge Tracker</system>
+		<url>https://sourceforge.net/p/unbbayes/feature-requests/milestone/Subjective%20Bayes%20net/</url>
+	</issueManagement>
+
+
+	<developers>
+		<developer>
+			<id>pcosta</id>
+			<name>Dr. Paulo Cesar G. Costa</name>
+			<email>pcosta@c4i.gmu.edu</email>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>cardialfly</id>
+			<name>Shou Matsumoto</name>
+			<email>smatsum2@c4i.gmu.edu</email>
+			<roles>
+				<role>Developer</role>
+				<role>Consultant</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id></id>
+			<name>Han Jun Yoon</name>
+			<email>godzmdi93@vt.edu</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>Virginia Tech - VT</organization>
+			<organizationUrl>vt.edu/</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+	</developers>
+
+	<contributors>
+		<contributor>
+			<name>Dr. Jair Feldens Ferrari</name>
+			<email>jfeldens@c4i.gmu.edu </email>
+			<url>https://c4i.gmu.edu/c4i-center-faculty-and-affiliates/</url>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>http://www.gmu.edu</organizationUrl>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<timezone>-5</timezone>
+		</contributor>
+		<contributor>
+			<name>Dr. Jin-Hee Cho</name>
+			<email>jicho@vt.edu</email>
+			<url>hhttps://cs.vt.edu/people/faculty/jin-hee-cho.html</url>
+			<organization>Virginia Tech - VT</organization>
+			<organizationUrl>vt.edu/</organizationUrl>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<timezone>-5</timezone>
+		</contributor>
+	</contributors>
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>11</java.version>
+
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<version.compiler.plugin>3.10.1</version.compiler.plugin>
+		<version.assembly.plugin>3.4.2</version.assembly.plugin>
+
+	</properties>
+
+
+
+	<!-- Dependencies that are not present in maven central repository are here -->
+	<repositories>
+		<repository>
+			<id>UnBBayes-repo</id>
+			<name>Custom maven repository</name>
+			<url>file://${project.basedir}/lib/repository</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- This is a plug-in project for UnBBayes. Since it uses classes from 
+			the core, UnBBayes is indeed a dependency -->
+		<dependency>
+			<groupId>br.unb.cic</groupId>
+			<artifactId>unbbayes</artifactId>
+			<version>4.22.19-SNAPSHOT</version>
+			<scope>compile</scope>
+			<exclusions>
+				<!-- Do not load old log4j -->
+				<!-- <exclusion> -->
+				<!-- <groupId>log4j</groupId> -->
+				<!-- <artifactId>log4j</artifactId> -->
+				<!-- </exclusion> -->
+
+				<!-- Do not load old JUnit -->
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- This plug-in project also uses Beta & Diriclet distribution features 
+			from the unbbayes.learning -->
+		<dependency>
+			<groupId>br.unb.cic</groupId>
+			<artifactId>unbbayes.learning</artifactId>
+			<version>1.3.2-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+		<!-- Command line argument parser -->
+		<dependency>
+			<groupId>commons-cli</groupId>
+			<artifactId>commons-cli</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+
+
+		<!-- Logger -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+
+
+		<!-- JUnit supposedly compatible with Hamcrest -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- JUnit 5 requires Surefire version 2.22.0 or higher -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>

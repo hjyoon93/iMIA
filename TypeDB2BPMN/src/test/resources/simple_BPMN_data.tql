@@ -1,0 +1,142 @@
+## =============== Begin ===============
+## Insert BPMN elements
+
+## definitions
+insert $x isa BPMN_definitions,
+     has BPMNattrib_xmlns "http://www.omg.org/spec/BPMN/20100524/MODEL",
+     has BPMNattrib_targetNamespace "https://camunda.org/examples",
+     has BPMNattrib_typeLanguage "http://www.w3.org/2001/XMLSchema",
+     has BPMNattrib_expressionLanguage "http://www.w3.org/1999/XPath",
+     has UID "https://camunda.org/examples/#definitions";
+
+## Mapping to the conceptual model
+insert $concept isa Mission, has UID "https://camunda.org/examples/#Mission_definitions";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'https://camunda.org/examples/#definitions';
+     $concept isa entity, has UID 'https://camunda.org/examples/#Mission_definitions';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## process
+insert $x isa BPMN_process,
+     has BPMNattrib_isClosed "false",
+     has BPMNattrib_processType "None",
+     has UID "https://camunda.org/examples/#process";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#definitions";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#process";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## userTask
+insert $x isa BPMN_userTask,
+     has BPMNattrib_startQuantity "1",
+     has BPMNattrib_implementation "##unspecified",
+     has BPMNattrib_isForCompensation "false",
+     has BPMNattrib_name "User Task",
+     has BPMNattrib_completionQuantity "1",
+     has BPMNattrib_id "task",
+     has UID "https://camunda.org/examples/#task";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#process";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#task";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa Task, has UID "https://camunda.org/examples/#Task_task";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'https://camunda.org/examples/#task';
+     $concept isa entity, has UID 'https://camunda.org/examples/#Task_task';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "flow1",
+     has UID "https://camunda.org/examples/#incoming";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#task";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#incoming";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "flow2",
+     has UID "https://camunda.org/examples/#outgoing";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#task";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#outgoing";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## startEvent
+insert $x isa BPMN_startEvent,
+     has BPMNattrib_parallelMultiple "false",
+     has BPMNattrib_isInterrupting "true",
+     has BPMNattrib_id "start",
+     has UID "https://camunda.org/examples/#start";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#process";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#start";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## outgoing
+insert $x isa BPMN_outgoing,
+     has BPMN_textContent "flow1",
+     has UID "https://camunda.org/examples/#outgoing1";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#start";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#outgoing1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## endEvent
+insert $x isa BPMN_endEvent,
+     has BPMNattrib_id "end",
+     has UID "https://camunda.org/examples/#end";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#process";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#end";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## incoming
+insert $x isa BPMN_incoming,
+     has BPMN_textContent "flow2",
+     has UID "https://camunda.org/examples/#incoming1";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#end";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#incoming1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "task",
+     has BPMNattrib_id "flow1",
+     has BPMNattrib_sourceRef "start",
+     has UID "https://camunda.org/examples/#flow1";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#process";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#flow1";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "https://camunda.org/examples/#PrecedenceTask_flow1";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'https://camunda.org/examples/#flow1';
+     $concept isa entity, has UID 'https://camunda.org/examples/#PrecedenceTask_flow1';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## sequenceFlow
+insert $x isa BPMN_sequenceFlow,
+     has BPMNattrib_targetRef "end",
+     has BPMNattrib_id "flow2",
+     has BPMNattrib_sourceRef "task",
+     has UID "https://camunda.org/examples/#flow2";
+match
+     $parent isa BPMN_Entity, has UID "https://camunda.org/examples/#process";
+     $child isa BPMN_Entity, has UID "https://camunda.org/examples/#flow2";
+insert $rel (parent: $parent, child: $child) isa BPMN_hasChildTag;
+
+## Mapping to the conceptual model
+insert $concept isa PrecedenceTask, has UID "https://camunda.org/examples/#PrecedenceTask_flow2";
+match
+     $bpmnEntity isa BPMN_Entity, has UID 'https://camunda.org/examples/#flow2';
+     $concept isa entity, has UID 'https://camunda.org/examples/#PrecedenceTask_flow2';
+insert $rel (bpmnEntity: $bpmnEntity, conceptualModel: $concept) isa BPMN_hasConceptualModelElement;
+
+## =============== End ===============

@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>br.unb.cic</groupId>
+	<artifactId>unbbayes</artifactId>
+	<name>UnBBayes</name>
+	<version>4.22.19-SNAPSHOT</version>
+	<url>http://unbbayes.sourceforge.net
+	</url>
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, Version 3, 29 June 2007</name>
+			<url>https://www.gnu.org/licenses/lgpl-3.0.html</url>
+		</license>
+	</licenses>
+	<issueManagement>
+		<system>SourceForge Tracker</system>
+		<url>http://sourceforge.net/tracker/?group_id=47519
+		</url>
+	</issueManagement>
+	<!--
+		ciManagement> <system>Continuum</system>
+		<url>http://integrationserver.wakaleo.com/continuum</url> <notifiers>
+		<notifier> <type>mail</type>
+		<address>rommel.carvalho@gmail.com</address> </notifier> </notifiers>
+		</ciManagement
+	-->
+	<inceptionYear>2001</inceptionYear>
+	<mailingLists>
+		<mailingList>
+			<name> Announcements. All messages on this list are also sent to the
+				users list.</name>
+			<subscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-announce
+			</subscribe>
+			<unsubscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-announce
+			</unsubscribe>
+			<post>unbbayes-announce@lists.sourceforge.net
+			</post>
+			<archive>
+				http://sourceforge.net/mailarchive/forum.php?forum_name=unbbayes-announce
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name> A subscriber-only list for those interested in developing
+				UnBBayes.</name>
+			<subscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-developers
+			</subscribe>
+			<unsubscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-developers
+			</unsubscribe>
+			<post>unbbayes-developers@lists.sourceforge.net
+			</post>
+			<archive>
+				http://sourceforge.net/mailarchive/forum.php?forum_name=unbbayes-developers
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name> A subscriber-only list for those interested in translating
+				UnBBayes.</name>
+			<subscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-translators
+			</subscribe>
+			<unsubscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-translators
+			</unsubscribe>
+			<post>unbbayes-translators@lists.sourceforge.net
+			</post>
+			<archive>
+				http://sourceforge.net/mailarchive/forum.php?forum_name=unbbayes-translators
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name> A subscriber-only list for those interested in discussing
+				about UnBBayes.</name>
+			<subscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-users
+			</subscribe>
+			<unsubscribe>
+				https://lists.sourceforge.net/lists/listinfo/UnBBayes-users
+			</unsubscribe>
+			<post>unbbayes-users@lists.sourceforge.net
+			</post>
+			<archive>
+				http://sourceforge.net/mailarchive/forum.php?forum_name=unbbayes-users
+			</archive>
+		</mailingList>
+	</mailingLists>
+	<developers>
+		<developer>
+			<id>mladeira</id>
+			<name>Dr. Marcelo Ladeira</name>
+			<email>mladeira@unb.br</email>
+			<roles>
+				<role>Project Manager</role>
+			</roles>
+			<organization>University of Brasília - UnB</organization>
+			<organizationUrl>www.unb.br</organizationUrl>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>rommelnc</id>
+			<name>Rommel Novaes Carvalho</name>
+			<email>rommel.carvalho@gmail.com</email>
+			<roles>
+				<role>Project Manager</role>
+				<role>Architect</role>
+				<role>Developer</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>pcosta</id>
+			<name>Dr. Paulo Cesar G. Costa</name>
+			<email>pcosta@gmu.edu</email>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>laecio</id>
+			<name>Laecio Lima</name>
+			<email>laecio@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>University of Brasilia - UnB</organization>
+			<organizationUrl>www.unb.br</organizationUrl>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>shou</id>
+			<name>Shou Matsumoto</name>
+			<email>cardialfly@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>University of Brasilia - UnB</organization>
+			<organizationUrl>www.unb.br</organizationUrl>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>young</id>
+			<name>Young Park</name>
+			<email>cparkf@gmu.edu</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>aditya</id>
+			<name>Aditya Mugali</name>
+			<email>amugali@gmu.edu</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>adebarro</id>
+			<name>Alexandre B Barreto</name>
+			<email>adebarro@gmu.edu</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>www.gmu.edu</organizationUrl>
+			<timezone>-5</timezone>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>Dr. Kathryn Blackmond Laskey</name>
+			<email>klaskey@gmu.edu</email>
+			<url>http://volgenau.gmu.edu/~klaskey
+			</url>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>http://www.gmu.edu
+			</organizationUrl>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<timezone>-5</timezone>
+		</contributor>
+		<contributor>
+			<name>Dr. Kuo-Chu Chang</name>
+			<email>kchang@gmu.edu</email>
+			<url>http://volgenau.gmu.edu/~kchang
+			</url>
+			<organization>George Mason University - GMU</organization>
+			<organizationUrl>http://www.gmu.edu
+			</organizationUrl>
+			<roles>
+				<role>Consultant</role>
+			</roles>
+			<timezone>-5</timezone>
+		</contributor>
+	</contributors>
+	<scm>
+		<connection>
+			scm:svn:https://unbbayes.svn.sourceforge.net/svnroot/unbbayes/trunk
+		</connection>
+		<developerConnection>
+			scm:svn:https://unbbayes.svn.sourceforge.net/svnroot/unbbayes/trunk/
+		</developerConnection>
+		<url>http://unbbayes.svn.sourceforge.net/viewvc/unbbayes/trunk
+		</url>
+	</scm>
+	<organization>
+		<name>University of Brasilia - UnB</name>
+		<url>http://www.unb.br</url>
+	</organization>
+	<properties>
+   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+ 	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>unbbayes.Main</mainClass>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib</classpathPrefix>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5.5</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/dist.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<locales>en</locales>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.ws.jaxme</groupId>
+				<artifactId>maven-jaxme-plugin</artifactId>
+				<version>1.0.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jaxme</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!--
+						BEGIN - this is a work around, because the plugin does not work as
+						documented
+					-->
+<!-- 					<target> ${project.build.directory}/target/jaxme/java</target> -->
+					<target>${project.build.directory}/jaxme/java</target>
+<!-- 					<resourceTarget>${project.build.directory}/../target/jaxme/resources</resourceTarget> -->
+					<resourceTarget>${project.build.directory}/jaxme/resources</resourceTarget>
+					<!--
+						END - this is a work around, because the plugin does not work as
+						documented
+					-->
+					<schemas>
+						<!-- value>src/main/xsd/XMLBIF_0_6.xsd</value -->
+					</schemas>
+					<packageName>unbbayes.io.xmlbif.version6.xmlclasses
+					</packageName>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.ws.jaxme
+										</groupId>
+										<artifactId>
+											maven-jaxme-plugin
+										</artifactId>
+										<versionRange>
+											[1.0.3,)
+										</versionRange>
+										<goals>
+											<goal>jaxme</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<!-- Dependencies that are not present in maven central repository are here -->
+	<repositories>
+		<repository>
+			<id>UnBBayes-repo</id>
+			<name>Custom maven repository</name>
+			<url>file://${project.basedir}/lib/repository</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+
+		<!-- JAVAHELP -->
+		<dependency>
+			<!--
+				JavaHelp is an open source software, a full-featured,
+				platform-independent, extensible help system that enables you to
+				incorporate online help in applets, components, applications,
+				operating systems, and devices.
+				http://java.sun.com/javase/technologies/desktop/javahelp/
+			-->
+			<groupId>javax.help</groupId>
+			<artifactId>javahelp</artifactId>
+			<version>2.0.02</version>
+		</dependency>
+		<!-- JAVAHELP -->
+		
+		<!-- PLOT-GRAPHICS -->
+		<!-- Used for plotting some graphics. -->
+		<!-- This is unbbayes.datamining plugin's dependency
+		
+		<dependency>
+			<groupId>guess</groupId>
+			<artifactId>plot</artifactId>
+			<version>1.0</version>
+		</dependency>
+		-->
+		<!-- CLONE -->
+		<!-- Used for Clonning nodes. -->
+		<!-- This is unbbayes.datamining plugin's dependency -->
+
+
+		<!-- JUNIT -->
+			<!--
+				JUnit is a simple framework to write repeatable tests. It is an
+				instance of the xUnit architecture for unit testing frameworks.
+				http://junit.sourceforge.net/
+			-->
+			<!-- JUnit should not be included to distributables of GPL projects, because it is released under Eclipse public license, which is incompatible with GPL -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<!-- Add it only in the context of test and do not add to distribution -->
+			<scope>test</scope>
+		</dependency>
+		<!-- JUNIT -->
+
+		<!-- JAXME/JAXB -->
+		<!--
+			JaxMe 2 is an open source implementation of JAXB, the specification
+			for Java/XML binding. http://ws.apache.org/jaxme/
+		-->
+		<dependency>
+			<groupId>jaxme</groupId>
+			<artifactId>jaxme2</artifactId>
+			<version>0.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>jaxme</groupId>
+			<artifactId>jaxme2-rt</artifactId>
+			<version>0.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>jaxme</groupId>
+			<artifactId>jaxmeapi</artifactId>
+			<version>0.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>jaxme</groupId>
+			<artifactId>jaxmejs</artifactId>
+			<version>0.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>jaxme</groupId>
+			<artifactId>jaxmexs</artifactId>
+			<version>0.5.1</version>
+		</dependency>
+		
+		
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.uncommons.maths</groupId> -->
+<!-- 			<artifactId>uncommons-maths</artifactId> -->
+<!-- 			<version>1.2.2a</version> -->
+<!-- 		</dependency> -->
+		
+		<!-- JAXME/JAXB -->
+
+		<!-- XALAN -->
+		<dependency>
+			<!--
+				Xalan-Java is an XSLT processor for transforming XML documents into
+				HTML, text, or other XML document types. It implements XSL
+				Transformations (XSLT) Version 1.0 and XML Path Language (XPath)
+				Version 1.0 and can be used from the command line, in an applet or a
+				servlet, or as a module in other program.
+				http://xml.apache.org/xalan-j/
+			-->
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+		<!-- XALAN -->
+
+		<!-- COMMONS-LOGGING -->
+		<!--
+			The Logging package is an ultra-thin bridge between different
+			logging implementations. A library that uses the commons-logging API
+			can be used with any logging implementation at runtime.
+			http://commons.apache.org/logging/
+		-->
+<!-- 		<dependency> -->
+<!-- 			<groupId>commons-logging</groupId> -->
+<!-- 			<artifactId>commons-logging</artifactId> -->
+<!-- 			<version>1.1</version> -->
+<!-- 		</dependency> -->
+		<!-- COMMONS-LOGGING -->
+
+		<!-- PROTEGE-OWL -->
+		<!--
+			ICU is a mature, widely used set of C/C++ and Java libraries
+			providing Unicode and Globalization support for software
+			applications. Necessary for Protege. http://www.icu-project.org/
+		-->
+		<!-- Necessary for Evaluation -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.ibm.icu</groupId> -->
+<!-- 			<artifactId>icu4j</artifactId> -->
+<!-- 			<version>3.8</version> -->
+<!-- 		</dependency> -->
+		<!-- Necessary for Protege. -->
+		<!-- This is mebn dependency (plugin dependency)
+		<dependency>
+			<groupId>guess</groupId>
+			<artifactId>iri</artifactId>
+			<version>2.4</version>
+		</dependency>
+		 -->
+		<!--
+			Jena is a Java framework for building Semantic Web applications. It
+			provides a programmatic environment for RDF, RDFS and OWL, SPARQL
+			and includes a rule-based inference engine. Necessary for Protege.
+			http://jena.sourceforge.net/
+		-->
+		<!-- This is mebn dependency (plugin dependency)
+		<dependency>
+			<groupId>guess</groupId>
+			<artifactId>jena</artifactId>
+			<version>2.4</version>
+		</dependency>
+		-->
+		<!--
+			The Xerces Java Parser 1.4.4 supports the XML 1.0 recommendation and
+			contains advanced parser functionality, such as support for the
+			W3C's XML Schema recommendation version 1.0, DOM Level 2 version
+			1.0, and SAX Version 2, in addition to supporting the
+			industry-standard DOM Level 1 and SAX version 1 APIs. Necessary for
+			Protege. http://xerces.apache.org/xerces-j/
+		-->
+		<!--  No code uses this dependency
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.8.1</version>
+		</dependency>
+		-->
+		<!--
+			PowerLoom is a full-function, logic-based knowledge representation
+			and reasoning system, that supports all aspects of knowledge-based
+			applications.
+			http://www.isi.edu/isd/LOOM/PowerLoom/documentation/manual/manual_2.html
+		-->
+		<!-- This is mebn dependency (plugin dependency)
+		<dependency>
+			<groupId>guess</groupId>
+			<artifactId>powerloom</artifactId>
+			<version>1.0</version>
+		</dependency>
+		-->
+		<!--
+			STELLA is a strongly typed, object-oriented, Lisp-like language,
+			designed to facilitate symbolic programming tasks in artificial
+			intelligence applications. Necessary for PowerLoom.
+			http://www.isi.edu/isd/LOOM/Stella/
+		-->
+		<!-- This is mebn dependency (plugin dependency)
+		<dependency>
+			<groupId>guess</groupId>
+			<artifactId>stella</artifactId>
+			<version>1.0</version>
+		</dependency>
+		-->
+		<!--
+			Protégé is a free, open source ontology editor and knowledge-base
+			framework. http://protege.stanford.edu/
+		-->
+		<!-- This is mebn dependency (plugin dependency)
+		<dependency>
+			<groupId>guess</groupId>
+			<artifactId>protege</artifactId>
+			<version>3.2</version>
+		</dependency>
+		-->
+		<!--
+			The Protégé-OWL editor is an extension of Protégé that supports the
+			Web Ontology Language (OWL).
+			http://protege.stanford.edu/overview/protege-owl.html
+		-->
+		<!-- This is mebn dependency (plugin dependency)
+		<dependency>
+			<groupId>guess</groupId>
+			<artifactId>protege-owl</artifactId>
+			<version>3.2</version>
+		</dependency>
+		-->
+		<!-- PROTEGE-OWL -->
+
+		<!-- MIGLAYOUT -->
+		<!--
+			MiGLayout is the most versatile and flexible Swing and SWT Layout
+			Manager for Java, yet it is very easy to learn and use.
+			http://www.miglayout.com/
+		-->
+		<!-- This is unbbayes.datamining dependency (plugin dependency)
+		<dependency>
+			<groupId>guess</groupId>
+			<artifactId>miglayout15-swing</artifactId>
+			<version>1.0</version>
+		</dependency>
+		-->
+		<!-- MIGLAYOUT -->
+
+		<dependency>
+			<!--
+				JPF provides a runtime engine that dynamically discovers and loads
+				"plug-ins". A plug-in is a structured component that describes
+				itself to JPF using a "manifest". JPF maintains a registry of
+				available plug-ins and the functions they provide (via extension
+				points and extensions). http://jpf.sourceforge.net/index.html
+			-->
+			<groupId>net.sf.jpf</groupId>
+			<artifactId>jpf</artifactId>
+			<version>1.5-SNAPSHOT</version>
+			
+			
+		</dependency>
+		
+		<!-- Explicitly declare dependency to log4j, so that plug-ins can use it without having to include these jars -->
+		<dependency>
+		    <groupId>log4j</groupId>
+		    <artifactId>log4j</artifactId>
+		    <version>1.2.17</version>
+		</dependency>
+		
+		
+
+		<!-- Common library for math functions. -->
+		<!-- http://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
+		<!-- This is for calculating statistics in com.bbn.bn.inference.IterativeSecondOrderJunctionTreeAlgorithm -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-math3</artifactId>
+		    <version>3.6.1</version>
+		    <!-- Using managed version from parent project -->
+	    </dependency>
+
+		<!-- Tools for statistical and machine learning applications -->
+		<!-- http://mvnrepository.com/artifact/cc.mallet/mallet -->
+		<!-- This is for supporting Dirichlet distribution in com.bbn.bn.inference.IterativeSecondOrderJunctionTreeAlgorithm -->
+		<!-- Note: IterativeSecondOrderJunctionTreeAlgorithm is a prototype version 
+		and it will eventually be migrated to different dependency (e.g. UnBBayes),
+		so this dependency will be eventually removed from this pom
+		(there's no need to declare a managed version in parent project) -->
+		<dependency>
+		    <groupId>cc.mallet</groupId>
+		    <artifactId>mallet</artifactId>
+		    <version>2.0.8</version>
+		</dependency>
+		
+		
+		<!-- read csv files -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-csv</artifactId>
+		    <version>1.5</version>
+		</dependency>
+		
+		<!-- API for reading/writing json -->
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20190722</version>
+		</dependency>
+		
+	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId> maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<!--  >report>dependencies</report -->
+							<report>project-team</report>
+							<report>mailing-list</report>
+							<report>issue-tracking</report>
+							<report>license</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<inherited>false</inherited>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
+  				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changes-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- plugin>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				</plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<links>
+						<link>
+							http://java.sun.com/j2se/1.5.0/docs/api
+						</link>
+					</links>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+			<!-- plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+				<source>1.5</source>
+				<target>1.5</target>
+				<rulesets>
+				<ruleset>/rulesets/basic.xml</ruleset>
+				<ruleset>/rulesets/imports.xml</ruleset>
+				<ruleset>/rulesets/unusedcode.xml</ruleset>
+				<ruleset>/rulesets/finalizers.xml</ruleset>
+				</rulesets>
+				</configuration>
+				</plugin>
+				<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+				<source>1.5</source>
+				<target>1.5</target>
+				<configLocation>
+				config/maven_checks.xml
+				</configLocation>
+				</configuration>
+				</plugin>
+				<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<configuration>
+				<tags>
+				<tag>TODO</tag>
+				<tag>@todo</tag>
+				<tag>FIXME</tag>
+				<tag>XXX</tag>
+				</tags>
+				</configuration>
+				</plugin>
+				<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				</plugin>
+				<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>clirr-maven-plugin</artifactId>
+				<configuration>
+				<source>1.5</source>
+				<target>1.5</target>
+				<minSeverity>info</minSeverity>
+				</configuration>
+				</plugin -->
+		</plugins>
+	</reporting>
+	<distributionManagement>
+		<site>
+  		 	<id>sourceforge.net</id>
+   			<url>scp://shell.sourceforge.net/home/groups/u/un/unbbayes/htdocs</url>
+  		</site>
+	</distributionManagement>
+</project>

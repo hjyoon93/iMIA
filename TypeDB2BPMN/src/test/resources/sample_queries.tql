@@ -1,0 +1,58 @@
+## query everything
+match $x isa thing;
+
+## query isCompoundBy
+ match 
+ $r isa isCompoundBy; 
+ $m isa Mission, has UID $muid; 
+ $t isa Task, has UID $tuid; 
+ $bpmntask isa BPMN_Entity, has UID $buid;
+ (bpmnEntity: $bpmntask, conceptualModel: $t) isa BPMN_hasConceptualModelElement;
+ get $m,$t,$r,$bpmntask,$muid,$tuid,$buid;
+
+## query isPerformedBy
+ match
+ $bpmntask isa BPMN_Entity, has UID $uid1;
+ $bpmnperfomer isa BPMN_Entity, has UID $uid2;
+ $rel1 (task: $task, performer: $performer) isa isPerformedBy;
+ $rel2 (bpmnEntity: $bpmntask, conceptualModel: $task) isa BPMN_hasConceptualModelElement;
+ $rel3 (bpmnEntity: $bpmnperfomer, conceptualModel: $performer) isa BPMN_hasConceptualModelElement;
+ get $rel1, $rel2, $rel3, $uid1, $uid2;
+
+## query provides
+ match
+ $asset isa Asset, has UID $uid1;
+ $service isa Service, has UID $uid2;
+ $bpmnasset isa BPMN_Entity, has UID $uid3;
+ $bpmnservice isa BPMN_Entity, has UID $uid4;
+ $rel1 (asset: $asset, service: $service) isa provides;
+ $rel2 (bpmnEntity: $bpmnasset, conceptualModel: $asset) isa BPMN_hasConceptualModelElement;
+ $rel3 (bpmnEntity: $bpmnservice, conceptualModel: $service) isa BPMN_hasConceptualModelElement;
+ get $rel1, $rel2, $rel3, $uid1, $uid2, $uid3, $uid4;
+
+## query isPrecededBySetOfTask and isCompoundBySetOfTask associated with sequenceFlow
+ match
+ $p isa PrecedenceTask;
+ $t1 isa Task;
+ $t2 isa Task;
+ $r1  (precedence_task: $p, task: $t2) isa isPrecededBySetOfTask; 
+ $r2  (precedence_task: $p, task: $t1) isa isCompoundBySetOfTask; 
+ $bpmntask1 isa BPMN_Entity;
+ $bpmntask2 isa BPMN_Entity;
+ $seq isa BPMN_sequenceFlow;
+ $rel1 (bpmnEntity: $bpmntask1, conceptualModel: $t1) isa BPMN_hasConceptualModelElement;
+ $rel2 (bpmnEntity: $bpmntask2, conceptualModel: $t2) isa BPMN_hasConceptualModelElement;
+ $rel3  (bpmnEntity: $seq, conceptualModel: $p) isa BPMN_hasConceptualModelElement;
+
+## Query AND/ORPrecedenceTaskList
+ match
+ $taskFrom isa Task;
+ $taskTo isa Task;
+ {$prec isa ANDPrecedenceTaskList;} or {$prec isa ORPrecedenceTaskList;};
+ $relFrom (task: $taskFrom, precedence_task: $prec) isa isCompoundBySetOfTask;
+ $relTo (task: $taskTo, precedence_task: $prec) isa isPrecededBySetOfTask;
+ $bpmntaskFrom isa BPMN_Activity, has BPMNattrib_name $attribFrom;
+ $bpmntaskTo isa BPMN_Activity, has BPMNattrib_name $attribTo;
+ $mapFrom (bpmnEntity: $bpmntaskFrom, conceptualModel: $taskFrom) isa BPMN_hasConceptualModelElement;
+ $mapTo (bpmnEntity: $bpmntaskTo, conceptualModel: $taskTo) isa BPMN_hasConceptualModelElement;
+
