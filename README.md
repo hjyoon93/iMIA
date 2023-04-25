@@ -16,3 +16,5 @@ Some source code and scripts for DALNIM
 * *misc*: miscellaneous code and resources.
 
 * *TypeDB2SBN*: tool to load the concept model from TypeDB and generate a (subjective) Bayesian network structure.
+
+* vtoi: code for Federated-Learning-for-Traffic-Sign-Recognition.
