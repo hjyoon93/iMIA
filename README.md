@@ -1,5 +1,5 @@
-# DALNIM
-Some source code and scripts for DALNIM
+# iMIA
+Some source code and scripts for the Interdependent Mission Impact Assessment framework.
 
 ## Content
 
