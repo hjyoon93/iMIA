@@ -1,5 +1,5 @@
-# DALNIM
-Some source code and scripts for DALNIM
+# iMIA
+Some source code and scripts for the Interdependent Mission Impact Assessment framework.
 
 ## Content
 
@@ -9,10 +9,12 @@ Some source code and scripts for DALNIM
 
 *  *Final_Concept_Model_Version\<N\>*: the DALNIM conceptual model. This picture illustrates the main entities and relationships considered in the domain of DALNIM project.
 
-*  *concept_model.tql*: TypeQL script that will save the the DALNIM conceptual model schema to TypeDB.
+*  *concept_model.tql*: TypeQL script that will save the the iMIA conceptual model schema to TypeDB.
 
 *  *dependencies.drawio.svg*: a diagram describing the maven dependencies of the projects in this folder. This can be edited in [draw.io](https://app.diagrams.net/).
 
 * *misc*: miscellaneous code and resources.
 
 * *TypeDB2SBN*: tool to load the concept model from TypeDB and generate a (subjective) Bayesian network structure.
+
+* vtoi: code for Federated-Learning-for-Traffic-Sign-Recognition.
