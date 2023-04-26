@@ -12,12 +12,12 @@ if __name__ == '__main__':
     t=0
     scheme = 'ebm'
     while t<1:
-        # try:  
-        game_start(t, 0, False, True, web_data_upper_vul=7, Iot_upper_vul=arr[t%10], scheme=scheme)
-        print("Project took", time.time() - start, "seconds.")
-        t+=1
-        # except:
-        #     pass
+        try:  
+            game_start(t, 0, False, True, web_data_upper_vul=7, Iot_upper_vul=arr[t%10], scheme=scheme)
+            print("Project took", time.time() - start, "seconds.")
+            t+=1
+        except:
+            pass
     # time.sleep(10)
     # try:
     #     os.system('say "your program has finished"')

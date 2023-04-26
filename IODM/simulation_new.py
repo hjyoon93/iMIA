@@ -705,7 +705,9 @@ class game_class:
                     results.append({"node":"Edge"+str(i+1)+"_IoT_service", "success": 0})
                     results.append({"node":"Edge"+str(i+1)+"_IoT", "success": 0})
             else:
-                results.append({"node":"Edge"+str(i+1)+"_service", "success": 0})
+                results.append({"node":"Edge"+str(i+1)+"_asset", "success": 0})
+                results.append({"node":"Edge"+str(i+1)+"_MEC_service", "success": 0})
+                results.append({"node":"Edge"+str(i+1)+"_IoT_service", "success": 0})
                 results.append({"node":"Edge"+str(i+1)+"_MEC", "success": 0})  
                 results.append({"node":"Edge"+str(i+1)+"_IoT", "success": 0})
 
@@ -853,7 +855,7 @@ class game_class:
                 results.append({"node":"MEC"+str(i+1)+"_asset", "success": 0})
                 results.append({"node":"MEC"+str(i+1)+"_obj_service", "success": 0})
                 results.append({"node":"MEC"+str(i+1)+"_Edge_service", "success": 0})
-                # results.append({"node":"MEC"+str(i+1)+"_obj", "success": 0})
+                results.append({"node":"MEC"+str(i+1)+"_obj", "success": 0})
                 # if self.graph.network.nodes["MEC"+str(i+1)]["poisoned"] != 0:
                 #     results.append({"node":"MEC"+str(i+1)+"_obj", "success": 0})
                 # else:
@@ -956,7 +958,8 @@ class game_class:
         # print("Timeliness:", timeliness)
         # availability  = self.available/35
         # self.avg_availibility += (edge_iot_service + edge_mec_service + mec_obj_service + mec_edge_service + iot_service)/50
-        self.avg_timeliness += timeliness
+        if timeliness > 0.7:
+            self.avg_timeliness +=1
         # print(self.available, availability) 
         # self.timely = timely
         # self.processed = processed
@@ -997,10 +1000,10 @@ class game_class:
             # w.writerow(res)
             # res = dict(res)
             # print(res.items())
-        # with open('test_fin.csv','a') as f:    
-        #     w =  csv.DictWriter(f, resu.keys())
+        with open('./results/initial/train.csv','a') as f:    
+            w =  csv.DictWriter(f, resu.keys())
             # w.writeheader()
-            # w.writerow(resu)
+            w.writerow(resu)
         return rtt, res_cnt
 
     def mission_completed(self):
