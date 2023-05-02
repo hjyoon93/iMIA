@@ -18,3 +18,5 @@ Some source code and scripts for the Interdependent Mission Impact Assessment fr
 * *TypeDB2SBN*: tool to load the concept model from TypeDB and generate a (subjective) Bayesian network structure.
 
 * vtoi: code for Federated-Learning-for-Traffic-Sign-Recognition.
+
+* SBN Implementation: https://sourceforge.net/projects/unbbayes/
