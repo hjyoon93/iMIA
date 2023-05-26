@@ -1,6 +1,8 @@
 # iMIA
 Some source code and scripts for the Interdependent Mission Impact Assessment framework.
 
+See also: [https://wordpress.cs.vt.edu/dalnim/](https://wordpress.cs.vt.edu/dalnim/)
+
 ## Content
 
 *  *BPMN2TypeDB*: tool to convert BPMN2 files to TypeQL scripts. See README.md inside this folder for more details.
