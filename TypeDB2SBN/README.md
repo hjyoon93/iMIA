@@ -1,12 +1,10 @@
 # TypeDB2SBN
 
-This is some source code to generate an SBN structure (i.e., input for SBN parameter learning) from DALNIM iMIA knowledge base (stored in TypeDB).
+This program generates an SBN structure (i.e., input for SBN parameter learning) from DALNIM iMIA knowledge base (stored in TypeDB).
 It can be used to write Hugin .NET files from information queried from a TypeDB database.
 
-See *pom.xml* (the maven configuration file) for details about this project's configuration.
-
 Basically, this tool will look for instances of some special classes/relations in the TypeDB knowledge base and interpret them as nodes or arcs in the SBN.
-Please, find the [DALNIM concept model](https://github.com/cardialfly/DALNIM/blob/main/Final_Concept_Model_Version3.pdf) (../Final_Concept_Model_Version3.pdf) for the available classes.
+Please, find the [DALNIM concept model](https://github.com/hjyoon93/iMIA/blob/main/Final_Concept_Model_Version3.pdf) (../Final_Concept_Model_Version3.pdf) for the available classes.
 
 The resulting SBN will be stored in Hugin NET format, which can be opened and managed with [UnBBayes-SBN](https://sourceforge.net/p/unbbayes/code/HEAD/tree/trunk/unbbayes.prs.sbn/) (see <https://sourceforge.net/p/unbbayes/code/HEAD/tree/trunk/unbbayes.prs.sbn/>).
 
@@ -31,7 +29,9 @@ The following list summarizes what classes/relations in the DALNIM concept model
     * provides
 
     
-## How to build
+## How to build from source code
+
+The source code is available at [https://github.com/hjyoon93/iMIA/tree/master/TypeDB2SBN](https://github.com/hjyoon93/iMIA/tree/master/TypeDB2SBN).
 
 1. Download and setup Apache Maven (recommended version 3.8.X) from [https://maven.apache.org/](https://maven.apache.org/).
 
@@ -43,6 +43,8 @@ The following list summarizes what classes/relations in the DALNIM concept model
 
 4. An executable JAR file called *TypeDB2SBN-<VERSION>-jar-with-dependencies.jar* will be created in the *target* folder. This file can be executed with a Java Runtime Environment (version 11 or newer suggested).
 	* Similarly, a source JAR file called *TypeDB2SBN-<VERSION>-sources.jar* will be created in the *target* folder. This is a standard JAR container with the project's source code. A JAR file is an ordinary ZIP file that can be extracted with any ZIP package extraction tool of your choice.
+
+See *pom.xml* (the maven configuration file) for details about this project's configuration.
 
 
 ## How to run
