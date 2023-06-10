@@ -77,12 +77,23 @@ public class DecoderImpl implements Decoder {
 			+ "    } or {\n" + "        # Parents from provides\n" + "        $childType sub Service;\n"
 			+ "        $parentType sub Asset;\n" + "        (asset: $parent, service: $child) isa provides;\n"
 			+ "    };\n" + "get $parent, $puid;";
+	
 
-	private boolean isFillUniformCPT = false;
+	private String descriptionQuery = "match\n"
+			+ "    $entity isa $MIAEntity, has UID $uid;\n"
+			+ "    $bpmnEntity isa $BPMN_Entity, has BPMNattrib_name $name;\n"
+			+ "    $uid = \"@{UID}\";\n"
+			+ "    (bpmnEntity: $bpmnEntity, conceptualModel: $entity) isa BPMN_hasConceptualModelElement;\n"
+			+ "get $name;";
+
+	private boolean isFillUniformCPT = true;
 	
 	private int nodePositionXGap = 280;
 	
 	private int nodePositionYGap = 120;
+
+	private String nameAttributeName = "BPMNattrib_name";
+
 
 	/**
 	 * Default constructor is protected from public access. Use
@@ -180,6 +191,7 @@ public class DecoderImpl implements Decoder {
 		// ensure there is a mission node
 		ProbabilisticNode missionNode = new ProbabilisticNode();
 		missionNode.setName("Mission");
+		missionNode.setDescription("Mission goal achievement");
 		// make sure the nodes are boolean (2 states)
 		missionNode.removeAllStates();
 		for (int i = 0; missionNode.getStatesSize() < 2; i++) {
@@ -224,7 +236,7 @@ public class DecoderImpl implements Decoder {
 					String uid = retrieveUID(nodeEntity, queryResponse);
 					uidToEntityMap.put(uid, nodeEntity);
 
-					// generate node name
+					// generate node name (ID)
 					String nodeName = "";
 					// append the fragment of URI
 					try {
@@ -241,9 +253,19 @@ public class DecoderImpl implements Decoder {
 						nodeName = nodeEntity.getType().getLabel().name() + net.getNodeCount();
 					}
 
+					// obtain the BPMN node's name (i.e., short textual description).
+					String description = retrieveDescription(uid, transaction);
+					if (description == null || description.trim().isEmpty()) {
+						// use the ID if name was not found...
+						logger.warn("No description/name found for BPMN entity {}. Using ID {} by default...",
+								nodeEntity, nodeName);
+						description = nodeName;
+					}
+
 					// create a BN node accordingly
 					ProbabilisticNode node = new ProbabilisticNode();
 					node.setName(nodeName);
+					node.setDescription(description);
 					// make sure the nodes are boolean (2 states)
 					node.removeAllStates();
 					for (int i = 0; node.getStatesSize() < 2; i++) {
@@ -349,7 +371,7 @@ public class DecoderImpl implements Decoder {
 				}
 			}
 		}
-		
+
 		adjustNodePositions(net);
 
 		// save the model
@@ -425,6 +447,45 @@ public class DecoderImpl implements Decoder {
 			// handle some special attributes
 			if (attribName.equals(getUIDAttributeName())) {
 				logger.debug("uid of entity {} is {}", typeDBEntity, attribValue);
+				return attribValue;
+			}
+		} // end of iteration on attributes
+
+		return null;
+	}
+
+	/**
+	 * @param uid  : the entity's UID
+	 * @param transaction : access point to TypeDB query
+	 * @return the "name" attribute of the TypeDB entity
+	 */
+	protected String retrieveDescription(String uid, TypeDBTransaction transaction) {
+
+		// resolve key placeholders in query template
+		// (e.g., substitute "@{UID}" with uid's value)
+		Properties keywords = new Properties();
+		keywords.put(getUIDAttributeName(), uid);
+		String resolvedDescriptionQuery = this.resolveQuery(getDescriptionQuery(), keywords);
+
+		// Run query.
+		List<ConceptMap> queryResponse = transaction.query().match(resolvedDescriptionQuery)
+				.collect(Collectors.toList());
+
+		// extract the attributes associated with current entity
+		Collection<Attribute<?>> attributes = queryResponse.stream()
+				// convert to attributes
+				.flatMap(map -> map.concepts().stream()).filter(Concept::isAttribute).map(Concept::asAttribute)
+				.distinct().collect(Collectors.toList());
+
+		// access the attribute
+		for (Attribute<?> attrib : attributes) {
+
+			String attribName = attrib.getType().getLabel().name();
+			String attribValue = attrib.asString().getValue();
+
+			// extract the "name" attribute
+			if (attribName.equals(getNameAttributeName())) {
+				logger.debug("Name of entity {} is {}", uid, attribValue);
 				return attribValue;
 			}
 		} // end of iteration on attributes
@@ -589,14 +650,18 @@ public class DecoderImpl implements Decoder {
 	}
 
 	/**
-	 * @return the isFillUniformCPT
+	 * @return the isFillUniformCPT : if true, the CPTs will be filled with uniform
+	 *         distribution.
+	 * @see #saveSBNFile(File)
 	 */
 	public boolean isFillUniformCPT() {
 		return isFillUniformCPT;
 	}
 
 	/**
-	 * @param isFillUniformCPT the isFillUniformCPT to set
+	 * @param isFillUniformCPT : if true, the CPTs will be filled with uniform
+	 *                         distribution.
+	 * @see #saveSBNFile(File)
 	 */
 	public void setFillUniformCPT(boolean isFillUniformCPT) {
 		this.isFillUniformCPT = isFillUniformCPT;
@@ -628,6 +693,39 @@ public class DecoderImpl implements Decoder {
 	 */
 	public void setNodePositionYGap(int nodePositionYGap) {
 		this.nodePositionYGap = nodePositionYGap;
+	}
+
+	/**
+	 * @return the "name" attribute of BPMN. Default is "BPMNattrib_name".
+	 */
+	public String getNameAttributeName() {
+		return nameAttributeName;
+	}
+
+	/**
+	 * @param nameAttributeName : the "name" attribute of BPMN. Default is "name".
+	 */
+	public void setNameAttributeName(String nameAttributeName) {
+		this.nameAttributeName = nameAttributeName;
+	}
+
+	/**
+	 * @return the query to perform in order to obtain the description of a node
+	 *         associated with some UID.
+	 * 
+	 * @see #retrieveDescription(String, TypeDBTransaction)
+	 */
+	public String getDescriptionQuery() {
+		return descriptionQuery;
+	}
+
+	/**
+	 * @param descriptionQuery : the query to perform in order to obtain the
+	 *                         description of a node associated with some UID.
+	 * @see #retrieveDescription(String, TypeDBTransaction)
+	 */
+	public void setDescriptionQuery(String descriptionQuery) {
+		this.descriptionQuery = descriptionQuery;
 	}
 
 }

@@ -45,3 +45,12 @@ match
         (asset: $parent, service: $child) isa provides;
     };
 get $parent, $puid;
+
+
+# description of a given node identified with UID
+match
+    $entity isa $MIAEntity, has UID $uid;
+    $bpmnEntity isa $BPMN_Entity, has BPMNattrib_name $name;
+    $uid = "http://bpmn.io/schema/bpmn/#Task_Activity_07y81cl";
+    (bpmnEntity: $bpmnEntity, conceptualModel: $entity) isa BPMN_hasConceptualModelElement;
+get $name;

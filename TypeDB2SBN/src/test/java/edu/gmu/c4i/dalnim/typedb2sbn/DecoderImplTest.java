@@ -29,7 +29,9 @@ import com.vaticle.typeql.lang.query.TypeQLQuery;
 import unbbayes.io.CountCompatibleNetIO;
 import unbbayes.prs.Node;
 import unbbayes.prs.bn.JunctionTreeAlgorithm;
+import unbbayes.prs.bn.PotentialTable;
 import unbbayes.prs.bn.ProbabilisticNetwork;
+import unbbayes.prs.bn.ProbabilisticNode;
 
 /**
  * Unit test for {@link DecoderImpl}. A TypeDB database must be available at
@@ -172,6 +174,30 @@ public class DecoderImplTest {
 		// make sure the mission node was created
 		Node missionNode = net.getNode("Mission");
 		assertFalse(missionNode.getParentNodes().isEmpty());
+
+		// make sure all nodes have a description
+		for (Node node : net.getNodes()) {
+			assertFalse(node.toString(), node.getDescription().trim().isEmpty());
+			assertFalse(node.toString(), node.getDescription().trim().equalsIgnoreCase("null"));
+			// make sure cpts are non-zero
+			// there is no need to be normalized, though
+			// (Dirichlet parameters may not be normalized anyway)
+			if (node instanceof ProbabilisticNode) {
+				PotentialTable table = ((ProbabilisticNode) node).getProbabilityFunction();
+				for (int columnOffset = 0; columnOffset < table.tableSize(); columnOffset += node.getStatesSize()) {
+					// verify for each column of CPT:
+					// each column must have a non-zero value
+					boolean hasNonZero = false;
+					for (int state = 0; state < node.getStatesSize(); state++) {
+						if (table.getValue(columnOffset + state) > 0f) {
+							hasNonZero = true;
+							break;
+						}
+					}
+					assertTrue(node.toString(), hasNonZero);
+				}
+			}
+		}
 
 		// make sure the network can be compiled
 		new JunctionTreeAlgorithm(net).run();
